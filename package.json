@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i ./resources/css/portal.css -o ./public/assets/portal.css --minify",
+    "watch:css": "npx @tailwindcss/cli -i ./resources/css/portal.css -o ./public/assets/portal.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.0",
+    "tailwindcss": "^4.1.0"
+  }
+}
