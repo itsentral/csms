@@ -84,6 +84,11 @@
   .footer { @apply mt-[22px] text-[11px] text-kai-muted; }
   .empty { @apply p-[30px] text-center text-kai-muted; }
   .login-overlay { @apply fixed inset-0 z-[1000] flex items-center justify-center bg-[linear-gradient(135deg,#102b55,#165da8)] p-5; }
+  .boot-screen { @apply fixed inset-0 z-[1100] flex items-center justify-center bg-kai-bg p-5; }
+  .boot-card { @apply flex min-w-[220px] flex-col items-center gap-3 rounded-[18px] bg-white px-8 py-7 text-center text-kai-navy shadow-[0_25px_70px_#06162d22]; }
+  .boot-logo { @apply h-auto max-h-[58px] w-[120px] rounded-md bg-white p-1 object-contain; }
+  .boot-card span { @apply text-sm text-kai-muted; }
+  .boot-spinner { @apply size-8 animate-spin rounded-full border-[3px] border-kai-blue/20 border-t-kai-blue; }
   .login-box { @apply w-full max-w-[460px] rounded-[18px] bg-white p-7 shadow-[0_25px_70px_#06162d55]; }
   .login-box h1 { @apply my-2 text-2xl; }
   .login-box p { @apply text-kai-muted; }
@@ -101,6 +106,7 @@
   .role-option input { @apply h-[17px] w-[17px] flex-none accent-kai-blue; }
   .role-help { @apply mt-2 text-xs text-kai-muted; }
   .password-toggle { @apply absolute right-3 top-1/2 -translate-y-1/2 bg-transparent p-1 text-kai-muted hover:bg-transparent hover:text-kai-navy focus:outline-none focus:ring-2 focus:ring-kai-blue focus:ring-offset-1; }
+  .password-toggle svg { @apply block size-5; }
   .password-field { @apply relative; }
   .password-field input { @apply pr-11; }
   .button-spinner { @apply mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white align-[-3px]; }
@@ -113,4 +119,39 @@
 }
 @media (max-width: 540px) {
   .cards, .formgrid, .reviewers { @apply grid-cols-1; }.heading { @apply block; }.heading button { @apply mt-3; }.wide { @apply col-auto; }
+}
+
+/* Print-specific certificate layout: fixed physical dimensions are required for A4 output. */
+@layer components {
+  .cert-actions { @apply my-3 flex flex-wrap gap-2; }
+  .certificate { @apply relative mt-4 min-h-[540px] overflow-hidden rounded border-2 border-[#173b70] bg-white px-12 pb-7 pt-[34px] text-center text-kai-ink shadow-[0_8px_24px_#102b5512]; outline: 1px solid #e8a24b; outline-offset: -9px; }
+  .certificate::before, .certificate::after { content: ""; @apply pointer-events-none absolute size-[180px] rounded-full border border-[#dce7f5]; }
+  .certificate::before { @apply -left-20 -top-28; }.certificate::after { @apply -bottom-[120px] -right-20; }
+  .cert-topline { @apply absolute inset-x-0 top-0 h-[7px] bg-[linear-gradient(90deg,#165da8_0_70%,#f58220_70%)]; }
+  .cert-logo { @apply mx-auto mb-2.5 block h-auto max-h-[66px] w-[150px] object-contain; }
+  .cert-org { @apply mb-[18px] mt-0 text-[11px] font-extrabold uppercase tracking-[2px] text-kai-blue; }
+  .cert-title { @apply my-2 text-[29px] font-extrabold leading-[1.2] tracking-[1px] text-kai-navy; }
+  .cert-subtitle { @apply mb-6 mt-0 text-xs font-extrabold uppercase tracking-[3px] text-[#a85a12]; }
+  .cert-rule { @apply mx-auto my-[18px] h-0.5 w-[130px] bg-kai-orange; }
+  .cert-award { @apply m-0 text-sm text-[#53647d]; }
+  .cert-vendor { @apply mx-auto mb-1 mt-2 max-w-[90%] [overflow-wrap:anywhere] text-[29px] font-extrabold text-kai-navy; }
+  .cert-scope { @apply my-3 text-sm; }
+  .cert-score { @apply inline-block rounded-lg border border-[#d7e3f2] bg-[#f5f8fc] px-7 py-2.5 text-[27px] font-extrabold tracking-[.5px] text-kai-navy; }
+  .cert-status { @apply mx-auto mt-2 table rounded-full px-[15px] py-[5px] text-xs font-extrabold; }
+  .cert-meta { @apply my-[22px] flex flex-wrap justify-center gap-7 text-[11px] text-[#52647c]; }.cert-meta b { @apply text-kai-navy; }
+  .cert-validity { @apply mx-auto my-2 max-w-[650px] text-[11px] text-kai-muted; }
+  .cert-signatures { @apply mx-[4%] mb-0 mt-7 flex justify-between gap-[30px] text-center text-[11px] text-[#52647c]; }
+  .cert-sign { @apply w-[220px] border-t border-[#a8b7ca] pt-[7px]; }.cert-sign strong { @apply mb-[3px] block text-xs text-kai-navy; }
+}
+
+@page { size: A4 landscape; margin: 10mm; }
+@media print {
+  html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; width: 100% !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body * { visibility: hidden !important; }
+  #certPreview, #certPreview * { visibility: visible !important; }
+  #certPreview { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; margin: 0 !important; padding: 0 !important; max-width: none !important; }
+  #certPreview .certificate { display: block !important; width: 100% !important; min-height: 180mm !important; height: 180mm !important; margin: 0 !important; padding: 25px 42px 20px !important; box-shadow: none !important; border-radius: 0 !important; break-inside: avoid !important; page-break-inside: avoid !important; }
+  #certPreview .cert-actions, #certPreview button { display: none !important; visibility: hidden !important; }
+  #certPreview .cert-logo { width: 140px !important; max-height: 58px !important; }
+  #certPreview .cert-title { font-size: 27px !important; }.cert-vendor { font-size: 26px !important; }.cert-signatures { margin-top: 23px !important; }
 }
