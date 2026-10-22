@@ -25,3 +25,25 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Kunci dan rahasia: jangan pernah di-commit
+.ssh/
+id_rsa
+id_rsa.pub
+id_ed25519*
+id_ecdsa*
+id_dsa*
+*.pem
+*.key
+*.ppk
+*.p12
+*.pfx
+*.kdbx
+.env.*
+!.env.example
+auth.json
+
+# Artefak pengujian
+/test-results/
+/playwright-report/
+/blob-report/

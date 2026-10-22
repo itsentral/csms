@@ -1,147 +1,766 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   Material Design 3 — token dasar
+   Palet diturunkan dari warna merek PT KAI (biru #165DA8, oranye #F58220).
+   Font: Google Sans (self-hosted, tanpa CDN eksternal).
+   ========================================================================== */
+
+/* Material Symbols Outlined (Apache 2.0): subset ikon yang dipakai, dilayani sendiri tanpa CDN */
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("/assets/fonts/materialsymbols-outlined.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Google Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/assets/fonts/googlesans-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Google Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/assets/fonts/googlesans-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Google Sans Flex";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/assets/fonts/googlesans-flex-latin.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Google Sans Code";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/assets/fonts/googlesanscode-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 @theme {
-  --color-kai-navy: #102b55;
-  --color-kai-blue: #165da8;
-  --color-kai-orange: #f58220;
-  --color-kai-bg: #f3f6fb;
-  --color-kai-ink: #172b4d;
-  --color-kai-muted: #64748b;
-  --color-kai-line: #e0e7f0;
+  --font-sans: "Google Sans", "Google Sans Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Google Sans Flex", "Google Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Google Sans Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Peran warna Material 3 */
+  --color-primary: #0b57d0;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #d3e3fd;
+  --color-on-primary-container: #041e49;
+  --color-inverse-primary: #a8c7fa;
+
+  --color-secondary: #535e70;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #c2e7ff;
+  --color-on-secondary-container: #001d35;
+
+  --color-tertiary: #8b5000;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #ffddb8;
+  --color-on-tertiary-container: #2c1600;
+
+  --color-error: #b3261e;
+  --color-on-error: #ffffff;
+  --color-error-container: #f9dedc;
+  --color-on-error-container: #410e0b;
+
+  --color-success: #146c2e;
+  --color-success-container: #c4eed0;
+  --color-on-success-container: #072711;
+
+  --color-surface: #f8fafd;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f3f6fb;
+  --color-surface-container: #f0f4f9;
+  --color-surface-container-high: #e9eef6;
+  --color-surface-container-highest: #dde3ea;
+  --color-on-surface: #1f1f1f;
+  --color-on-surface-variant: #444746;
+  --color-outline: #747775;
+  --color-outline-variant: #c4c7c5;
+  --color-inverse-surface: #303030;
+  --color-on-inverse-surface: #f2f2f2;
+
+  /* Permukaan navigasi: terang, menyatu dengan latar halaman seperti Gmail/Drive */
+  --color-rail: #f8fafd;
+  --color-rail-container: #f0f4f9;
+  --color-on-rail: #1f1f1f;
+  --color-on-rail-variant: #444746;
+
+  /* Skala bentuk Material 3 */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.75rem;
+
+  /* Skala tipografi Material 3 */
+  --text-display-large: 3.5625rem;
+  --text-display-large--line-height: 4rem;
+  --text-display-large--letter-spacing: -0.015625rem;
+  --text-display-medium: 2.8125rem;
+  --text-display-medium--line-height: 3.25rem;
+  --text-display-small: 2.25rem;
+  --text-display-small--line-height: 2.75rem;
+  --text-headline-large: 2rem;
+  --text-headline-large--line-height: 2.5rem;
+  --text-headline-medium: 1.75rem;
+  --text-headline-medium--line-height: 2.25rem;
+  --text-headline-small: 1.5rem;
+  --text-headline-small--line-height: 2rem;
+  --text-title-large: 1.375rem;
+  --text-title-large--line-height: 1.75rem;
+  --text-title-medium: 1rem;
+  --text-title-medium--line-height: 1.5rem;
+  --text-title-medium--letter-spacing: 0.009375rem;
+  --text-title-small: 0.875rem;
+  --text-title-small--line-height: 1.25rem;
+  --text-title-small--letter-spacing: 0.0078125rem;
+  --text-body-large: 1rem;
+  --text-body-large--line-height: 1.5rem;
+  --text-body-large--letter-spacing: 0.03125rem;
+  --text-body-medium: 0.875rem;
+  --text-body-medium--line-height: 1.25rem;
+  --text-body-medium--letter-spacing: 0.015625rem;
+  --text-body-small: 0.75rem;
+  --text-body-small--line-height: 1rem;
+  --text-body-small--letter-spacing: 0.03125rem;
+  --text-label-large: 0.875rem;
+  --text-label-large--line-height: 1.25rem;
+  --text-label-large--letter-spacing: 0.0078125rem;
+  --text-label-medium: 0.75rem;
+  --text-label-medium--line-height: 1rem;
+  --text-label-medium--letter-spacing: 0.03125rem;
+  --text-label-small: 0.6875rem;
+  --text-label-small--line-height: 1rem;
+  --text-label-small--letter-spacing: 0.03125rem;
+
+  /* Elevation Material 3 */
+  --shadow-e1: 0 1px 2px 0 rgb(0 0 0 / 0.3), 0 1px 3px 1px rgb(0 0 0 / 0.15);
+  --shadow-e2: 0 1px 2px 0 rgb(0 0 0 / 0.3), 0 2px 6px 2px rgb(0 0 0 / 0.15);
+  --shadow-e3: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 4px 8px 3px rgb(0 0 0 / 0.15);
+  --shadow-e4: 0 2px 3px 0 rgb(0 0 0 / 0.3), 0 6px 10px 4px rgb(0 0 0 / 0.15);
+  --shadow-e5: 0 4px 4px 0 rgb(0 0 0 / 0.3), 0 8px 12px 6px rgb(0 0 0 / 0.15);
+
+  /* Gerak Material 3 */
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
 }
 
 @source "../../resources/views";
 @source "../../public/assets/portal.js";
 
+/* ==========================================================================
+   Dasar
+   ========================================================================== */
 @layer base {
   * { @apply box-border; }
-  body { @apply m-0 bg-kai-bg font-sans text-sm leading-[1.45] text-kai-ink; }
+  html { @apply antialiased; }
+  body {
+    @apply m-0 bg-surface font-sans text-body-medium text-on-surface;
+    font-synthesis-weight: none;
+    --field-surface: var(--color-surface-container-lowest);
+  }
   button, input, select, textarea { font: inherit; }
-  button { @apply cursor-pointer border-0 rounded-[9px] bg-kai-blue px-3.5 py-2.5 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-65; }
+  b, strong { font-weight: 500; }
+
+  /* Radio dan checkbox Material 3 */
+  input[type="radio"], input[type="checkbox"] {
+    @apply relative m-0 size-5 flex-none cursor-pointer appearance-none border-2 border-on-surface-variant bg-transparent align-middle
+      transition-[background-color,border-color,box-shadow] duration-150 ease-standard;
+  }
+  input[type="radio"] { @apply rounded-full; }
+  input[type="checkbox"] { @apply size-[18px] rounded-[2px]; }
+  input[type="radio"]:hover { box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-on-surface) 8%, transparent); }
+  input[type="radio"]:checked {
+    @apply border-primary;
+    background: radial-gradient(circle, var(--color-primary) 0 46%, transparent 50%);
+  }
+  input[type="checkbox"]:checked {
+    @apply border-primary bg-primary bg-no-repeat;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12.5l4.5 4.5L19 7.5'/></svg>");
+    background-size: 100% 100%;
+  }
+  input[type="radio"]:disabled, input[type="checkbox"]:disabled { @apply cursor-not-allowed opacity-38; }
+  button { @apply cursor-pointer; }
+  :focus-visible { @apply outline-2 outline-offset-2 outline-primary; }
+  ::selection { @apply bg-primary-container text-on-primary-container; }
+
+  /* Scrollbar bergaya Material */
+  * { scrollbar-width: thin; scrollbar-color: var(--color-outline-variant) transparent; }
+  *::-webkit-scrollbar { width: 10px; height: 10px; }
+  *::-webkit-scrollbar-thumb { @apply rounded-full bg-outline-variant; }
+  *::-webkit-scrollbar-track { @apply bg-transparent; }
 }
 
+/* ==========================================================================
+   Komponen Material 3
+   ========================================================================== */
 @layer components {
-  button.secondary { @apply bg-[#eaf0f8] text-kai-navy; }
-  button.orange { @apply bg-kai-orange; }
-  button.danger { @apply bg-[#b42318]; }
-  .app { @apply grid min-h-screen grid-cols-[245px_1fr]; }
-  .side { @apply bg-kai-navy px-[15px] py-6 text-white; }
-  .brand { @apply flex items-center gap-2.5 border-b border-white/15 px-2.5 pb-6; }
-  .logo { @apply block h-auto max-h-[42px] w-[88px] flex-none rounded-[5px] bg-white p-[3px] object-contain; }
-  .brand-logo { @apply block h-auto w-28 max-w-full flex-none rounded-md bg-white p-1 object-contain; }
-  .brand strong { @apply block text-[15px]; }
-  .brand small { @apply text-[#b8c8df]; }
-  .nav { @apply mt-5; }
-  .nav button { @apply my-1 w-full bg-transparent text-left font-medium text-[#dbe7f7] hover:bg-white/10 hover:text-white; }
-  .nav button.active { @apply bg-white/10 text-white; }
-  .sidefoot { @apply mt-8 p-2.5 text-xs text-[#b8c8df]; }
-  .main { @apply min-w-0; }
-  .top { @apply flex h-[70px] items-center justify-between border-b border-kai-line bg-white px-7; }
-  .top small { @apply text-kai-muted; }
-  .content { @apply mx-auto max-w-[1450px] p-7; }
-  .eyebrow { @apply text-[11px] font-extrabold uppercase tracking-[1.2px] text-kai-blue; }
-  .heading { @apply mb-[22px] flex items-start justify-between gap-5; }
-  .heading h1 { @apply my-1 text-[27px]; }
-  .heading p { @apply m-0 text-kai-muted; }
-  .cards { @apply my-5 grid grid-cols-4 gap-3.5; }
-  .card, .panel { @apply rounded-[15px] border border-kai-line bg-white p-5 shadow-[0_3px_12px_#102b5506]; }
-  .metric { @apply my-[7px] text-[29px] font-extrabold; }
-  .muted { @apply text-kai-muted; }
-  .row { @apply flex flex-wrap items-center gap-3; }
+  /* --- Tombol ---------------------------------------------------------- */
+  .btn {
+    @apply relative inline-flex h-10 select-none items-center justify-center gap-2 rounded-full px-6 text-label-large
+      transition-[background-color,box-shadow,transform] duration-200 ease-standard disabled:pointer-events-none disabled:opacity-38;
+    font-weight: 500;
+  }
+  .btn::after {
+    content: "";
+    @apply pointer-events-none absolute inset-0 rounded-[inherit] bg-current opacity-0 transition-opacity duration-200 ease-standard;
+  }
+  .btn:hover:not(:disabled)::after { opacity: 0.08; }
+  .btn:focus-visible::after { opacity: 0.1; }
+  .btn:active:not(:disabled)::after { opacity: 0.12; }
+  .btn-filled { @apply bg-primary text-on-primary; }
+  .btn-tonal { @apply bg-secondary-container text-on-secondary-container; }
+  .btn-outlined { @apply border border-outline text-primary; }
+  .btn-text { @apply px-3 text-primary; }
+  .btn-elevated { @apply bg-surface-container-lowest text-primary shadow-e1; }
+  .btn-danger { @apply bg-error text-on-error; }
+  .btn-tonal-danger { @apply bg-error-container text-on-error-container; }
+  .btn-accent { @apply bg-tertiary-container text-on-tertiary-container; }
+  .btn-sm { @apply h-8 px-4 text-label-medium; }
+
+  /* Tombol tersegmen (Material 3 segmented button) */
+  .segmented { @apply inline-flex overflow-hidden rounded-full border border-outline; }
+  .segmented button {
+    @apply h-10 flex-1 border-0 bg-transparent px-5 text-label-large text-on-surface-variant
+      transition-colors duration-200 ease-standard hover:bg-surface-container;
+  }
+  .segmented button.selected { @apply bg-secondary-container text-on-secondary-container; }
+
+  .icon-btn {
+    @apply inline-flex size-10 flex-none items-center justify-center rounded-full text-on-surface-variant
+      transition-colors duration-200 ease-standard hover:bg-on-surface/8 disabled:pointer-events-none disabled:opacity-38;
+  }
+
+  /* --- Kartu ------------------------------------------------------------ */
+  /* Kartu metrik: tonal tanpa garis. Panel: outlined. Panel di dalam panel: tonal. */
+  .card { @apply rounded-lg bg-surface-container p-5; }
+  .panel { @apply rounded-lg border border-outline-variant bg-surface-container-lowest p-5; --field-surface: var(--color-surface-container-lowest); }
+  .panel .panel { @apply border-0 bg-surface-container-low; --field-surface: var(--color-surface-container-low); }
+  .panel h2 { @apply mb-4 mt-0 font-display text-title-large text-on-surface; }
+  .panel h3 { @apply mb-3 mt-0 text-title-medium text-on-surface; }
+  /* Jarak antarpanel dan antara judul panel dengan isinya */
+  .panel + .panel, .panel + .note, .note + .panel { @apply mt-5; }
+  .panel .panel + .panel { @apply mt-4; }
+  .panel > .row:first-child { @apply mb-4; }
+  .panel .row > h2, .panel .row > h3 { @apply mb-0; }
+  .panel .cards { @apply my-0; }
+  .panel .cards + p { @apply mt-4; }
+  .formgrid + .role-note, .formgrid + .note, .formgrid + .row { @apply mt-4; }
+  .cards-3 p { @apply mb-0 mt-0.5; }
+  .card-filled { @apply rounded-md bg-surface-container p-5; }
+  .card-elevated { @apply rounded-md bg-surface-container-lowest p-5 shadow-e1; }
+  .card-outlined { @apply rounded-md border border-outline-variant bg-surface-container-lowest p-5; }
+  .card-interactive { @apply cursor-pointer transition-colors duration-200 ease-standard hover:bg-surface-container-high; }
+
+  /* --- Bantuan tata letak -------------------------------------------------- */
+  .row { @apply flex flex-wrap items-center gap-2; }
   .between { @apply justify-between; }
-  .tag { @apply inline-block rounded-full bg-[#eaf0f8] px-[9px] py-1 text-[11px] font-bold text-[#38506d]; }
-  .tag.green { @apply bg-[#e4f7ee] text-[#08764c]; }
-  .tag.orange { @apply bg-[#fff1df] text-[#a65300]; }
-  .tag.red { @apply bg-[#ffebe9] text-[#b42318]; }
-  .panel h2 { @apply mb-3.5 mt-0 text-[17px]; }
-  .panel + .panel { @apply mt-4; }
-  .tablewrap { @apply overflow-auto; }
-  table { @apply w-full min-w-[650px] border-collapse; }
-  th, td { @apply border-b border-kai-line px-2.5 py-3 text-left align-top; }
-  th { @apply bg-slate-50 text-[11px] uppercase tracking-[.5px] text-kai-muted; }
-  tr:last-child td { @apply border-b-0; }
-  .formgrid { @apply grid grid-cols-2 gap-3.5; }
-  .field { @apply flex flex-col gap-1.5; }
-  .field label { @apply text-xs font-bold; }
-  .field input, .field select, .field textarea { @apply w-full rounded-[9px] border border-[#ccd6e4] bg-white p-[11px] text-kai-ink; }
-  .field textarea { @apply min-h-20 resize-y; }
+  .main { @apply min-w-0; }
+  .logo { @apply block h-auto max-h-[38px] w-20 flex-none rounded-[5px] bg-white p-[3px] object-contain; }
+  .top-title-group { @apply flex min-w-0 flex-col gap-0.5; }
+  .top-action svg { @apply size-5 flex-none fill-current; }
+  .top-action { @apply gap-1.5 px-3; }
+
+  /* --- Medan isian (outlined text field Material 3) --------------------------
+     Latar transparan dengan garis 1px. Label mengambang duduk di atas garis dan
+     latar label mengikuti latar bidang sehingga garis terpotong (notch). */
+  .field { @apply relative flex flex-col; }
+  .formgrid { @apply grid grid-cols-2 items-start gap-4; }
   .wide { @apply col-span-full; }
-  .stepbar { @apply mb-[18px] flex flex-wrap gap-2; }
-  .step { @apply rounded-lg bg-[#e7edf6] px-[11px] py-2 text-xs font-bold text-[#51627b]; }
-  .step.on { @apply bg-kai-navy text-white; }
-  .question { @apply my-2.5 rounded-[10px] border border-kai-line p-3.5; }
-  .question .qtitle { @apply mb-2.5 font-semibold; }
-  .choices { @apply flex flex-wrap gap-[15px]; }
-  .choices label { @apply flex items-center gap-1.5 text-xs; }
-  .qmeta { @apply mb-[5px] text-[11px] text-kai-muted; }
-  .progress { @apply h-2 overflow-hidden rounded-full bg-[#e6edf6]; }
-  .progress div { @apply h-full bg-kai-orange; }
-  .hide { @apply hidden!; }
-  .note { @apply my-3 rounded-[10px] border border-[#f5d9a8] bg-[#fff8e9] px-3.5 py-3 text-[#784d0c]; }
-  .success { @apply my-3 rounded-[10px] border border-[#b7e5cd] bg-[#e9f8f0] px-3.5 py-3 text-[#086443]; }
-  .small { @apply text-xs; }
-  .risk { @apply text-[22px] font-extrabold; }
-  .footer { @apply mt-[22px] text-[11px] text-kai-muted; }
-  .empty { @apply p-[30px] text-center text-kai-muted; }
-  .login-overlay { @apply fixed inset-0 z-[1000] flex items-center justify-center bg-[linear-gradient(135deg,#102b55,#165da8)] p-5; }
-  .boot-screen { @apply fixed inset-0 z-[1100] flex items-center justify-center bg-kai-bg p-5; }
-  .boot-card { @apply flex min-w-[220px] flex-col items-center gap-3 rounded-[18px] bg-white px-8 py-7 text-center text-kai-navy shadow-[0_25px_70px_#06162d22]; }
-  .boot-logo { @apply h-auto max-h-[58px] w-[120px] rounded-md bg-white p-1 object-contain; }
-  .boot-card span { @apply text-sm text-kai-muted; }
-  .boot-spinner { @apply size-8 animate-spin rounded-full border-[3px] border-kai-blue/20 border-t-kai-blue; }
-  .login-box { @apply w-full max-w-[460px] rounded-[18px] bg-white p-7 shadow-[0_25px_70px_#06162d55]; }
-  .login-box h1 { @apply my-2 text-2xl; }
-  .login-box p { @apply text-kai-muted; }
-  .login-tabs { @apply my-[18px] flex gap-2; }
-  .login-tabs button { @apply flex-1; }
-  .login-tabs .selected { @apply bg-kai-navy text-white; }
-  .user-pill { @apply flex items-center gap-2; }
-  .role-note { @apply mb-3.5 rounded-[9px] border border-[#c9def8] bg-[#eef5ff] px-3 py-2.5 text-xs text-[#234c7d]; }
   .reviewers { @apply grid grid-cols-2 gap-2.5; }
-  .reviewer-card { @apply rounded-[10px] border border-kai-line p-3; }
-  .login-error { @apply mt-2 text-xs text-[#b42318]; }
-  .role-options { @apply mt-0.5 grid grid-cols-1 gap-2; }
-  .role-option { @apply flex cursor-pointer items-center gap-2.5 rounded-[9px] border border-[#d6e0ee] bg-white px-3 py-2.5 text-sm font-semibold; }
-  .role-option:has(input:checked) { @apply border-kai-blue bg-[#eef5ff] text-kai-navy; }
-  .role-option input { @apply h-[17px] w-[17px] flex-none accent-kai-blue; }
-  .role-help { @apply mt-2 text-xs text-kai-muted; }
-  .password-toggle { @apply absolute right-3 top-1/2 -translate-y-1/2 bg-transparent p-1 text-kai-muted hover:bg-transparent hover:text-kai-navy focus:outline-none focus:ring-2 focus:ring-kai-blue focus:ring-offset-1; }
-  .password-toggle svg { @apply block size-5; }
+  .reviewer-card { @apply rounded-md border border-outline-variant bg-surface-container-lowest p-3; }
+  .field > label {
+    @apply pointer-events-none absolute left-3 top-7 bg-[var(--field-surface)] px-1 text-body-large text-on-surface-variant;
+    transform: translateY(-50%);
+    max-width: calc(100% - 1.5rem);
+    @apply truncate;
+    transition: top 180ms var(--ease-standard), transform 180ms var(--ease-standard),
+      font-size 180ms var(--ease-standard), line-height 180ms var(--ease-standard), color 180ms var(--ease-standard);
+  }
+  .field > input, .field > select, .field > textarea {
+    @apply w-full rounded-xs border border-outline bg-transparent px-4 pb-2 pt-6 text-body-large text-on-surface outline-none
+      transition-[border-color,box-shadow] duration-200 ease-standard;
+  }
+  .field > input, .field > select { @apply h-14; }
+  .field > select {
+    @apply cursor-pointer appearance-none bg-[length:20px] bg-[right_1rem_center] bg-no-repeat pr-12;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23444746' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
+  }
+  .field > select option { @apply bg-white text-on-surface; }
+  .field > input::placeholder, .field > textarea::placeholder { @apply text-transparent; }
+  .field > input:hover, .field > select:hover, .field > textarea:hover { @apply border-on-surface-variant; }
+  .field > input:focus, .field > select:focus, .field > textarea:focus { @apply border-primary; }
+  .field > input:focus + label, .field > textarea:focus + label,
+  .field > input:not(:placeholder-shown) + label, .field > textarea:not(:placeholder-shown) + label,
+  .field > select + label {
+    @apply top-[-8px] text-[12px] font-medium leading-4 text-on-surface-variant;
+    transform: translateY(0);
+  }
+  .field > input:focus + label, .field > textarea:focus + label { @apply text-primary; }
+  .field > select:focus + label { @apply text-primary; }
+  .field > input:disabled, .field > select:disabled, .field > textarea:disabled { @apply cursor-not-allowed opacity-38; }
+  .field > input[type="date"] { @apply pb-1 pt-6; color-scheme: light; }
+  .field > input[type="date"]::-webkit-datetime-edit { @apply text-body-large; }
+  .field > input[type="date"]::-webkit-calendar-picker-indicator { @apply cursor-pointer opacity-60 hover:opacity-100; }
+  .field > input[type="date"]::-webkit-datetime-edit,
+  .field > input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+  .field > input[type="date"]::-webkit-inner-spin-button { background-color: transparent; }
+  .field-hint { @apply mt-1.5 text-body-small text-on-surface-variant; }
+  .field-error > input, .field-error > select, .field-error > textarea { @apply border-error; }
+  .field-error > label { @apply text-error; }
+  .field-error-text { @apply text-error; }
+  /* Varian area teks: label mengambang di atas garis atas kotak. */
+  .field-area > textarea { @apply min-h-28 resize-y; }
+  .field-area > label { @apply top-3 text-body-large; transform: translateY(0); }
+  .field-area > textarea:focus + label,
+  .field-area > textarea:not(:placeholder-shown) + label { @apply top-[-8px] text-[12px] font-medium leading-4 text-on-surface-variant; }
+  .field-area > textarea:focus + label { @apply text-primary; }
+  .field > .field-label { @apply pointer-events-none static max-w-none overflow-visible whitespace-normal bg-transparent p-0 pb-1.5 text-label-large text-on-surface-variant; transform: none; }
+  /* Medan isian dengan tombol mata di dalam (login) */
+  .field > .password-field { @apply relative; }
+  .field > .password-field input {
+    @apply h-14 w-full rounded-xs border border-outline bg-transparent px-4 pb-2 pt-6 text-body-large
+      text-on-surface outline-none transition-[border-color,box-shadow] duration-200 ease-standard;
+  }
+  .field > .password-field input:hover { @apply border-on-surface-variant; }
+  .field > .password-field input:focus { @apply border-primary; }
+  .field:has(.password-field input:focus) > label,
+  .field:has(.password-field input:not(:placeholder-shown)) > label {
+    @apply top-[-8px] text-[12px] font-medium leading-4 text-on-surface-variant;
+    transform: translateY(0);
+  }
+  .field:has(.password-field input:focus) > label { @apply text-primary; }
+
+
+  /* --- Chip -------------------------------------------------------------- */
+  .chip {
+    @apply inline-flex h-8 select-none items-center gap-1.5 rounded-lg border border-outline-variant bg-surface-container-lowest
+      px-3 text-label-medium text-on-surface-variant transition-colors duration-200 ease-standard;
+  }
+  .chip-assist { @apply border-transparent bg-secondary-container text-on-secondary-container; }
+  .chip-filter { @apply border-transparent bg-surface-container-high; }
+  .chip-filter.selected { @apply bg-secondary-container text-on-secondary-container; }
+  .chip-lg { @apply h-10 rounded-lg px-4; }
+
+  /* --- Lencana ----------------------------------------------------------- */
+  .badge {
+    @apply inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-error px-1 text-[10px] font-bold text-on-error;
+  }
+  .tag {
+    @apply inline-flex h-6 items-center gap-1 whitespace-nowrap rounded-md border border-transparent px-2.5 text-label-medium;
+  }
+  .tag-neutral { @apply bg-surface-container-high text-on-surface-variant; }
+  .tag-primary { @apply bg-primary-container text-on-primary-container; }
+  .tag-success { @apply bg-success-container text-on-success-container; }
+  .tag-warning { @apply bg-tertiary-container text-on-tertiary-container; }
+  .tag-error { @apply bg-error-container text-on-error-container; }
+  .tag-outline { @apply border-outline-variant text-on-surface-variant; }
+
+  /* --- Navigasi (rail/drawer) --------------------------------------------- */
+  .app { @apply grid min-h-screen grid-cols-[248px_1fr]; }
+  .side {
+    @apply sticky top-0 flex h-screen flex-col self-start overflow-y-auto bg-rail px-3 py-4 text-on-rail;
+  }
+  .brand { @apply flex items-center gap-3 px-2 pb-3 pt-1; }
+  .brand-logo { @apply block h-auto w-24 flex-none rounded-md bg-white p-1 object-contain; }
+  .brand-text { @apply min-w-0; }
+  .login-box .brand { @apply border-0 p-0; }
+  .login-box .brand strong { @apply text-on-surface; }
+  .login-box .brand small { @apply text-on-surface-variant; }
+  .brand strong { @apply block font-display text-headline-small font-medium leading-none tracking-[0.04em] text-on-rail; }
+  .brand small { @apply block text-body-small leading-snug text-on-rail-variant; }
+  .nav { @apply mt-4 flex flex-col gap-1; }
+  .nav button {
+    @apply flex h-12 w-full items-center gap-3 rounded-full px-4 text-label-large text-on-rail-variant
+      transition-colors duration-200 ease-standard hover:bg-on-surface/8 hover:text-on-rail;
+    text-align: left;
+  }
+  .nav button.active { @apply bg-secondary-container font-medium text-on-secondary-container; }
+  .nav button.is-hidden { @apply hidden!; }
+  /* Ikon Material Symbols Outlined (font ligature). Varian terisi (FILL 1) dipakai pada item aktif. */
+  .msym {
+    font-family: "Material Symbols Outlined"; font-weight: 400; font-style: normal; font-size: 24px; line-height: 1;
+    letter-spacing: normal; text-transform: none; white-space: nowrap; direction: ltr;
+    display: inline-block; width: 1em; height: 1em; overflow: hidden; flex: none; user-select: none;
+    font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; font-variation-settings: "FILL" 0;
+  }
+  .nav-icon, .sheet-icon { font-size: 24px; }
+  .btn-icon { font-size: 18px; }
+  .nav button.active .nav-icon { font-variation-settings: "FILL" 1; }
+  .nav-more { @apply hidden; }
+  .sidefoot { @apply mt-auto px-1 pt-4; }
+  .sidefoot-note { @apply mt-3 px-1.5 text-body-small leading-snug text-on-rail-variant; }
+  .account-avatar {
+    @apply flex size-9 flex-none items-center justify-center rounded-full bg-primary-container text-label-large font-medium text-on-primary-container;
+  }
+
+  /* --- App bar ------------------------------------------------------------ */
+  .top {
+    @apply sticky top-0 z-40 flex h-16 items-center justify-between gap-4 bg-surface px-6;
+  }
+  .top small { @apply text-body-small text-on-surface-variant; }
+  .top-title { @apply truncate font-display text-title-medium font-normal text-on-surface-variant; }
+  .top-actions { @apply flex items-center gap-3; }
+  /* Pengalih bahasa ID | EN */
+  .lang-switch { @apply inline-flex h-8 flex-none overflow-hidden rounded-full border border-outline; }
+  .lang-switch button {
+    @apply h-full min-w-10 px-3 text-label-medium font-medium text-on-surface-variant transition-colors duration-200 ease-standard hover:bg-on-surface/8;
+  }
+  .lang-switch button.selected { @apply bg-secondary-container text-on-secondary-container; }
+  .lang-switch-floating { @apply fixed right-4 top-4 z-[1001]; }
+  .top-avatar {
+    @apply flex size-10 flex-none items-center justify-center rounded-full bg-primary-container text-label-large font-medium text-on-primary-container
+      transition-shadow duration-200 ease-standard hover:shadow-[0_0_0_6px_color-mix(in_srgb,var(--color-on-surface)_8%,transparent)];
+  }
+  /* Konten berada dalam kartu putih membulat di atas latar halaman, seperti Gmail/Drive */
+  .main { @apply flex flex-col; }
+  .content { @apply w-full flex-1 bg-surface-container-lowest p-6; --field-surface: var(--color-surface-container-lowest); }
+  @media (min-width: 901px) {
+    .main { @apply pb-4 pr-4; }
+    .content { @apply rounded-3xl p-8; }
+  }
+
+  /* --- Heading ------------------------------------------------------------ */
+  .heading { @apply mb-6 flex flex-wrap items-start justify-between gap-4; }
+  .heading h1 { @apply mt-0.5; }
+  .heading h1 { @apply m-0 font-display text-headline-small font-normal text-on-surface; }
+  .heading p { @apply mx-0 mb-0 mt-1.5 text-body-medium text-on-surface-variant; }
+  .heading + .cards { @apply mt-0; }
+  .eyebrow { @apply text-label-large text-on-surface-variant; }
+
+  /* --- Table -------------------------------------------------------------- */
+  .tablewrap { @apply overflow-auto rounded-lg border border-outline-variant; }
+  table { @apply w-full min-w-[640px] border-collapse text-left; }
+  th, td { @apply border-b border-outline-variant px-3.5 py-3 align-middle; }
+  th { @apply whitespace-nowrap; }
+  td:last-child { @apply whitespace-nowrap; }
+  table .btn { @apply h-8 px-4 text-label-medium; }
+  table .btn + .btn { @apply ml-1; }
+  table .btn-tonal { @apply border border-outline bg-transparent text-primary; }
+  table .btn-danger { @apply bg-error-container text-on-error-container; }
+  th { @apply bg-surface-container-low text-label-medium font-medium text-on-surface-variant; }
+  tbody tr { @apply transition-colors duration-150 hover:bg-surface-container-low; }
+  tbody tr:last-child td { @apply border-b-0; }
+  table select {
+    @apply h-9 rounded-md border border-outline-variant bg-surface-container-lowest px-2.5 text-body-medium text-on-surface
+      transition-colors duration-200 hover:border-outline focus:border-primary focus:outline-none;
+  }
+  table input[type="text"], table input:not([type]) {
+    @apply h-9 w-full rounded-md border border-outline-variant bg-surface-container-lowest px-2.5 text-body-medium text-on-surface
+      transition-colors duration-200 hover:border-outline focus:border-primary focus:outline-none;
+  }
+
+  /* --- Progress ----------------------------------------------------------- */
+  .progress { @apply h-1 w-full overflow-hidden rounded-full bg-primary/20; }
+  .progress div { @apply h-full rounded-full bg-primary transition-[width] duration-300 ease-emphasized; }
+  .progress.linear-indeterminate div { @apply w-1/3 animate-pulse; }
+
+  /* --- Divider ------------------------------------------------------------ */
+  .divider { @apply h-px w-full bg-outline-variant; }
+
+  /* --- Catatan / banner --------------------------------------------------- */
+  .note {
+    @apply my-3 flex items-start gap-2.5 rounded-lg border-0 bg-surface-container-low px-4 py-3 text-body-medium text-on-surface-variant;
+  }
+  .note strong { @apply text-on-surface; }
+  .note-warning { @apply border-transparent bg-tertiary-container text-on-tertiary-container; }
+  .note-error { @apply border-transparent bg-error-container text-on-error-container; }
+  .note-success { @apply border-transparent bg-success-container text-on-success-container; }
+  .note-info { @apply border-transparent bg-primary-container text-on-primary-container; }
+  .role-note { @apply mb-4 rounded-lg border border-transparent bg-primary-container/50 px-4 py-3 text-body-medium text-on-primary-container; }
+
+  /* --- Snackbar ------------------------------------------------------------ */
+  .snackbar {
+    @apply pointer-events-auto fixed bottom-6 left-1/2 z-[1200] flex min-w-[320px] max-w-[560px] -translate-x-1/2 items-center gap-3
+      rounded-xs bg-inverse-surface px-4 py-3 text-body-medium text-on-inverse-surface shadow-e3;
+    animation: snack-in 250ms var(--ease-emphasized);
+  }
+  .snackbar button { @apply ml-auto flex-none rounded-full px-3 py-1 text-label-large text-inverse-primary hover:bg-white/10; }
+  .snackbar.error { @apply bg-[#601410]; }
+  @keyframes snack-in {
+    from { opacity: 0; transform: translate(-50%, 16px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+
+  /* --- Bottom sheet Material 3 ---------------------------------------------- */
+  .sheet-backdrop {
+    @apply fixed inset-0 z-[1100] flex items-end bg-black/45;
+    animation: fade-in 200ms var(--ease-standard);
+  }
+  .sheet {
+    @apply w-full rounded-t-xl bg-surface-container-low p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-e5;
+    animation: sheet-in 300ms var(--ease-emphasized);
+  }
+  .sheet-handle { @apply mx-auto mb-3 h-1 w-8 rounded-full bg-outline-variant; }
+  .sheet-list { @apply flex flex-col gap-1; }
+  .sheet-item {
+    @apply flex h-14 w-full items-center gap-4 rounded-full bg-transparent px-4 text-left text-body-large text-on-surface
+      transition-colors duration-200 hover:bg-surface-container-high;
+  }
+  .sheet-item .nav-icon, .sheet-icon { font-size: 24px; }
+  .sheet-item.danger { @apply text-error; }
+  .sheet-title { @apply mb-3 px-4 font-display text-title-medium text-on-surface; }
+  .sheet-account { @apply mb-1 flex items-center gap-3 border-b border-outline-variant px-4 pb-3 pt-1; }
+  .sheet-account .account-avatar { @apply size-12 text-title-medium; }
+  .sheet-account-meta { @apply flex min-w-0 flex-col; }
+  .sheet-account-meta b { @apply truncate text-title-small; }
+  .sheet-account-meta small { @apply truncate text-body-small text-on-surface-variant; }
+  @keyframes sheet-in { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  /* Di desktop, sheet bawah menjadi menu popup di dekat tombol akun (pola Google), bukan lembar layar penuh */
+  @media (min-width: 901px) {
+    .sheet-backdrop { @apply items-stretch justify-start bg-transparent; animation: none; }
+    .sheet {
+      @apply absolute right-4 top-[4.25rem] w-72 overflow-hidden rounded-2xl bg-surface-container-low px-0 py-2 shadow-e2;
+      animation: menu-in 160ms var(--ease-standard);
+      transform-origin: top right;
+    }
+    .sheet-handle { @apply hidden; }
+    .sheet-title { @apply mb-1 px-4 pt-2 text-title-small text-on-surface-variant; }
+    .sheet-list { @apply gap-0; }
+    .sheet-item { @apply h-12 gap-3 rounded-none px-4 text-body-medium hover:bg-on-surface/8 focus-visible:bg-on-surface/10; }
+    .sheet-item .nav-icon, .sheet-icon { font-size: 20px; }
+    @keyframes menu-in { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+  }
+
+  /* --- Dialog Material 3 ---------------------------------------------------- */
+  .dialog-backdrop {
+    @apply fixed inset-0 z-[1100] flex items-center justify-center bg-black/45 p-4;
+    animation: fade-in 200ms var(--ease-standard);
+  }
+  .dialog {
+    @apply w-full max-w-[560px] rounded-xl bg-surface-container-lowest p-6 text-on-surface shadow-e3;
+    animation: dialog-in 300ms var(--ease-emphasized);
+    --field-surface: var(--color-surface-container-lowest);
+  }
+  .dialog-form { @apply max-h-[calc(100vh-2rem)] overflow-y-auto; }
+  .auth-links { @apply mt-2 flex justify-end; }
+  .auth-links .btn { @apply px-2; }
+  .mfa-steps { @apply m-0 mt-3 list-decimal space-y-3 pl-5 text-body-medium text-on-surface-variant; }
+  .mfa-steps a { @apply text-primary underline; }
+  .mfa-qr { @apply mx-auto mt-3 w-fit rounded-lg border border-outline-variant bg-white p-2; }
+  .mfa-qr svg { @apply block; }
+  .mfa-secret { @apply my-2 block break-all rounded-lg bg-surface-container px-3 py-2 font-mono text-title-small tracking-widest text-on-surface; }
+  .mfa-codes { @apply m-0 mt-3 grid list-none grid-cols-2 gap-2 p-0; }
+  .mfa-codes code { @apply block rounded-lg bg-surface-container px-3 py-2 text-center font-mono text-body-large tracking-wider text-on-surface; }
+  .mfa-status { @apply flex items-center gap-2; }
+  .mfa-danger { @apply text-error hover:bg-error/8; }
+  .dialog-form .field { @apply mt-4; }
+  .dialog-form h2 + .field { @apply mt-5; }
+  .dialog-icon {
+    @apply mb-3 flex size-11 items-center justify-center rounded-full bg-secondary-container text-on-secondary-container;
+  }
+  .dialog h2 { @apply m-0 font-display text-headline-small font-normal text-on-surface; }
+  .dialog p { @apply mt-3 text-body-medium text-on-surface-variant; }
+  .dialog-actions { @apply mt-5 flex flex-wrap justify-end gap-2; }
+  .dialog-text {
+    @apply mt-3 w-full rounded-xs border border-outline bg-transparent px-3 pb-2 pt-5 text-body-large outline-none;
+  }
+  .dialog-text:focus { @apply border-2 border-primary; }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes dialog-in {
+    from { opacity: 0; transform: scale(0.92) translateY(12px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* --- Question /步骤 -------------------------------------------------------- */
+  .stepbar { @apply mb-5 flex flex-wrap gap-2; }
+  .step {
+    @apply rounded-full bg-surface-container-high px-3.5 py-1.5 text-label-medium text-on-surface-variant;
+  }
+  .step.on { @apply bg-secondary-container text-on-secondary-container; }
+
+  .question { @apply my-3 rounded-md border border-outline-variant bg-surface-container-lowest p-4; }
+  .question .qtitle { @apply mb-3 text-body-large text-on-surface; }
+  .choices { @apply flex flex-wrap gap-x-6 gap-y-2; }
+  .choices label { @apply inline-flex min-h-10 cursor-pointer items-center gap-3 text-body-medium text-on-surface; }
+  .qmeta { @apply mb-1 text-label-medium text-on-surface-variant; }
+
+  /* --- Draft pra-kualifikasi ------------------------------------------------ */
+  .pq-bar { @apply mb-4 rounded-lg border border-outline-variant bg-surface-container-lowest p-5; }
+  .pq-bar-row { @apply mb-3 flex flex-wrap items-center justify-between gap-3; }
+  .pq-pct { @apply font-display text-headline-small tabular-nums text-primary; }
+  .pq-hint { @apply mb-0 mt-3 text-body-small text-on-surface-variant; }
+  .pq-chips { @apply mt-3 flex flex-wrap gap-2; }
+  .pq-chip { @apply h-8 rounded-lg border border-outline-variant bg-surface-container-lowest px-3 text-label-medium text-on-surface-variant hover:bg-surface-container; }
+  .pq-chip b { @apply ml-1 font-medium; }
+  .pq-chip.complete { @apply border-transparent bg-success-container text-on-success-container; }
+  .pq-group { @apply mb-3 overflow-hidden rounded-md border border-outline-variant bg-surface-container-lowest; }
+  .pq-group-head {
+    @apply flex w-full items-center gap-3 bg-transparent px-4 py-4 text-left hover:bg-surface-container focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
+  }
+  .pq-group-caret { @apply relative size-8 flex-none rounded-full text-on-surface-variant transition-transform duration-200; font-size: 0; }
+  .pq-group-caret::before {
+    content: ""; @apply absolute left-1/2 top-1/2 size-[11px] border-b-[2.5px] border-r-[2.5px] border-current;
+    transform: translate(-65%, -50%) rotate(-45deg);
+  }
+  .pq-group-head:hover .pq-group-caret { @apply bg-on-surface/8; }
+  .pq-group-head.open .pq-group-caret { @apply rotate-90; }
+  .pq-group-name { @apply flex-1 font-display text-title-medium text-on-surface; }
+  .pq-group-count { @apply rounded-full bg-surface-container-high px-2.5 py-1 text-label-medium text-on-surface-variant; }
+  .pq-group-count.complete { @apply bg-success-container text-on-success-container; }
+  .pq-group-body { @apply border-t border-outline-variant p-4; }
+  .pq-files { @apply mt-3 flex flex-wrap items-center gap-2; }
+  .pq-fileinput { @apply hidden; }
+  .pq-filebtn {
+    @apply inline-flex h-8 items-center gap-1.5 rounded-full border border-outline px-3.5 text-label-medium text-primary
+      transition-colors duration-200 ease-standard hover:bg-primary/8;
+  }
+  .pq-filelist { @apply flex flex-wrap items-center gap-1.5 text-body-small; }
+  .pq-file { @apply inline-flex items-center gap-1 rounded-xs bg-surface-container-high px-2 py-1 font-medium text-on-surface-variant; }
+  .pq-file a { @apply text-on-surface-variant no-underline hover:text-on-surface hover:underline; }
+  .pq-file.pending { @apply bg-tertiary-container text-on-tertiary-container; }
+  .pq-file em { @apply not-italic opacity-75; }
+  .pq-file-x {
+    @apply inline-flex size-4 flex-none items-center justify-center rounded-full text-[13px] leading-none
+      text-current opacity-60 transition-opacity duration-150 hover:bg-black/10 hover:opacity-100;
+  }
+  .pq-note { @apply mt-3 flex flex-wrap items-center gap-2; }
+  .pq-notetoggle { @apply h-auto bg-transparent px-0 py-0 text-label-large text-primary hover:bg-transparent hover:underline; }
+  .pq-noteinput {
+    @apply w-full max-w-[520px] rounded-xs border border-outline bg-transparent px-3 pb-2 pt-5 text-body-large outline-none transition-colors;
+  }
+  .pq-noteinput:focus { @apply border-2 border-primary; }
+  .pq-actions {
+    @apply sticky bottom-0 z-[30] mt-4 flex flex-wrap items-center justify-between gap-3 rounded-md border border-outline-variant
+      bg-surface-container-lowest/95 p-4 shadow-e2 backdrop-blur;
+  }
+  .pq-actions-info { @apply flex flex-col gap-0.5; }
+  .pq-actions-btns { @apply flex flex-wrap gap-2; }
+  .pq-save-state { @apply text-label-medium text-on-surface-variant; }
+  .pq-save-state.saving { @apply text-primary; }
+  .pq-save-state.error { @apply text-error; }
+  .pq-pending { @apply text-body-small font-medium text-on-tertiary-container; }
+  .pq-resume { @apply mb-4 flex flex-wrap items-center justify-between gap-3 border-l-4 border-l-primary bg-primary-container text-on-primary-container; }
+  .pq-missing { @apply mt-4 flex list-none flex-col gap-2 p-0; }
+  .pq-missing-item {
+    @apply flex flex-col gap-0.5 rounded-md bg-surface-container-lowest px-3 py-2 text-body-small;
+  }
+  .pq-missing-item b { @apply text-label-large text-on-surface; }
+  .pq-missing-item span { @apply text-on-surface-variant; }
+
+  /* --- Login ---------------------------------------------------------------- */
+  .login-overlay {
+    @apply fixed inset-0 z-[1000] flex items-center justify-center bg-surface p-5;
+  }
+  .login-box { @apply w-full max-w-[450px] rounded-[28px] border border-outline-variant bg-surface-container-lowest px-10 pb-10 pt-12; }
+  .login-box .brand { @apply mb-8 justify-center; }
+  .login-box h1 { @apply mb-1; }
+  .login-box h1, .login-box > p, .login-box #authDesc { @apply text-center; }
+  .login-box h1 { @apply m-0 font-display text-headline-small font-normal text-on-surface; }
+  .login-box p { @apply text-body-medium text-on-surface-variant; }
+  .login-tabs { @apply my-5 flex gap-2; }
+  .login-tabs button { @apply flex-1; }
+  .login-tabs .selected { @apply bg-secondary-container text-on-secondary-container; }
+  .login-error { @apply mt-2 text-body-small text-error; }
+  .role-options { @apply mt-1 grid grid-cols-1 gap-2; }
+  .role-option {
+    @apply flex cursor-pointer items-center gap-3 rounded-md border border-outline-variant bg-surface-container-lowest px-3 py-3 text-body-large text-on-surface;
+  }
+  .role-option:has(input:checked) { @apply border-primary bg-primary-container text-on-primary-container; }
+  .role-option input { @apply flex-none; }
+  .role-help { @apply mt-2 text-body-small text-on-surface-variant; }
   .password-field { @apply relative; }
-  .password-field input { @apply pr-11; }
-  .button-spinner { @apply mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white align-[-3px]; }
-  .skeleton { @apply animate-pulse rounded-lg bg-slate-200; }
-  .skeleton-page { @apply space-y-5; }
+  .password-toggle {
+    @apply absolute right-3 top-1/2 bg-transparent p-1 text-on-surface-variant hover:bg-transparent hover:text-on-surface;
+    transform: translateY(-50%);
+  }
+  .password-toggle .msym { font-size: 20px; }
+  .button-spinner { @apply mr-2 inline-block size-4 animate-spin rounded-full border-2 border-white/40 border-t-white; }
+
+  /* --- Boot ------------------------------------------------------------------ */
+  .boot-screen { @apply fixed inset-0 z-[1100] flex items-center justify-center bg-surface p-5; }
+  .boot-card { @apply flex min-w-[240px] flex-col items-center gap-3 rounded-xl bg-surface-container-lowest px-8 py-7 text-center shadow-e2; }
+  .boot-logo { @apply h-auto w-28 rounded-md bg-white p-1 object-contain; }
+  .boot-card span { @apply text-body-medium text-on-surface-variant; }
+  .boot-card strong { @apply font-display text-headline-small font-medium tracking-[0.04em] text-on-surface; }
+  .boot-card small { @apply -mt-2 text-label-medium tracking-widest text-on-surface-variant; }
+  .boot-spinner { @apply size-8 animate-spin rounded-full border-[3px] border-primary/20 border-t-primary; }
+
+  /* --- Metrik ---------------------------------------------------------------- */
+  .cards { @apply my-5 grid grid-cols-2 gap-3.5 lg:grid-cols-4; }
+  .cards-3 { @apply grid-cols-1 sm:grid-cols-3 lg:grid-cols-3; }
+  .card-metric { @apply rounded-md border border-outline-variant bg-surface-container-lowest p-5; }
+  .metric { @apply my-1 font-display text-headline-medium tabular-nums text-on-surface; }
+  .muted { @apply text-on-surface-variant; }
+  .small { @apply text-body-small; }
+  .risk { @apply text-headline-small text-on-surface; }
+  .empty { @apply rounded-lg bg-surface-container-low px-6 py-10 text-center text-body-medium text-on-surface-variant; }
+  .panel .panel .empty { @apply bg-surface-container-lowest; }
+  .footer { @apply mt-5 text-body-small text-on-surface-variant; }
+  .skeleton { @apply animate-pulse rounded-sm bg-surface-container-high; }
+  .skeleton-page { @apply space-y-5 overflow-hidden; }
+  .skeleton-page .space-y-3 { @apply min-w-0 max-w-full; }
+  .hide { @apply hidden!; }
+  .m3-display { @apply font-display; font-optical-sizing: auto; }
+  .code { @apply font-mono; font-size: 0.9em; letter-spacing: 0; }
+  .num { @apply tabular-nums; }
+
+  /* --- Pencarian dan filter daftar -------------------------------------------- */
+  .toolbar { @apply mb-4 flex flex-wrap items-center gap-3; }
+  .search { @apply relative block min-w-[240px] flex-1; }
+  .search .msym { @apply pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant; }
+  .search input {
+    @apply h-12 w-full rounded-full border-0 bg-surface-container pl-14 pr-5 text-body-large text-on-surface outline-none
+      transition-[background-color,box-shadow] duration-200 ease-standard placeholder:text-on-surface-variant;
+  }
+  .search input:focus { @apply bg-surface-container-lowest shadow-e2; }
+  .chips { @apply flex flex-wrap gap-2; }
+
+  /* --- Indikator proses berjalan (bar tipis di tepi atas) ------------------------ */
+  .top-progress { @apply pointer-events-none fixed inset-x-0 top-0 z-[1300] hidden h-1 overflow-hidden bg-primary/20; }
+  .is-busy .top-progress { @apply block; animation: fade-in 150ms 250ms both; }
+  .is-busy { cursor: progress; }
+  .top-progress div { @apply h-full w-2/5 rounded-full bg-primary; animation: progress-slide 1.1s var(--ease-standard) infinite; }
+  @keyframes progress-slide { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+
+  /* --- Lencana status pada tabel ---------------------------------------------- */
+  .status-dot { @apply inline-block size-2 rounded-full; }
 }
 
-@media (max-width: 900px) {
-  .app { @apply grid-cols-1; }.side { @apply p-3; }.brand { @apply pb-3; }.nav { @apply mt-2 flex overflow-auto; }.nav button { @apply w-auto whitespace-nowrap; }.sidefoot { @apply hidden; }.cards { @apply grid-cols-2; }.content { @apply p-4; }.top { @apply px-4; }
-}
-@media (max-width: 540px) {
-  .cards, .formgrid, .reviewers { @apply grid-cols-1; }.heading { @apply block; }.heading button { @apply mt-3; }.wide { @apply col-auto; }
-}
-
-/* Print-specific certificate layout: fixed physical dimensions are required for A4 output. */
+/* ==========================================================================
+   Sertifikat cetak — tetap formal, memakai token M3
+   ========================================================================== */
 @layer components {
-  .cert-actions { @apply my-3 flex flex-wrap gap-2; }
-  .certificate { @apply relative mt-4 min-h-[540px] overflow-hidden rounded border-2 border-[#173b70] bg-white px-12 pb-7 pt-[34px] text-center text-kai-ink shadow-[0_8px_24px_#102b5512]; outline: 1px solid #e8a24b; outline-offset: -9px; }
+  .cert-actions { @apply my-4 flex flex-wrap gap-2; }
+  .certificate {
+    @apply relative mt-4 min-h-[540px] overflow-hidden rounded-md border-2 border-[#173b70] bg-white px-12 pb-7 pt-9 text-center text-on-surface shadow-e2;
+    outline: 1px solid #e8a24b;
+    outline-offset: -9px;
+  }
   .certificate::before, .certificate::after { content: ""; @apply pointer-events-none absolute size-[180px] rounded-full border border-[#dce7f5]; }
-  .certificate::before { @apply -left-20 -top-28; }.certificate::after { @apply -bottom-[120px] -right-20; }
-  .cert-topline { @apply absolute inset-x-0 top-0 h-[7px] bg-[linear-gradient(90deg,#165da8_0_70%,#f58220_70%)]; }
-  .cert-logo { @apply mx-auto mb-2.5 block h-auto max-h-[66px] w-[150px] object-contain; }
-  .cert-org { @apply mb-[18px] mt-0 text-[11px] font-extrabold uppercase tracking-[2px] text-kai-blue; }
-  .cert-title { @apply my-2 text-[29px] font-extrabold leading-[1.2] tracking-[1px] text-kai-navy; }
-  .cert-subtitle { @apply mb-6 mt-0 text-xs font-extrabold uppercase tracking-[3px] text-[#a85a12]; }
-  .cert-rule { @apply mx-auto my-[18px] h-0.5 w-[130px] bg-kai-orange; }
-  .cert-award { @apply m-0 text-sm text-[#53647d]; }
-  .cert-vendor { @apply mx-auto mb-1 mt-2 max-w-[90%] [overflow-wrap:anywhere] text-[29px] font-extrabold text-kai-navy; }
-  .cert-scope { @apply my-3 text-sm; }
-  .cert-score { @apply inline-block rounded-lg border border-[#d7e3f2] bg-[#f5f8fc] px-7 py-2.5 text-[27px] font-extrabold tracking-[.5px] text-kai-navy; }
-  .cert-status { @apply mx-auto mt-2 table rounded-full px-[15px] py-[5px] text-xs font-extrabold; }
-  .cert-meta { @apply my-[22px] flex flex-wrap justify-center gap-7 text-[11px] text-[#52647c]; }.cert-meta b { @apply text-kai-navy; }
-  .cert-validity { @apply mx-auto my-2 max-w-[650px] text-[11px] text-kai-muted; }
-  .cert-signatures { @apply mx-[4%] mb-0 mt-7 flex justify-between gap-[30px] text-center text-[11px] text-[#52647c]; }
-  .cert-sign { @apply w-[220px] border-t border-[#a8b7ca] pt-[7px]; }.cert-sign strong { @apply mb-[3px] block text-xs text-kai-navy; }
+  .certificate::before { @apply -left-20 -top-28; }
+  .certificate::after { @apply -bottom-[120px] -right-20; }
+  .cert-topline { @apply absolute inset-x-0 top-0 h-[7px] bg-[linear-gradient(90deg,#0b57a4_0_70%,#f58220_70%)]; }
+  .cert-logo { @apply mx-auto mb-3 block h-auto max-h-[66px] w-[150px] object-contain; }
+  .cert-org { @apply mb-4 mt-0 text-label-medium font-medium uppercase tracking-[2px] text-primary; }
+  .cert-title { @apply my-2 font-display text-headline-medium font-medium leading-tight tracking-[1px] text-[#0b1f3d]; }
+  .cert-subtitle { @apply mb-6 mt-0 text-label-medium font-medium uppercase tracking-[3px] text-on-tertiary-container; }
+  .cert-rule { @apply mx-auto my-4 h-0.5 w-[130px] bg-tertiary; }
+  .cert-award { @apply m-0 text-body-large text-on-surface-variant; }
+  .cert-vendor { @apply mx-auto mb-1 mt-2 max-w-[90%] break-words font-display text-headline-medium font-medium text-[#0b1f3d]; }
+  .cert-scope { @apply my-3 text-body-medium; }
+  .cert-score { @apply inline-block rounded-md border border-outline-variant bg-surface-container-low px-7 py-2.5 font-display text-headline-small font-medium tabular-nums text-primary; }
+  .cert-status { @apply mx-auto mt-2 table rounded-full px-4 py-1.5 text-label-large font-medium; }
+  .cert-meta { @apply my-6 flex flex-wrap justify-center gap-7 text-body-small text-on-surface-variant; }
+  .cert-meta b { @apply font-mono text-on-surface; }
+  .cert-validity { @apply mx-auto my-2 max-w-[650px] text-body-small text-on-surface-variant; }
+  .cert-signatures { @apply mx-[4%] mb-0 mt-7 flex justify-between gap-[30px] text-center text-body-small text-on-surface-variant; }
+  .cert-sign { @apply w-[220px] border-t border-outline pt-2; }
+  .cert-sign strong { @apply mb-1 block text-label-large text-on-surface; }
 }
 
 @page { size: A4 landscape; margin: 10mm; }
@@ -154,4 +773,66 @@
   #certPreview .cert-actions, #certPreview button { display: none !important; visibility: hidden !important; }
   #certPreview .cert-logo { width: 140px !important; max-height: 58px !important; }
   #certPreview .cert-title { font-size: 27px !important; }.cert-vendor { font-size: 26px !important; }.cert-signatures { margin-top: 23px !important; }
+}
+
+/* ==========================================================================
+   Responsif: navigasi bawah Material 3 untuk layar kecil
+   ========================================================================== */
+@media (max-width: 900px) {
+  .app { @apply grid-cols-1 grid-rows-[auto_1fr]; }
+  .side { @apply static flex h-auto flex-row items-center justify-between gap-3 overflow-visible bg-surface p-3; }
+  .sidefoot { @apply mt-0 p-0; }
+  .sidefoot-note { @apply hidden; }
+  .brand { @apply border-0 pb-0; }
+  .brand small { @apply hidden; }
+  .sidefoot { @apply hidden; }
+
+  /* Navigasi bawah Material 3 */
+  .nav {
+    @apply fixed inset-x-0 bottom-0 z-[60] mt-0 flex-row items-stretch justify-around gap-0
+      border-0 bg-surface-container px-1 pb-[env(safe-area-inset-bottom)] pt-1;
+  }
+  .nav button {
+    @apply relative h-auto min-h-16 w-auto min-w-0 flex-1 flex-col items-center justify-start gap-1.5 rounded-xl px-1 pb-2 pt-[10px]
+      text-center text-[11px] font-medium leading-tight text-on-surface-variant;
+  }
+  .nav button:hover { @apply bg-transparent text-on-surface; }
+  .nav button:focus-visible { outline-offset: -2px; }
+  .nav button.active { @apply bg-transparent text-on-surface; }
+  .nav button::before {
+    content: "";
+    @apply absolute left-1/2 top-1.5 h-8 w-16 -translate-x-1/2 scale-x-50 rounded-full bg-secondary-container opacity-0
+      transition-[opacity,transform] duration-200 ease-standard;
+  }
+  .nav button.active::before { @apply scale-x-100 opacity-100; }
+  .nav button.active .nav-icon { @apply text-on-secondary-container; }
+  .nav button .nav-icon, .nav button span { @apply relative; }
+  .nav-icon { @apply size-6; }
+  .content { @apply p-4 pb-24; }
+
+  .top { @apply h-14 gap-2 px-4; }
+  .top small { @apply hidden; }
+  .top-title { @apply truncate text-title-medium; }
+  .top-action { @apply size-10 px-0; }
+  .top-action span { @apply hidden; }
+  .top .tag { @apply hidden; }
+  .nav-more { @apply flex; }
+}
+@media (max-width: 540px) {
+  .formgrid, .reviewers { @apply grid-cols-1; }
+  .cards { @apply grid-cols-2 gap-2.5; }
+  .cards[style] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .cards-3 { @apply grid-cols-1; }
+  .card, .panel { @apply p-4; }
+  .metric { @apply text-headline-small; }
+  td:first-child { @apply min-w-44; }
+  .heading { @apply block; }
+  .heading button { @apply mt-3 w-full; }
+  .wide { @apply col-auto; }
+  .top { @apply h-auto min-h-14 flex-wrap py-2; }
+  .btn { @apply px-4; }
+  .pq-actions { @apply flex-col items-stretch; }
+  .pq-actions-btns { @apply flex-col; }
+  .pq-actions-btns .btn { @apply w-full; }
+  .snackbar { @apply bottom-4 w-[calc(100%-2rem)] min-w-0; }
 }

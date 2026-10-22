@@ -2,10 +2,21 @@
   "private": true,
   "scripts": {
     "build:css": "npx @tailwindcss/cli -i ./resources/css/portal.css -o ./public/assets/portal.css --minify",
-    "watch:css": "npx @tailwindcss/cli -i ./resources/css/portal.css -o ./public/assets/portal.css --watch"
+    "watch:css": "npx @tailwindcss/cli -i ./resources/css/portal.css -o ./public/assets/portal.css --watch",
+    "format": "prettier --write public/assets/portal.js public/assets/i18n.js eslint.config.js playwright.config.js e2e",
+    "format:check": "prettier --check public/assets/portal.js public/assets/i18n.js eslint.config.js playwright.config.js e2e",
+    "lint": "eslint .",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/cli": "^4.1.0",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0",
+    "jsqr": "^1.4.0",
+    "prettier": "^3.9.10",
     "tailwindcss": "^4.1.0"
-  }
+  },
+  "type": "module"
 }

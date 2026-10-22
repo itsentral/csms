@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RchsemsApplication;
 use App\Models\User;
+use App\Models\VendorProfile;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -13,13 +14,14 @@ class DashboardController extends Controller
         $user = $request->user();
         $query = RchsemsApplication::with('vendor.user')->latest();
         if ($user->hasRole('vendor')) {
-            $query->whereHas('vendor', fn($q) => $q->where('user_id', $user->id));
+            $query->whereHas('vendor', fn ($q) => $q->where('user_id', $user->id));
         }
+
         return view('dashboard', [
-            'applications'=>$query->take(20)->get(),
-            'vendorCount'=>\App\Models\VendorProfile::count(),
-            'applicationCount'=>RchsemsApplication::count(),
-            'internalCount'=>User::whereHas('roles', fn($q)=>$q->whereIn('slug',['verifikator','validator','pengadaan']))->count()
+            'applications' => $query->take(20)->get(),
+            'vendorCount' => VendorProfile::count(),
+            'applicationCount' => RchsemsApplication::count(),
+            'internalCount' => User::whereHas('roles', fn ($q) => $q->whereIn('slug', ['verifikator', 'validator', 'pengadaan']))->count(),
         ]);
     }
 }

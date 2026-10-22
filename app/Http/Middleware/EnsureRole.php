@@ -11,15 +11,16 @@ class EnsureRole
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         $user = $request->user();
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('login');
         }
         if ($user->hasRole('admin')) {
             return $next($request);
         }
-        if (!$user->hasAnyRole($roles)) {
+        if (! $user->hasAnyRole($roles)) {
             abort(403, 'Anda tidak memiliki kewenangan untuk mengakses menu ini.');
         }
+
         return $next($request);
     }
 }

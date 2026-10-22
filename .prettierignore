@@ -1,0 +1,9 @@
+node_modules
+vendor
+storage
+public/build
+public/assets/portal.css
+public/assets/fonts
+composer.lock
+package-lock.json
+*.md
