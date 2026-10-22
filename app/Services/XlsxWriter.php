@@ -81,7 +81,7 @@ class XlsxWriter
             $s = chr(65 + ($i - 1) % 26).$s;
         }
 
-return $s;
+        return $s;
     }
 
     private static function esc(string $s): string
@@ -91,6 +91,6 @@ return $s;
 
     private static function sheetName(string $n): string
     {
-        return mb_substr(preg_replace('/[\[\]\*\?\/\\\\:]/','',$n), 0, 31) ?: 'Sheet';
+        return mb_substr(preg_replace('/[\[\]\*\?\/\\\\:]/', '', $n), 0, 31) ?: 'Sheet';
     }
 }

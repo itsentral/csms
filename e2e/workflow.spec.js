@@ -61,4 +61,6 @@ test('pengadaan melihat hasil dan pratinjau sertifikat', async ({ page }) => {
   await page.click('[data-click="previewCert"]');
   await expect(page.locator('.certificate')).toContainText('SERTIFIKAT HASIL PENILAIAN');
   await expect(page.locator('.certificate')).toContainText('PT Vendor Contoh');
+  await expect(page.locator('.cert-score')).toHaveText(/^100\s*\/ 100$/); // skor bulat tanpa desimal
+  await expect(page.locator('.cert-meta')).toContainText('Oktober 2026');
 });

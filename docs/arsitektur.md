@@ -4,7 +4,7 @@ Ringkasan struktur source, database, sistem desain, internasionalisasi, dan pemb
 
 ## Gambaran umum
 
-Aplikasi satu halaman (SPA) tanpa build frontend. `/` menyajikan view `portal`; seluruh interaksi memakai JSON API `/api/*` (26 route) yang dipanggil `public/assets/portal.js` dengan JavaScript biasa. Controller tipis; aturan bisnis ada di `app/Services` dan validasi di `app/Http/Requests`. Peran disimpan sebagai kolom JSON `users.roles`; `User::hasRole()` selalu bernilai benar untuk admin.
+Aplikasi satu halaman (SPA) dengan JavaScript biasa (tanpa framework). `/` menyajikan view `portal`; seluruh interaksi memakai JSON API `/api/*` (26 route) yang dipanggil `portal.js`. Sumber JavaScript ada di `resources/js` dan diminifikasi dengan esbuild ke `public/assets` (hasilnya ikut di-commit, server tidak menjalankan Node.js). Controller tipis; aturan bisnis ada di `app/Services` dan validasi di `app/Http/Requests`. Peran disimpan sebagai kolom JSON `users.roles`; `User::hasRole()` selalu bernilai benar untuk admin.
 
 ## Struktur source
 
@@ -16,6 +16,7 @@ Aplikasi satu halaman (SPA) tanpa build frontend. `/` menyajikan view `portal`; 
 | `app/Http/Controllers/MfaController.php` | Langkah kedua login, penyiapan 2FA, kode pemulihan, dan reset oleh admin |
 | `app/Http/Requests` | Form Request: aturan validasi dan otorisasi peran (dijalankan sebelum validasi) |
 | `app/Services/VendorService.php`, `AssessmentService.php`, `EvidenceService.php`, `PortalState.php` | Transisi status dengan `lockForUpdate`, penilaian, lampiran, dan data yang dimuat klien |
+| `app/Enums/VendorStatus.php` | Satu-satunya definisi status vendor (`editable()`, `map()`); dikirim ke klien lewat `/api/state` |
 | `app/Services/Totp.php` | TOTP (RFC 6238) tanpa dependensi |
 | `app/Notifications/VendorStatusChanged.php` | Email perubahan status vendor |
 | `config/rchsems.php` | `MFA_REQUIRED`, `NOTIFY_EMAIL`, masa berlaku login 2FA |
@@ -27,10 +28,10 @@ Aplikasi satu halaman (SPA) tanpa build frontend. `/` menyajikan view `portal`; 
 | `app/Console/Commands/CreateAdmin.php` | `rchsems:create-admin` |
 | `resources/views/portal.blade.php` | Kerangka HTML, layar login, dan token CSRF |
 | `resources/css/portal.css` | Sumber token dan komponen (Tailwind v4) |
-| `public/assets/portal.js` | Logika antarmuka |
-| `public/assets/i18n.js` | Penerjemah ID/EN |
-| `public/assets/qr.js` | Pembuat kode QR (mode byte, versi 1-10, koreksi L/M) tanpa dependensi; `QR.svg(teks)` |
-| `public/assets/portal.css` | Hasil build CSS (ikut di-commit) |
+| `resources/js/portal.js` | Logika antarmuka (sumber) |
+| `resources/js/i18n.js` | Penerjemah ID/EN (sumber) |
+| `resources/js/qr.js` | Pembuat kode QR (mode byte, versi 1-10, koreksi L/M) tanpa dependensi; `QR.svg(teks)` (sumber) |
+| `public/assets/portal.js`, `i18n.js`, `qr.js`, `portal.css` | Hasil build (minifikasi); ikut di-commit dan **jangan diedit langsung** |
 | `public/assets/fonts/` | Font Google Sans dan subset Material Symbols Outlined (self-hosted) |
 | `lang/id/validation.php`, `lang/en/validation.php` | Pesan dan nama atribut validasi Laravel per bahasa |
 | `database/migrations`, `database/seeders`, `database/data` | Skema, seeder, dan master pertanyaan |
@@ -53,7 +54,7 @@ Tabel aktif: `users` (kolom `roles` JSON dan `active`), `questions`, `vendors`, 
 - Status vendor disimpan sebagai teks Indonesia (misalnya `Menunggu Verifikasi Dokumen`); nilai ini adalah data, bukan label tampilan, dan tidak diterjemahkan di server.
 - Audit log (`audit_logs`) dapat diperiksa lewat database; tidak ada menu audit di antarmuka.
 
-**Master pertanyaan** harus konsisten dengan frontend: `database/data/questions.json` (sumber seeder) dan konstanta `groups` di `portal.js` berasal dari sumber yang sama. Jangan mengubah bobot atau menimpa master pada database yang berjalan tanpa migrasi versi instrumen. `QuestionSeeder` idempoten dan tidak menimpa data yang ada. Total bobot (565) dihitung dari tabel `questions`, bukan konstanta.
+**Satu sumber untuk pertanyaan dan status.** `database/data/questions.json` (teks Indonesia dan English, kelompok, bobot) adalah master yang di-seed ke tabel `questions`. `/api/state` mengirim daftar pertanyaan (`questions`) dan konstanta status (`statuses`, dari `VendorStatus`) ke klien; `portal.js` membangun kelompok pertanyaan dari data itu dan mendaftarkan terjemahan English lewat `I18N.extend()`, tanpa salinan di JavaScript. Menambah atau mengubah pertanyaan cukup lewat master dan seeder. Jangan mengubah bobot atau menimpa master pada database yang berjalan tanpa migrasi versi instrumen. `QuestionSeeder` idempoten dan tidak menimpa data yang ada. Total bobot (565) dihitung dari tabel `questions`, bukan konstanta.
 
 ## Sistem desain Material 3
 
@@ -70,14 +71,17 @@ Antarmuka mengikuti Material Design 3 dengan palet gaya Google (Gmail/Drive). To
 | Dialog | Tidak ada `alert`/`confirm`/`prompt` bawaan browser. Gunakan `m3Dialog`, `m3Confirm`, dan `m3Snackbar`; isi berformat memakai `bodyHtml`, teks biasa memakai `body` (di-escape otomatis) |
 | Navigasi responsif | Di bawah 900 px, navigasi samping menjadi navigation bar bawah dengan maksimal empat tujuan langsung dan sisanya di lembar **Lainnya** |
 
-Build ulang CSS hanya diperlukan bila `resources/css/portal.css` diubah:
+Build ulang diperlukan bila `resources/css/portal.css` atau `resources/js/*.js` diubah:
 
 ```bash
 npm install
-npm run build:css
+npm run build        # build:css (Tailwind) + build:js (esbuild --minify)
+npm run watch:css    # opsional, saat mengembangkan
 ```
 
-Hasilnya (`public/assets/portal.css`) wajib ikut di-commit karena server tidak menjalankan Node.js.
+Hasilnya (`public/assets/portal.css`, `portal.js`, `i18n.js`, `qr.js`) wajib ikut di-commit karena server tidak menjalankan Node.js; CI gagal bila hasil build tidak sesuai sumber. esbuild tidak menggabungkan berkas dan nama fungsi tingkat atas tetap utuh, karena dipanggil lewat atribut `data-click`/`data-change`.
+
+**Format skor:** `fmtScore()` di `portal.js` menampilkan skor dengan format seragam (bilangan bulat tanpa desimal, selain itu maksimal dua desimal, mengikuti bahasa antarmuka) dan memotong, bukan membulatkan, agar skor tidak tampak melewati batas kategori risiko.
 
 ## Internasionalisasi (ID | EN)
 
@@ -103,8 +107,10 @@ Prinsipnya hanya tampilan yang diterjemahkan: nilai data (status, opsi `<option>
 | ---- | -------- | ------ |
 | Pint | `composer lint` / `composer format` | Gaya kode PHP (preset Laravel, `pint.json`) |
 | ESLint | `npm run lint` | Mutu JavaScript (`eslint.config.js`; fungsi tingkat atas dipanggil lewat `data-click`, jadi tidak dianggap tak terpakai) |
-| Prettier | `npm run format` / `format:check` | Format `portal.js`, `i18n.js`, dan berkas e2e (`.prettierrc.json`) |
-| Playwright | `npm run test:e2e` | Smoke test browser di `e2e/` (lihat [pengujian.md](pengujian.md)) |
+| Prettier | `npm run format` / `format:check` | Format `resources/js`, konfigurasi, dan berkas e2e (`.prettierrc.json`) |
+| esbuild | `npm run build:js` | Minifikasi JavaScript ke `public/assets` |
+| Playwright + axe-core | `npm run test:e2e` | Smoke test browser dan audit aksesibilitas di `e2e/` (lihat [pengujian.md](pengujian.md)) |
+| GitHub Actions | `.github/workflows/ci.yml` | Lint, test, build, audit, dan e2e pada setiap push dan pull request |
 
 ## Pembatasan laju
 

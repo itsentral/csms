@@ -28,7 +28,7 @@ Untuk backup yang benar-benar satu titik waktu, jalankan `php artisan down` sela
 3. Jalankan `bash deploy/update.sh`. Script ini lebih dulu menjalankan `php artisan down`, lalu `composer install --no-dev`, `migrate --force`, `db:seed --force` (idempoten, tidak menimpa data), membersihkan dan membuat ulang cache, lalu `php artisan up`. Script tidak menjalankan `migrate:fresh` dan tidak menghapus data.
 4. Jika script gagal, aplikasi **tetap dalam mode maintenance** agar operator dapat memperbaiki atau memulihkan backup sebelum `php artisan up`.
 
-Hasil build `public/assets/portal.css` dan `i18n.js` sudah ikut di repo; server tidak perlu Node.js.
+Hasil build `public/assets/` (CSS dan JavaScript) sudah ikut di repo; server tidak perlu Node.js.
 
 ## Restore
 

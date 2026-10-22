@@ -47,7 +47,7 @@ class BasicSecurityTest extends TestCase
         $res = $this->get('/')->assertOk();
         $this->assertStringContainsString("script-src 'self';", $res->headers->get('Content-Security-Policy'));
         $this->assertStringNotContainsString("'unsafe-inline'", explode('style-src', $res->headers->get('Content-Security-Policy'))[0]);
-        foreach ([resource_path('views/portal.blade.php'), public_path('assets/portal.js'), public_path('assets/i18n.js'), public_path('assets/qr.js')] as $file) {
+        foreach ([resource_path('views/portal.blade.php'), resource_path('js/portal.js'), resource_path('js/i18n.js'), resource_path('js/qr.js')] as $file) {
             $this->assertSame(0, preg_match('/\son(?:click|change|input|submit|keydown|keyup|load|error)\s*=\s*["\']/i', preg_replace('/data:image\/[^"\'`]+/', '', file_get_contents($file))), $file.' memakai handler inline, yang diblokir CSP.');
         }
         $this->assertSame(0, preg_match('/<script(?![^>]*\ssrc=)[^>]*>/i', file_get_contents(resource_path('views/portal.blade.php'))), 'portal.blade.php memuat skrip inline.');

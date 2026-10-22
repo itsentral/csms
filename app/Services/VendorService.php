@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\VendorStatus;
 use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -12,17 +13,15 @@ use Illuminate\Support\Str;
 /** Profil, jawaban, pengiriman, dan penghapusan vendor. Setiap perubahan mengunci barisnya (lockForUpdate). */
 class VendorService
 {
-    public const EDITABLE = ['Menunggu Pengisian', 'Perlu Perbaikan'];
-
     public function saveProfile(User $user, ?Vendor $vendor, array $data): array
     {
         return DB::transaction(function () use ($user, $vendor, $data) {
             if ($vendor) {
                 $vendor = Vendor::whereKey($vendor->id)->lockForUpdate()->firstOrFail();
                 Portal::authorize($user, $vendor);
-                abort_unless(in_array($vendor->status, self::EDITABLE), 409, __('portal.profile_locked'));
+                abort_unless(in_array($vendor->status, VendorStatus::editable()), 409, __('portal.profile_locked'));
             } else {
-                $vendor = new Vendor(['id' => 'RCH-'.date('Y').'-'.Str::upper(Str::random(12)), 'owner_id' => $user->id, 'status' => 'Menunggu Pengisian']);
+                $vendor = new Vendor(['id' => 'RCH-'.date('Y').'-'.Str::upper(Str::random(12)), 'owner_id' => $user->id, 'status' => VendorStatus::AwaitingFill->value]);
             }
             $vendor->fill(array_map(fn ($x) => $x ?? '', $data));
             $vendor->save();
@@ -36,7 +35,7 @@ class VendorService
     {
         return DB::transaction(function () use ($vendor, $answers) {
             $v = $this->lock($vendor);
-            abort_unless(in_array($v->status, self::EDITABLE), 409, __('portal.submission_locked'));
+            abort_unless(in_array($v->status, VendorStatus::editable()), 409, __('portal.submission_locked'));
             $rows = [];
             foreach ($answers as $a) {
                 $rows[] = ['vendor_id' => $v->id, 'question_id' => $a['question_id'], 'answer' => $a['answer'] ?? '', 'note' => $a['note'] ?? '', 'updated_at' => now(), 'created_at' => now()];
@@ -54,7 +53,7 @@ class VendorService
     {
         $out = DB::transaction(function () use ($vendor) {
             $v = $this->lock($vendor);
-            abort_unless(in_array($v->status, self::EDITABLE), 409, __('portal.submission_locked'));
+            abort_unless(in_array($v->status, VendorStatus::editable()), 409, __('portal.submission_locked'));
             $total = DB::table('questions')->count();
             $answered = $this->answeredCount($v->id);
             if ($answered !== $total) {
@@ -63,11 +62,11 @@ class VendorService
                 throw new HttpResponseException(response()->json(['message' => __('portal.incomplete', ['total' => $total]), 'missing' => $missing, 'answered' => $answered, 'total' => $total], 422));
             }
             // Pengiriman ulang setelah perbaikan memulai putaran penilaian baru; skor lama tetap ada di audit log.
-            if ($v->status === 'Perlu Perbaikan') {
+            if ($v->status === VendorStatus::NeedsRevision->value) {
                 Portal::audit('previous_round_archived', $v->id, Portal::serialize($v));
                 DB::table('assessments')->where('vendor_id', $v->id)->delete();
             }
-            $v->update(['status' => 'Menunggu Verifikasi Dokumen', 'draft_saved_at' => now()]);
+            $v->update(['status' => VendorStatus::AwaitingVerification->value, 'draft_saved_at' => now()]);
             Portal::audit('questionnaire_submitted', $v->id);
 
             return [$v, Portal::serialize($v)];

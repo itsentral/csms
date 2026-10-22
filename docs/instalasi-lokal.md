@@ -6,7 +6,7 @@ Panduan ini untuk menjalankan aplikasi di komputer developer. Untuk server produ
 
 - PHP **8.3+**, Composer 2, MySQL **8.0+**.
 - Ekstensi PHP: ctype, curl, dom, fileinfo, filter, hash, mbstring, openssl, pcre, PDO, pdo_mysql, session, tokenizer, xml, **zip** (dipakai untuk ekspor Excel). `pdo_sqlite` hanya untuk menjalankan test.
-- Node.js **tidak** diperlukan untuk menjalankan aplikasi; hanya untuk membangun ulang CSS (lihat [arsitektur.md](arsitektur.md#sistem-desain-material-3)).
+- Node.js **tidak** diperlukan untuk menjalankan aplikasi; hanya untuk membangun ulang CSS/JavaScript dan menjalankan test browser (lihat [arsitektur.md](arsitektur.md#sistem-desain-material-3)).
 
 Rujukan resmi: [Laravel 13 Releases](https://laravel.com/docs/13.x/releases) dan [Deployment](https://laravel.com/docs/13.x/deployment). Versi framework yang terpasang tercatat di `composer.lock`.
 

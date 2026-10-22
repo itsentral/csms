@@ -2,7 +2,7 @@
 
 /* ==========================================================================
    Material Design 3 — token dasar
-   Palet diturunkan dari warna merek PT KAI (biru #165DA8, oranye #F58220).
+   Palet diturunkan dari warna merek PT KAI: biru tua indigo (#2E2A72) dan oranye (#F06820), diukur dari logo.
    Font: Google Sans (self-hosted, tanpa CDN eksternal).
    ========================================================================== */
 
@@ -55,21 +55,27 @@
   --font-mono: "Google Sans Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Peran warna Material 3 */
-  --color-primary: #0b57d0;
+  /* Biru tua KAI sebagai warna utama, oranye KAI sebagai aksen */
+  --color-primary: #2e2a72;
   --color-on-primary: #ffffff;
-  --color-primary-container: #d3e3fd;
-  --color-on-primary-container: #041e49;
-  --color-inverse-primary: #a8c7fa;
+  --color-primary-container: #e1dff5;
+  --color-on-primary-container: #14123b;
+  --color-inverse-primary: #bdb9ee;
 
-  --color-secondary: #535e70;
+  --color-secondary: #57547a;
   --color-on-secondary: #ffffff;
-  --color-secondary-container: #c2e7ff;
-  --color-on-secondary-container: #001d35;
+  --color-secondary-container: #e6e4f5;
+  --color-on-secondary-container: #14123b;
 
-  --color-tertiary: #8b5000;
+  --color-tertiary: #b3430c;
   --color-on-tertiary: #ffffff;
-  --color-tertiary-container: #ffddb8;
-  --color-on-tertiary-container: #2c1600;
+  --color-tertiary-container: #ffe1cf;
+  --color-on-tertiary-container: #3b1500;
+  --color-accent: #f06820;
+
+  /* Peringatan status (kuning-amber), terpisah dari oranye merek */
+  --color-warning-container: #fdeeb8;
+  --color-on-warning-container: #3a2b00;
 
   --color-error: #b3261e;
   --color-on-error: #ffffff;
@@ -80,24 +86,28 @@
   --color-success-container: #c4eed0;
   --color-on-success-container: #072711;
 
-  --color-surface: #f8fafd;
+  --color-surface: #f5f5fa;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f3f6fb;
-  --color-surface-container: #f0f4f9;
-  --color-surface-container-high: #e9eef6;
-  --color-surface-container-highest: #dde3ea;
+  --color-surface-container-low: #f2f2f8;
+  --color-surface-container: #ecedf5;
+  --color-surface-container-high: #e5e6f1;
+  --color-surface-container-highest: #dcdde9;
   --color-on-surface: #1f1f1f;
   --color-on-surface-variant: #444746;
   --color-outline: #747775;
-  --color-outline-variant: #c4c7c5;
+  --color-outline-variant: #d6d7e3;
+  --color-field-outline: #bdbecd;
+  --color-field-outline-hover: #7f8094;
   --color-inverse-surface: #303030;
   --color-on-inverse-surface: #f2f2f2;
 
   /* Permukaan navigasi: terang, menyatu dengan latar halaman seperti Gmail/Drive */
-  --color-rail: #f8fafd;
-  --color-rail-container: #f0f4f9;
+  --color-rail: #f5f5fa;
+  --color-rail-container: #ecedf5;
   --color-on-rail: #1f1f1f;
   --color-on-rail-variant: #444746;
+  --color-rail-navy: #25225f;
+  --color-on-rail-navy-variant: #cdcbf0;
 
   /* Skala bentuk Material 3 */
   --radius-xs: 0.25rem;
@@ -211,7 +221,7 @@
 @layer components {
   /* --- Tombol ---------------------------------------------------------- */
   .btn {
-    @apply relative inline-flex h-10 select-none items-center justify-center gap-2 rounded-full px-6 text-label-large
+    @apply relative inline-flex h-9 select-none items-center justify-center gap-2 rounded-full px-5 text-label-large
       transition-[background-color,box-shadow,transform] duration-200 ease-standard disabled:pointer-events-none disabled:opacity-38;
     font-weight: 500;
   }
@@ -230,40 +240,40 @@
   .btn-danger { @apply bg-error text-on-error; }
   .btn-tonal-danger { @apply bg-error-container text-on-error-container; }
   .btn-accent { @apply bg-tertiary-container text-on-tertiary-container; }
-  .btn-sm { @apply h-8 px-4 text-label-medium; }
+  .btn-sm { @apply h-7 px-3.5 text-label-medium; }
 
   /* Tombol tersegmen (Material 3 segmented button) */
   .segmented { @apply inline-flex overflow-hidden rounded-full border border-outline; }
   .segmented button {
-    @apply h-10 flex-1 border-0 bg-transparent px-5 text-label-large text-on-surface-variant
+    @apply h-9 flex-1 border-0 bg-transparent px-4 text-label-large text-on-surface-variant
       transition-colors duration-200 ease-standard hover:bg-surface-container;
   }
   .segmented button.selected { @apply bg-secondary-container text-on-secondary-container; }
 
   .icon-btn {
-    @apply inline-flex size-10 flex-none items-center justify-center rounded-full text-on-surface-variant
+    @apply inline-flex size-9 flex-none items-center justify-center rounded-full text-on-surface-variant
       transition-colors duration-200 ease-standard hover:bg-on-surface/8 disabled:pointer-events-none disabled:opacity-38;
   }
 
   /* --- Kartu ------------------------------------------------------------ */
   /* Kartu metrik: tonal tanpa garis. Panel: outlined. Panel di dalam panel: tonal. */
-  .card { @apply rounded-lg bg-surface-container p-5; }
-  .panel { @apply rounded-lg border border-outline-variant bg-surface-container-lowest p-5; --field-surface: var(--color-surface-container-lowest); }
+  .card { @apply rounded-lg bg-surface-container p-4; }
+  .panel { @apply rounded-lg border border-outline-variant bg-surface-container-lowest p-4; --field-surface: var(--color-surface-container-lowest); }
   .panel .panel { @apply border-0 bg-surface-container-low; --field-surface: var(--color-surface-container-low); }
-  .panel h2 { @apply mb-4 mt-0 font-display text-title-large text-on-surface; }
+  .panel h2 { @apply mb-3 mt-0 font-display text-[1.125rem] leading-6 text-on-surface; }
   .panel h3 { @apply mb-3 mt-0 text-title-medium text-on-surface; }
   /* Jarak antarpanel dan antara judul panel dengan isinya */
-  .panel + .panel, .panel + .note, .note + .panel { @apply mt-5; }
+  .panel + .panel, .panel + .note, .note + .panel { @apply mt-4; }
   .panel .panel + .panel { @apply mt-4; }
-  .panel > .row:first-child { @apply mb-4; }
+  .panel > .row:first-child { @apply mb-3; }
   .panel .row > h2, .panel .row > h3 { @apply mb-0; }
   .panel .cards { @apply my-0; }
   .panel .cards + p { @apply mt-4; }
   .formgrid + .role-note, .formgrid + .note, .formgrid + .row { @apply mt-4; }
   .cards-3 p { @apply mb-0 mt-0.5; }
-  .card-filled { @apply rounded-md bg-surface-container p-5; }
-  .card-elevated { @apply rounded-md bg-surface-container-lowest p-5 shadow-e1; }
-  .card-outlined { @apply rounded-md border border-outline-variant bg-surface-container-lowest p-5; }
+  .card-filled { @apply rounded-md bg-surface-container p-4; }
+  .card-elevated { @apply rounded-md bg-surface-container-lowest p-4 shadow-e1; }
+  .card-outlined { @apply rounded-md border border-outline-variant bg-surface-container-lowest p-4; }
   .card-interactive { @apply cursor-pointer transition-colors duration-200 ease-standard hover:bg-surface-container-high; }
 
   /* --- Bantuan tata letak -------------------------------------------------- */
@@ -279,12 +289,12 @@
      Latar transparan dengan garis 1px. Label mengambang duduk di atas garis dan
      latar label mengikuti latar bidang sehingga garis terpotong (notch). */
   .field { @apply relative flex flex-col; }
-  .formgrid { @apply grid grid-cols-2 items-start gap-4; }
+  .formgrid { @apply grid grid-cols-2 items-start gap-3; }
   .wide { @apply col-span-full; }
   .reviewers { @apply grid grid-cols-2 gap-2.5; }
   .reviewer-card { @apply rounded-md border border-outline-variant bg-surface-container-lowest p-3; }
   .field > label {
-    @apply pointer-events-none absolute left-3 top-7 bg-[var(--field-surface)] px-1 text-body-large text-on-surface-variant;
+    @apply pointer-events-none absolute left-3 top-6 bg-[var(--field-surface)] px-1 text-body-medium text-on-surface-variant;
     transform: translateY(-50%);
     max-width: calc(100% - 1.5rem);
     @apply truncate;
@@ -292,18 +302,18 @@
       font-size 180ms var(--ease-standard), line-height 180ms var(--ease-standard), color 180ms var(--ease-standard);
   }
   .field > input, .field > select, .field > textarea {
-    @apply w-full rounded-xs border border-outline bg-transparent px-4 pb-2 pt-6 text-body-large text-on-surface outline-none
+    @apply w-full rounded-sm border border-field-outline bg-transparent px-3.5 pb-1.5 pt-5 text-body-medium text-on-surface outline-none
       transition-[border-color,box-shadow] duration-200 ease-standard;
   }
-  .field > input, .field > select { @apply h-14; }
+  .field > input, .field > select { @apply h-12; }
   .field > select {
-    @apply cursor-pointer appearance-none bg-[length:20px] bg-[right_1rem_center] bg-no-repeat pr-12;
+    @apply cursor-pointer appearance-none bg-[length:20px] bg-[right_0.75rem_center] bg-no-repeat pr-10;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23444746' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
   }
   .field > select option { @apply bg-white text-on-surface; }
   .field > input::placeholder, .field > textarea::placeholder { @apply text-transparent; }
-  .field > input:hover, .field > select:hover, .field > textarea:hover { @apply border-on-surface-variant; }
-  .field > input:focus, .field > select:focus, .field > textarea:focus { @apply border-primary; }
+  .field > input:hover, .field > select:hover, .field > textarea:hover { @apply border-field-outline-hover; }
+  .field > input:focus, .field > select:focus, .field > textarea:focus { @apply border-primary; box-shadow: 0 0 0 1px var(--color-primary); }
   .field > input:focus + label, .field > textarea:focus + label,
   .field > input:not(:placeholder-shown) + label, .field > textarea:not(:placeholder-shown) + label,
   .field > select + label {
@@ -313,8 +323,8 @@
   .field > input:focus + label, .field > textarea:focus + label { @apply text-primary; }
   .field > select:focus + label { @apply text-primary; }
   .field > input:disabled, .field > select:disabled, .field > textarea:disabled { @apply cursor-not-allowed opacity-38; }
-  .field > input[type="date"] { @apply pb-1 pt-6; color-scheme: light; }
-  .field > input[type="date"]::-webkit-datetime-edit { @apply text-body-large; }
+  .field > input[type="date"] { @apply pb-1 pt-5; color-scheme: light; }
+  .field > input[type="date"]::-webkit-datetime-edit { @apply text-body-medium; }
   .field > input[type="date"]::-webkit-calendar-picker-indicator { @apply cursor-pointer opacity-60 hover:opacity-100; }
   .field > input[type="date"]::-webkit-datetime-edit,
   .field > input[type="date"]::-webkit-datetime-edit-fields-wrapper,
@@ -324,8 +334,8 @@
   .field-error > label { @apply text-error; }
   .field-error-text { @apply text-error; }
   /* Varian area teks: label mengambang di atas garis atas kotak. */
-  .field-area > textarea { @apply min-h-28 resize-y; }
-  .field-area > label { @apply top-3 text-body-large; transform: translateY(0); }
+  .field-area > textarea { @apply min-h-24 resize-y; }
+  .field-area > label { @apply top-3 text-body-medium; transform: translateY(0); }
   .field-area > textarea:focus + label,
   .field-area > textarea:not(:placeholder-shown) + label { @apply top-[-8px] text-[12px] font-medium leading-4 text-on-surface-variant; }
   .field-area > textarea:focus + label { @apply text-primary; }
@@ -333,11 +343,11 @@
   /* Medan isian dengan tombol mata di dalam (login) */
   .field > .password-field { @apply relative; }
   .field > .password-field input {
-    @apply h-14 w-full rounded-xs border border-outline bg-transparent px-4 pb-2 pt-6 text-body-large
+    @apply h-12 w-full rounded-sm border border-field-outline bg-transparent px-3.5 pb-1.5 pt-5 text-body-medium
       text-on-surface outline-none transition-[border-color,box-shadow] duration-200 ease-standard;
   }
-  .field > .password-field input:hover { @apply border-on-surface-variant; }
-  .field > .password-field input:focus { @apply border-primary; }
+  .field > .password-field input:hover { @apply border-field-outline-hover; }
+  .field > .password-field input:focus { @apply border-primary; box-shadow: 0 0 0 1px var(--color-primary); }
   .field:has(.password-field input:focus) > label,
   .field:has(.password-field input:not(:placeholder-shown)) > label {
     @apply top-[-8px] text-[12px] font-medium leading-4 text-on-surface-variant;
@@ -366,7 +376,7 @@
   .tag-neutral { @apply bg-surface-container-high text-on-surface-variant; }
   .tag-primary { @apply bg-primary-container text-on-primary-container; }
   .tag-success { @apply bg-success-container text-on-success-container; }
-  .tag-warning { @apply bg-tertiary-container text-on-tertiary-container; }
+  .tag-warning { @apply bg-warning-container text-on-warning-container; }
   .tag-error { @apply bg-error-container text-on-error-container; }
   .tag-outline { @apply border-outline-variant text-on-surface-variant; }
 
@@ -383,9 +393,9 @@
   .login-box .brand small { @apply text-on-surface-variant; }
   .brand strong { @apply block font-display text-headline-small font-medium leading-none tracking-[0.04em] text-on-rail; }
   .brand small { @apply block text-body-small leading-snug text-on-rail-variant; }
-  .nav { @apply mt-4 flex flex-col gap-1; }
+  .nav { @apply mt-3 flex flex-col gap-0.5; }
   .nav button {
-    @apply flex h-12 w-full items-center gap-3 rounded-full px-4 text-label-large text-on-rail-variant
+    @apply relative flex h-10 w-full items-center gap-3 rounded-full px-4 text-label-large text-on-rail-variant
       transition-colors duration-200 ease-standard hover:bg-on-surface/8 hover:text-on-rail;
     text-align: left;
   }
@@ -410,47 +420,47 @@
 
   /* --- App bar ------------------------------------------------------------ */
   .top {
-    @apply sticky top-0 z-40 flex h-16 items-center justify-between gap-4 bg-surface px-6;
+    @apply sticky top-0 z-40 flex h-14 items-center justify-between gap-4 bg-surface px-5;
   }
   .top small { @apply text-body-small text-on-surface-variant; }
   .top-title { @apply truncate font-display text-title-medium font-normal text-on-surface-variant; }
   .top-actions { @apply flex items-center gap-3; }
   /* Pengalih bahasa ID | EN */
-  .lang-switch { @apply inline-flex h-8 flex-none overflow-hidden rounded-full border border-outline; }
+  .lang-switch { @apply inline-flex h-7 flex-none overflow-hidden rounded-full border border-field-outline; }
   .lang-switch button {
     @apply h-full min-w-10 px-3 text-label-medium font-medium text-on-surface-variant transition-colors duration-200 ease-standard hover:bg-on-surface/8;
   }
   .lang-switch button.selected { @apply bg-secondary-container text-on-secondary-container; }
   .lang-switch-floating { @apply fixed right-4 top-4 z-[1001]; }
   .top-avatar {
-    @apply flex size-10 flex-none items-center justify-center rounded-full bg-primary-container text-label-large font-medium text-on-primary-container
+    @apply flex size-9 flex-none items-center justify-center rounded-full bg-primary text-label-large font-medium text-on-primary ring-2 ring-accent ring-offset-2 ring-offset-surface
       transition-shadow duration-200 ease-standard hover:shadow-[0_0_0_6px_color-mix(in_srgb,var(--color-on-surface)_8%,transparent)];
   }
   /* Konten berada dalam kartu putih membulat di atas latar halaman, seperti Gmail/Drive */
   .main { @apply flex flex-col; }
-  .content { @apply w-full flex-1 bg-surface-container-lowest p-6; --field-surface: var(--color-surface-container-lowest); }
+  .content { @apply w-full flex-1 bg-surface-container-lowest p-4; --field-surface: var(--color-surface-container-lowest); }
   @media (min-width: 901px) {
     .main { @apply pb-4 pr-4; }
-    .content { @apply rounded-3xl p-8; }
+    .content { @apply rounded-3xl p-6; }
   }
 
   /* --- Heading ------------------------------------------------------------ */
-  .heading { @apply mb-6 flex flex-wrap items-start justify-between gap-4; }
+  .heading { @apply mb-4 flex flex-wrap items-start justify-between gap-3; }
   .heading h1 { @apply mt-0.5; }
-  .heading h1 { @apply m-0 font-display text-headline-small font-normal text-on-surface; }
+  .heading h1 { @apply m-0 font-display text-title-large font-medium text-on-surface; }
   .heading p { @apply mx-0 mb-0 mt-1.5 text-body-medium text-on-surface-variant; }
   .heading + .cards { @apply mt-0; }
-  .eyebrow { @apply text-label-large text-on-surface-variant; }
+  .eyebrow { @apply text-label-large font-medium text-tertiary; }
 
   /* --- Table -------------------------------------------------------------- */
   .tablewrap { @apply overflow-auto rounded-lg border border-outline-variant; }
   table { @apply w-full min-w-[640px] border-collapse text-left; }
-  th, td { @apply border-b border-outline-variant px-3.5 py-3 align-middle; }
+  th, td { @apply border-b border-outline-variant px-3 py-2.5 align-middle; }
   th { @apply whitespace-nowrap; }
   td:last-child { @apply whitespace-nowrap; }
-  table .btn { @apply h-8 px-4 text-label-medium; }
+  table .btn { @apply h-7 px-3.5 text-label-medium; }
   table .btn + .btn { @apply ml-1; }
-  table .btn-tonal { @apply border border-outline bg-transparent text-primary; }
+  table .btn-tonal { @apply border border-field-outline bg-transparent text-primary; }
   table .btn-danger { @apply bg-error-container text-on-error-container; }
   th { @apply bg-surface-container-low text-label-medium font-medium text-on-surface-variant; }
   tbody tr { @apply transition-colors duration-150 hover:bg-surface-container-low; }
@@ -477,7 +487,7 @@
     @apply my-3 flex items-start gap-2.5 rounded-lg border-0 bg-surface-container-low px-4 py-3 text-body-medium text-on-surface-variant;
   }
   .note strong { @apply text-on-surface; }
-  .note-warning { @apply border-transparent bg-tertiary-container text-on-tertiary-container; }
+  .note-warning { @apply border-transparent bg-warning-container text-on-warning-container; }
   .note-error { @apply border-transparent bg-error-container text-on-error-container; }
   .note-success { @apply border-transparent bg-success-container text-on-success-container; }
   .note-info { @apply border-transparent bg-primary-container text-on-primary-container; }
@@ -542,7 +552,7 @@
     animation: fade-in 200ms var(--ease-standard);
   }
   .dialog {
-    @apply w-full max-w-[560px] rounded-xl bg-surface-container-lowest p-6 text-on-surface shadow-e3;
+    @apply w-full max-w-[520px] rounded-xl bg-surface-container-lowest p-5 text-on-surface shadow-e3;
     animation: dialog-in 300ms var(--ease-emphasized);
     --field-surface: var(--color-surface-container-lowest);
   }
@@ -558,18 +568,18 @@
   .mfa-codes code { @apply block rounded-lg bg-surface-container px-3 py-2 text-center font-mono text-body-large tracking-wider text-on-surface; }
   .mfa-status { @apply flex items-center gap-2; }
   .mfa-danger { @apply text-error hover:bg-error/8; }
-  .dialog-form .field { @apply mt-4; }
-  .dialog-form h2 + .field { @apply mt-5; }
+  .dialog-form .field { @apply mt-3; }
+  .dialog-form h2 + .field { @apply mt-4; }
   .dialog-icon {
     @apply mb-3 flex size-11 items-center justify-center rounded-full bg-secondary-container text-on-secondary-container;
   }
-  .dialog h2 { @apply m-0 font-display text-headline-small font-normal text-on-surface; }
+  .dialog h2 { @apply m-0 font-display text-title-large font-medium text-on-surface; }
   .dialog p { @apply mt-3 text-body-medium text-on-surface-variant; }
-  .dialog-actions { @apply mt-5 flex flex-wrap justify-end gap-2; }
+  .dialog-actions { @apply mt-4 flex flex-wrap justify-end gap-2; }
   .dialog-text {
-    @apply mt-3 w-full rounded-xs border border-outline bg-transparent px-3 pb-2 pt-5 text-body-large outline-none;
+    @apply mt-3 w-full rounded-sm border border-field-outline bg-transparent px-3 pb-2 pt-4 text-body-medium outline-none;
   }
-  .dialog-text:focus { @apply border-2 border-primary; }
+  .dialog-text:focus { @apply border-primary; box-shadow: 0 0 0 1px var(--color-primary); }
   @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
   @keyframes dialog-in {
     from { opacity: 0; transform: scale(0.92) translateY(12px); }
@@ -590,12 +600,12 @@
   .qmeta { @apply mb-1 text-label-medium text-on-surface-variant; }
 
   /* --- Draft pra-kualifikasi ------------------------------------------------ */
-  .pq-bar { @apply mb-4 rounded-lg border border-outline-variant bg-surface-container-lowest p-5; }
+  .pq-bar { @apply mb-3 rounded-lg border border-outline-variant bg-surface-container-lowest p-4; }
   .pq-bar-row { @apply mb-3 flex flex-wrap items-center justify-between gap-3; }
   .pq-pct { @apply font-display text-headline-small tabular-nums text-primary; }
   .pq-hint { @apply mb-0 mt-3 text-body-small text-on-surface-variant; }
   .pq-chips { @apply mt-3 flex flex-wrap gap-2; }
-  .pq-chip { @apply h-8 rounded-lg border border-outline-variant bg-surface-container-lowest px-3 text-label-medium text-on-surface-variant hover:bg-surface-container; }
+  .pq-chip { @apply h-7 rounded-lg border border-outline-variant bg-surface-container-lowest px-3 text-label-medium text-on-surface-variant hover:bg-surface-container; }
   .pq-chip b { @apply ml-1 font-medium; }
   .pq-chip.complete { @apply border-transparent bg-success-container text-on-success-container; }
   .pq-group { @apply mb-3 overflow-hidden rounded-md border border-outline-variant bg-surface-container-lowest; }
@@ -612,7 +622,7 @@
   .pq-group-name { @apply flex-1 font-display text-title-medium text-on-surface; }
   .pq-group-count { @apply rounded-full bg-surface-container-high px-2.5 py-1 text-label-medium text-on-surface-variant; }
   .pq-group-count.complete { @apply bg-success-container text-on-success-container; }
-  .pq-group-body { @apply border-t border-outline-variant p-4; }
+  .pq-group-body { @apply border-t border-outline-variant p-3; }
   .pq-files { @apply mt-3 flex flex-wrap items-center gap-2; }
   .pq-fileinput { @apply hidden; }
   .pq-filebtn {
@@ -622,7 +632,7 @@
   .pq-filelist { @apply flex flex-wrap items-center gap-1.5 text-body-small; }
   .pq-file { @apply inline-flex items-center gap-1 rounded-xs bg-surface-container-high px-2 py-1 font-medium text-on-surface-variant; }
   .pq-file a { @apply text-on-surface-variant no-underline hover:text-on-surface hover:underline; }
-  .pq-file.pending { @apply bg-tertiary-container text-on-tertiary-container; }
+  .pq-file.pending { @apply bg-warning-container text-on-warning-container; }
   .pq-file em { @apply not-italic opacity-75; }
   .pq-file-x {
     @apply inline-flex size-4 flex-none items-center justify-center rounded-full text-[13px] leading-none
@@ -643,7 +653,7 @@
   .pq-save-state { @apply text-label-medium text-on-surface-variant; }
   .pq-save-state.saving { @apply text-primary; }
   .pq-save-state.error { @apply text-error; }
-  .pq-pending { @apply text-body-small font-medium text-on-tertiary-container; }
+  .pq-pending { @apply text-body-small font-medium text-on-warning-container; }
   .pq-resume { @apply mb-4 flex flex-wrap items-center justify-between gap-3 border-l-4 border-l-primary bg-primary-container text-on-primary-container; }
   .pq-missing { @apply mt-4 flex list-none flex-col gap-2 p-0; }
   .pq-missing-item {
@@ -653,10 +663,28 @@
   .pq-missing-item span { @apply text-on-surface-variant; }
 
   /* --- Login ---------------------------------------------------------------- */
+  /* Latar login: gradien radial biru tua dengan cahaya oranye di sudut, ditambah lingkaran konsentris tipis (kesan jalur rel melengkung) */
   .login-overlay {
-    @apply fixed inset-0 z-[1000] flex items-center justify-center bg-surface p-5;
+    @apply fixed inset-0 z-[1000] flex items-center justify-center overflow-hidden p-5;
+    background-color: #19164f;
+    background-image:
+      radial-gradient(60% 55% at 8% 6%, rgb(92 86 205 / 0.55), transparent 62%),
+      radial-gradient(52% 52% at 97% 97%, rgb(240 104 32 / 0.78), transparent 60%),
+      radial-gradient(38% 38% at 92% 8%, rgb(140 135 235 / 0.30), transparent 65%),
+      radial-gradient(45% 40% at 3% 98%, rgb(240 104 32 / 0.22), transparent 65%);
   }
-  .login-box { @apply w-full max-w-[450px] rounded-[28px] border border-outline-variant bg-surface-container-lowest px-10 pb-10 pt-12; }
+  .login-overlay::before, .login-overlay::after {
+    content: ""; @apply pointer-events-none absolute rounded-full;
+    background: repeating-radial-gradient(circle at center, transparent 0 46px, rgb(255 255 255 / 0.07) 46px 47px);
+  }
+  .login-overlay::before { width: 120vmax; height: 120vmax; right: -62vmax; bottom: -70vmax; }
+  .login-overlay::after { width: 70vmax; height: 70vmax; left: -38vmax; top: -44vmax; }
+  .login-overlay > * { @apply relative; z-index: 1; }
+  .login-overlay > .lang-switch-floating { @apply fixed; }
+  .login-overlay .lang-switch { border-color: rgb(255 255 255 / 0.45); }
+  .login-overlay .lang-switch button { @apply text-white hover:bg-white/15; }
+  .login-overlay .lang-switch button.selected { @apply bg-white text-primary; }
+  .login-box { @apply w-full max-w-[420px] rounded-[28px] border-0 bg-surface-container-lowest px-9 pb-9 pt-10 shadow-e4; }
   .login-box .brand { @apply mb-8 justify-center; }
   .login-box h1 { @apply mb-1; }
   .login-box h1, .login-box > p, .login-box #authDesc { @apply text-center; }
@@ -668,7 +696,7 @@
   .login-error { @apply mt-2 text-body-small text-error; }
   .role-options { @apply mt-1 grid grid-cols-1 gap-2; }
   .role-option {
-    @apply flex cursor-pointer items-center gap-3 rounded-md border border-outline-variant bg-surface-container-lowest px-3 py-3 text-body-large text-on-surface;
+    @apply flex cursor-pointer items-center gap-3 rounded-md border border-outline-variant bg-surface-container-lowest px-3 py-2 text-body-medium text-on-surface;
   }
   .role-option:has(input:checked) { @apply border-primary bg-primary-container text-on-primary-container; }
   .role-option input { @apply flex-none; }
@@ -736,41 +764,63 @@
    ========================================================================== */
 @layer components {
   .cert-actions { @apply my-4 flex flex-wrap gap-2; }
+  /* Sertifikat bertema KAI: pita biru tua indigo dengan tebasan oranye (mengikuti logo), bingkai ganda, dan aksen garis kecepatan */
   .certificate {
-    @apply relative mt-4 min-h-[540px] overflow-hidden rounded-md border-2 border-[#173b70] bg-white px-12 pb-7 pt-9 text-center text-on-surface shadow-e2;
-    outline: 1px solid #e8a24b;
+    @apply relative mx-auto mt-4 w-full max-w-[297mm] overflow-hidden rounded-md border-2 border-primary bg-white px-12 pb-9 pt-11 text-center text-on-surface shadow-e2;
+    outline: 1px solid var(--color-accent);
     outline-offset: -9px;
   }
-  .certificate::before, .certificate::after { content: ""; @apply pointer-events-none absolute size-[180px] rounded-full border border-[#dce7f5]; }
-  .certificate::before { @apply -left-20 -top-28; }
-  .certificate::after { @apply -bottom-[120px] -right-20; }
-  .cert-topline { @apply absolute inset-x-0 top-0 h-[7px] bg-[linear-gradient(90deg,#0b57a4_0_70%,#f58220_70%)]; }
+  /* Proporsi kertas A4 landscape (297 x 210 mm) pada layar lebar; di layar sempit tinggi mengikuti isi */
+  @media (min-width: 900px) {
+    .certificate { aspect-ratio: 297 / 210; @apply flex flex-col items-center justify-center; }
+    .certificate > * { max-width: 100%; }
+    .certificate .cert-meta, .certificate .cert-signatures { @apply w-full; }
+  }
+  .certificate::before {
+    content: ""; @apply pointer-events-none absolute inset-x-0 bottom-0 h-[10px];
+    background: linear-gradient(110deg, var(--color-primary) 0 24%, var(--color-accent) 24% 28%, var(--color-primary) 28%);
+  }
+  .certificate::after {
+    content: ""; @apply pointer-events-none absolute -bottom-10 -right-10 size-[260px];
+    background: repeating-linear-gradient(115deg, rgb(46 42 114 / 0.07) 0 3px, transparent 3px 14px);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  }
+  .cert-topline {
+    @apply absolute inset-x-0 top-0 h-[14px];
+    background: linear-gradient(110deg, var(--color-primary) 0 74%, var(--color-accent) 74% 79%, var(--color-primary) 79%);
+  }
   .cert-logo { @apply mx-auto mb-3 block h-auto max-h-[66px] w-[150px] object-contain; }
   .cert-org { @apply mb-4 mt-0 text-label-medium font-medium uppercase tracking-[2px] text-primary; }
-  .cert-title { @apply my-2 font-display text-headline-medium font-medium leading-tight tracking-[1px] text-[#0b1f3d]; }
-  .cert-subtitle { @apply mb-6 mt-0 text-label-medium font-medium uppercase tracking-[3px] text-on-tertiary-container; }
-  .cert-rule { @apply mx-auto my-4 h-0.5 w-[130px] bg-tertiary; }
+  .cert-title { @apply my-2 font-display text-headline-medium font-medium leading-tight tracking-[1px] text-primary; }
+  .cert-subtitle { @apply mb-6 mt-0 text-label-medium font-medium uppercase tracking-[3px] text-tertiary; }
+  .cert-rule { @apply mx-auto my-4 h-[3px] w-[130px] rounded-full; background: linear-gradient(90deg, var(--color-primary) 0 62%, var(--color-accent) 62%); }
   .cert-award { @apply m-0 text-body-large text-on-surface-variant; }
-  .cert-vendor { @apply mx-auto mb-1 mt-2 max-w-[90%] break-words font-display text-headline-medium font-medium text-[#0b1f3d]; }
+  .certificate .cert-vendor { @apply mx-auto mb-1 mt-2 max-w-[90%] break-words font-display text-headline-medium font-medium text-primary; }
   .cert-scope { @apply my-3 text-body-medium; }
-  .cert-score { @apply inline-block rounded-md border border-outline-variant bg-surface-container-low px-7 py-2.5 font-display text-headline-small font-medium tabular-nums text-primary; }
-  .cert-status { @apply mx-auto mt-2 table rounded-full px-4 py-1.5 text-label-large font-medium; }
+  .cert-score { @apply inline-block w-fit self-center rounded-xl bg-primary px-8 py-2.5 font-display text-headline-small font-medium tabular-nums text-on-primary; }
+  .cert-score span { @apply text-inverse-primary; }
+  .cert-status { @apply mx-auto mt-3 table rounded-full px-4 py-1.5 text-label-large font-medium; }
   .cert-meta { @apply my-6 flex flex-wrap justify-center gap-7 text-body-small text-on-surface-variant; }
-  .cert-meta b { @apply font-mono text-on-surface; }
+  .cert-meta b { @apply font-medium text-on-surface; }
+  .cert-meta b.code { @apply font-mono; }
   .cert-validity { @apply mx-auto my-2 max-w-[650px] text-body-small text-on-surface-variant; }
   .cert-signatures { @apply mx-[4%] mb-0 mt-7 flex justify-between gap-[30px] text-center text-body-small text-on-surface-variant; }
-  .cert-sign { @apply w-[220px] border-t border-outline pt-2; }
+  .cert-sign { @apply w-[220px] border-t-2 border-primary pt-2; }
   .cert-sign strong { @apply mb-1 block text-label-large text-on-surface; }
 }
 
 @page { size: A4 landscape; margin: 10mm; }
 @media print {
   html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; width: 100% !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  html, body { height: 189mm !important; overflow: hidden !important; }
+  body::before { display: none !important; }
   body * { visibility: hidden !important; }
   #certPreview, #certPreview * { visibility: visible !important; }
   #certPreview { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; margin: 0 !important; padding: 0 !important; max-width: none !important; }
-  #certPreview .certificate { display: block !important; width: 100% !important; min-height: 180mm !important; height: 180mm !important; margin: 0 !important; padding: 25px 42px 20px !important; box-shadow: none !important; border-radius: 0 !important; break-inside: avoid !important; page-break-inside: avoid !important; }
+  #certPreview .certificate { display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; width: 277mm !important; max-width: none !important; height: 189mm !important; min-height: 0 !important; aspect-ratio: auto !important; margin: 0 !important; padding: 12mm 14mm !important; box-shadow: none !important; border-radius: 0 !important; break-inside: avoid !important; page-break-inside: avoid !important; }
   #certPreview .cert-actions, #certPreview button { display: none !important; visibility: hidden !important; }
+  #certPreview .cert-meta, #certPreview .cert-signatures { width: 100% !important; }
+  #certPreview .cert-score, #certPreview .cert-status { width: fit-content !important; align-self: center !important; }
   #certPreview .cert-logo { width: 140px !important; max-height: 58px !important; }
   #certPreview .cert-title { font-size: 27px !important; }.cert-vendor { font-size: 26px !important; }.cert-signatures { margin-top: 23px !important; }
 }
@@ -835,4 +885,31 @@
   .pq-actions-btns { @apply flex-col; }
   .pq-actions-btns .btn { @apply w-full; }
   .snackbar { @apply bottom-4 w-[calc(100%-2rem)] min-w-0; }
+}
+
+/* ==========================================================================
+   Identitas KAI: garis aksen biru tua + oranye di tepi atas, penanda menu aktif
+   ========================================================================== */
+@layer components {
+  body::before {
+    content: "";
+    @apply pointer-events-none fixed inset-x-0 top-0 z-[1200] h-[3px];
+    background: linear-gradient(90deg, var(--color-primary) 0 78%, var(--color-accent) 78%);
+  }
+  /* Sidebar desktop: biru tua KAI (di ponsel navigasi bawah tetap terang) */
+  @media (min-width: 901px) {
+    .side { background-color: var(--color-rail-navy); @apply text-white; }
+    .side .brand strong { @apply text-white; }
+    .side .brand small, .side .sidefoot-note { color: var(--color-on-rail-navy-variant); }
+    .side .nav button { color: var(--color-on-rail-navy-variant); }
+    .side .nav button:hover { @apply bg-white/10 text-white; }
+    .side .nav button.active { @apply bg-white/15 text-white; }
+    .side :focus-visible { @apply outline-white; }
+  }
+  @media (min-width: 901px) {
+    .nav button.active::before {
+      content: "";
+      @apply absolute left-1.5 top-1/2 h-[18px] w-1 -translate-y-1/2 rounded-full bg-accent;
+    }
+  }
 }

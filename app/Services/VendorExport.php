@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\VendorStatus;
 use Illuminate\Support\Facades\DB;
 
 /** Menyusun data ekspor vendor menjadi sheet XLSX. Header mengikuti bahasa antarmuka (id/en). */
@@ -35,7 +36,7 @@ class VendorExport
         $aRows = [$l['a']];
         $sRows = [$l['s']];
         foreach ($vendors as $v) {
-            $done = ($v['status'] ?? '') === 'Tervalidasi';
+            $done = ($v['status'] ?? '') === VendorStatus::Validated->value;
             $vRows[] = [$v['id'], $v['name'] ?? '', $v['nib'] ?? '', $v['npwp'] ?? '', $v['ossRisk'] ?? '', $v['pic'] ?? '', $v['email'] ?? '', $v['phone'] ?? '', $v['business'] ?? '', $v['branch'] ?? '', $v['address'] ?? '', $v['scope'] ?? '', $v['status'] ?? '', $v['docDate'] ?? '', $v['evaluator'] ?? '', $v['fieldDate'] ?? '', $v['validator'] ?? '', $v['fieldLocation'] ?? '', $v['fieldResult'] ?? '', round((float) ($v['totals']['review'] ?? 0), 2), round((float) ($v['totals']['validation'] ?? 0), 2), $done ? round((float) $v['totals']['validation'] / $max * 100, 2) : '', $v['finalRisk'] ?? '', $v['finalizedAt'] ?? '', $v['created'] ?? ''];
             $answers = (array) ($v['answers'] ?? []);
             $byStage = [];

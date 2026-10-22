@@ -65,6 +65,6 @@ class ReviewController extends Controller
             }
         });
 
-        return redirect()->route('reviews.show',[$application, $type])->with('status','Penilaian disimpan. Nilai penilai lain tetap tersimpan dan dapat dilihat pada halaman ini.');
+        return redirect()->route('reviews.show', [$application, $type])->with('status', 'Penilaian disimpan. Nilai penilai lain tetap tersimpan dan dapat dilihat pada halaman ini.');
     }
 }

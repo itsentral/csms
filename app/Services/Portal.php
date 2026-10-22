@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\VendorStatus;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Notifications\VendorStatusChanged;
@@ -27,7 +28,7 @@ class Portal
 
     public static function isHiddenDraft(User $u, Vendor $v): bool
     {
-        return $v->status === 'Menunggu Pengisian' && $v->owner_id !== $u->id && ! $u->hasRole('admin');
+        return $v->status === VendorStatus::AwaitingFill->value && $v->owner_id !== $u->id && ! $u->hasRole('admin');
     }
 
     public static function maxTotal(): float
@@ -132,6 +133,6 @@ class Portal
 
     public static function total(string $id, string $stage): float
     {
-        return (float) DB::query()->fromSub(DB::table('assessment_scores as s')->join('assessments as a', 'a.id', '=', 's.assessment_id')->join('questions as q', 'q.id', '=', 's.question_id')->where('a.vendor_id', $id)->where('a.stage',$stage)->groupBy('s.question_id','q.max')->selectRaw('AVG(s.score) * q.max as weighted'), 'totals')->sum('weighted');
+        return (float) DB::query()->fromSub(DB::table('assessment_scores as s')->join('assessments as a', 'a.id', '=', 's.assessment_id')->join('questions as q', 'q.id', '=', 's.question_id')->where('a.vendor_id', $id)->where('a.stage', $stage)->groupBy('s.question_id', 'q.max')->selectRaw('AVG(s.score) * q.max as weighted'), 'totals')->sum('weighted');
     }
 }

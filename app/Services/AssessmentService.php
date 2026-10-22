@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\VendorStatus;
 use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\DB;
@@ -23,8 +24,8 @@ class AssessmentService
             // Nilai verifikasi masih boleh disimpan setelah verifikator lain meneruskan vendor; hanya advance/return yang
             // memerlukan tahap verifikasi.
             $allowed = $stage === 'review'
-                ? ($d['action'] === 'save' ? ['Menunggu Verifikasi Dokumen', 'Menunggu Validasi Lapangan'] : ['Menunggu Verifikasi Dokumen'])
-                : ['Menunggu Validasi Lapangan'];
+                ? ($d['action'] === 'save' ? [VendorStatus::AwaitingVerification->value, VendorStatus::AwaitingValidation->value] : [VendorStatus::AwaitingVerification->value])
+                : [VendorStatus::AwaitingValidation->value];
             abort_unless(in_array($v->status, $allowed, true), 409, __('portal.stage_mismatch'));
             if ($d['action'] === 'finalize') {
                 abort_unless(! empty($d['fieldDate']) && ! empty($d['fieldLocation']) && ($d['fieldResult'] ?? 'Belum dilakukan') !== 'Belum dilakukan', 422, __('portal.field_validation_incomplete'));
@@ -70,11 +71,11 @@ class AssessmentService
     private function transition(Vendor $v, string $action): void
     {
         if ($action === 'advance') {
-            $v->status = 'Menunggu Validasi Lapangan';
+            $v->status = VendorStatus::AwaitingValidation->value;
         } elseif ($action === 'return') {
-            $v->status = 'Perlu Perbaikan';
+            $v->status = VendorStatus::NeedsRevision->value;
         } elseif ($action === 'finalize') {
-            $v->status = 'Tervalidasi';
+            $v->status = VendorStatus::Validated->value;
             $total = Portal::total($v->id, 'validation');
             $max = Portal::maxTotal();
             $v->finalRisk = Portal::category($total / $max * 100);

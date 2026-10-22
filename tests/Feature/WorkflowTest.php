@@ -303,12 +303,23 @@ class WorkflowTest extends TestCase
             $this->assertStringContainsString('name="'.$name.'"', $wb);
         }
         $sheet1 = $zip->getFromName('xl/worksheets/sheet1.xml');
-        $this->assertStringContainsString('PT Ekspor =1+1',$sheet1);
-        $this->assertStringContainsString('Bukti &amp; &lt;ok&gt;',$zip->getFromName('xl/worksheets/sheet2.xml'));
-        $this->assertStringContainsString('Does the company identify internal and external issues',$zip->getFromName('xl/worksheets/sheet2.xml'));
+        $this->assertStringContainsString('PT Ekspor =1+1', $sheet1);
+        $this->assertStringContainsString('Bukti &amp; &lt;ok&gt;', $zip->getFromName('xl/worksheets/sheet2.xml'));
+        $this->assertStringContainsString('Does the company identify internal and external issues', $zip->getFromName('xl/worksheets/sheet2.xml'));
         foreach (['sheet1', 'sheet2', 'sheet3'] as $n) {
             $this->assertNotFalse(simplexml_load_string($zip->getFromName('xl/worksheets/'.$n.'.xml')));
         }
         $zip->close();
+    }
+
+    public function test_state_exposes_question_master_and_status_constants(): void
+    {
+        $state = $this->actingAs($this->user('vendor'))->getJson('/api/state')->assertOk();
+        $state->assertJsonCount(49, 'questions')
+            ->assertJsonPath('questions.0.id', '1.a')
+            ->assertJsonPath('statuses.validated', 'Tervalidasi')
+            ->assertJsonPath('statuses.awaitingFill', 'Menunggu Pengisian');
+        $this->assertNotEmpty($state->json('questions.0.text_en'));
+        $this->assertNotEmpty($state->json('questions.48.group_en'));
     }
 }

@@ -94,6 +94,8 @@ Kegagalan kirim email dicatat di log dan tidak menggagalkan alur kerja. Bahasa e
 - **Validasi form:** kolom wajib yang kosong ditandai langsung dengan pesan "Wajib diisi", bukan tooltip browser.
 - **Bahasa:** pengalih ID | EN di top bar dan halaman login (default Indonesia); pilihan diingat di browser, termasuk bahasa pesan kesalahan form dari server.
 - **Antrean kerja:** halaman Verifikasi dan Validasi otomatis memilih vendor pertama yang menunggu tindakan, dan daftar vendor mengelompokkan "Menunggu tindakan Anda" di atas vendor lain.
+- **Format skor:** skor tampil seragam di seluruh halaman dan sertifikat: bilangan bulat tanpa desimal (mis. 100 / 100), selain itu maksimal dua desimal; dipotong, bukan dibulatkan, agar tidak tampak melewati batas kategori.
+- **Aksesibilitas:** dialog dan menu memiliki nama yang dibaca pembaca layar, dapat ditutup dengan Esc, dan seluruh halaman diaudit otomatis dengan axe-core.
 - **Menu akun:** avatar di kanan atas memuat Ganti Password, Ekspor Data, dan Keluar.
 - **Layar kecil:** navigasi bawah dengan maksimal empat tujuan langsung dan sisanya lewat lembar **Lainnya**.
 

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\VendorStatus;
 use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Http\UploadedFile;
@@ -18,7 +19,7 @@ class EvidenceService
     {
         return DB::transaction(function () use ($user, $vendor, $questionId, $file) {
             $v = $this->vendors->lock($vendor);
-            abort_unless(in_array($v->status, VendorService::EDITABLE), 409, __('portal.attachments_locked'));
+            abort_unless(in_array($v->status, VendorStatus::editable()), 409, __('portal.attachments_locked'));
             $id = (string) Str::uuid();
             $path = $file->store('evidence/'.$vendor->id, 'local');
             try {
@@ -46,7 +47,7 @@ class EvidenceService
         $isOwner = $v->owner_id === $user->id;
         abort_unless($isOwner || $user->hasRole('admin'), 403, __('portal.delete_attachment_forbidden'));
         if ($isOwner) {
-            abort_unless(in_array($v->status, VendorService::EDITABLE), 409, __('portal.attachments_locked_after_submit'));
+            abort_unless(in_array($v->status, VendorStatus::editable()), 409, __('portal.attachments_locked_after_submit'));
         }
         DB::transaction(fn () => DB::table('evidence')->where('id', $file->id)->delete());
         Storage::disk('local')->delete($file->path);

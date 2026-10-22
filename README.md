@@ -38,12 +38,12 @@ Buka http://127.0.0.1:8000. Untuk akun demo lokal: `php artisan db:seed --class=
 ## Perintah yang sering dipakai
 
 ```bash
-php artisan test                  # 35 test PHPUnit, SQLite in-memory
-npm install && npm run test:e2e   # 11 smoke test browser (Playwright + Chrome terpasang)
+php artisan test                  # 36 test PHPUnit, SQLite in-memory
+npm install && npm run test:e2e   # 12 smoke test + 3 audit aksesibilitas (Playwright + Chrome terpasang)
 composer lint && npm run lint     # Pint (PHP) dan ESLint (JavaScript); perbaiki format: composer format && npm run format
-npm run build:css                 # hanya jika resources/css/portal.css diubah
+npm run build                     # wajib setelah mengubah resources/css atau resources/js
 php artisan rchsems:create-admin  # membuat admin pertama (password diminta interaktif)
 php artisan rchsems:reset-mfa EMAIL   # darurat: atur ulang 2FA akun yang kehilangan perangkat
 ```
 
-Hasil build `public/assets/portal.css` wajib ikut di-commit karena server production tidak menjalankan Node.js.
+Hasil build di `public/assets/` (CSS dan JavaScript minifikasi) wajib ikut di-commit karena server production tidak menjalankan Node.js. Sumber JavaScript ada di `resources/js`. CI (GitHub Actions) memeriksa lint, test, kesegaran hasil build, audit dependensi, dan e2e.

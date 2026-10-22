@@ -15,6 +15,6 @@ class SetLocale
             app()->setLocale($lang);
         }
 
-return $next($r);
+        return $next($r);
     }
 }

@@ -7,7 +7,7 @@ composer install
 php artisan test
 ```
 
-Test memakai **SQLite in-memory** (`phpunit.xml`), sehingga tidak menyentuh database MySQL aplikasi. Hasil terakhir (22 Oktober 2026, PHP 8.5.7, Laravel 13.36.0, PHPUnit 12.5): **35 test, 225 assertion, lulus**.
+Test memakai **SQLite in-memory** (`phpunit.xml`), sehingga tidak menyentuh database MySQL aplikasi. Hasil terakhir (22 Oktober 2026, PHP 8.5.7, Laravel 13.36.0, PHPUnit 12.5): **36 test, 233 assertion, lulus**.
 
 Untuk menjalankan test pada MySQL, buat **database khusus kosong** `rchsems_test`, beri izin pada akun test, lalu:
 
@@ -26,7 +26,7 @@ Environment shell mengungguli default PHPUnit. `RefreshDatabase` membuat dan men
 | Akses | Shell dapat dibuka tamu; API menolak tamu dan akun nonaktif; error API berformat JSON |
 | Akun | Registrasi tidak dapat menaikkan peran; akun internal multi-peran; penonaktifan aman (akun sendiri dan admin dilindungi); ganti password mengakhiri sesi lain |
 | Isolasi | Vendor tidak dapat melihat atau mengubah data vendor lain; izin per peran |
-| Master data | 49 pertanyaan dan total bobot 565 sesuai mockup; batas kategori risiko |
+| Master data | 49 pertanyaan dan total bobot 565 sesuai mockup; batas kategori risiko; `/api/state` menyediakan master pertanyaan dan konstanta status |
 | Alur penilaian | Dua verifikator dan dua validator dengan rata-rata; transisi status dan penguncian final; skor atau tahap tidak valid ditolak; penyimpanan nilai verifikator setelah diteruskan; pengembalian perbaikan dan pengarsipan putaran |
 | Draft dan lampiran | Simpan sebagian dan lanjutkan; draft terkunci setelah kirim; pengiriman menyebut pertanyaan yang belum terjawab; draft hanya terlihat admin (termasuk unduh lampiran); bukti privat dan unduhan berizin; pemilik menghapus lampiran draft tetapi tidak setelah kirim |
 | Penghapusan | Admin menghapus vendor beserta berkas; akun pemilik tetap ada |
@@ -50,7 +50,15 @@ npm install
 npm run test:e2e
 ```
 
-11 test (±30 detik) menjalankan aplikasi pada port 8123 dengan database SQLite terpisah `database/e2e.sqlite` (dibuat ulang setiap run oleh `e2e/global-setup.js`, tidak menyentuh database pengembangan) dan **memakai Chrome yang sudah terpasang** (`channel: 'chrome'`), jadi tidak ada browser yang diunduh. Ganti dengan `PW_CHANNEL=msedge` atau jalankan `npx playwright install chromium` bila Chrome tidak tersedia. Cakupan: login dengan Enter dan password salah, pelanggaran CSP, pengalih bahasa, lupa password, alur lintas peran (vendor mengirim → verifikator meneruskan → validator menetapkan → pengadaan melihat hasil dan sertifikat), admin membuat akun lewat modal dan mengekspor Excel, serta aktivasi 2FA (kode QR di layar didekode dan dicocokkan dengan kunci) dan login dengan kode. `qr.spec.js` menguji encoder QR untuk versi 1-10 dan koreksi L/M dengan dekoder independen (jsQR).
+12 test alur (ditambah 3 audit aksesibilitas, ±45 detik) menjalankan aplikasi pada port 8123 dengan database SQLite terpisah `database/e2e.sqlite` (dibuat ulang setiap run oleh `e2e/global-setup.js`, tidak menyentuh database pengembangan) dan **memakai Chrome yang sudah terpasang** (`channel: 'chrome'`), jadi tidak ada browser yang diunduh. Ganti dengan `PW_CHANNEL=msedge` atau jalankan `npx playwright install chromium` bila Chrome tidak tersedia. Cakupan: login dengan Enter dan password salah, pelanggaran CSP, pengalih bahasa, lupa password, alur lintas peran (vendor mengirim → verifikator meneruskan → validator menetapkan → pengadaan melihat hasil dan sertifikat), admin membuat akun lewat modal dan mengekspor Excel, serta aktivasi 2FA (kode QR di layar didekode dan dicocokkan dengan kunci) dan login dengan kode. `qr.spec.js` menguji encoder QR untuk versi 1-10 dan koreksi L/M dengan dekoder independen (jsQR). Teks pertanyaan dipastikan berasal dari server dan ikut berbahasa English, serta format skor sertifikat seragam.
+
+### Aksesibilitas (axe-core)
+
+`e2e/a11y.spec.js` menjalankan axe-core (WCAG 2.0/2.1 A dan AA ditambah praktik terbaik) pada halaman login, lupa password, semua halaman admin, menu akun, modal buat akun, dialog 2FA, dan tampilan ponsel (390 px). Pelanggaran tingkat *serious* dan *critical* menggagalkan test; semua temuan dicetak dengan awalan `A11Y`. Audit otomatis tidak menggantikan uji manual dengan pembaca layar dan keyboard.
+
+## CI (GitHub Actions)
+
+`.github/workflows/ci.yml` berjalan pada push ke `main` dan setiap pull request, dengan tiga check: (1) **PHP (lint, test, audit)**: `composer lint`, `php artisan test`, `composer audit`; (2) **Frontend (lint, build, audit)**: ESLint, Prettier, `npm run build` yang harus tidak mengubah `public/assets`, dan `npm audit --omit=dev`; (3) **E2E and accessibility (Playwright)**: seluruh test Playwright dengan Chrome bawaan runner. Audit npm hanya menggagalkan build untuk dependensi produksi (saat ini tidak ada). Alat build memiliki advisori `braces` (GHSA-vfj7-8cjw-p6xm, DoS pada pola bersarang) yang belum punya versi perbaikan; hanya dipakai pada mode `watch` lokal dan tidak memproses input pengguna.
 
 ## Pemeriksaan manual
 

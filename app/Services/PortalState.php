@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Enums\VendorStatus;
 use App\Models\User;
 use App\Models\Vendor;
+use Illuminate\Support\Facades\DB;
 
 /** Data yang dimuat klien: sesi, vendor yang boleh dilihat pengguna, dan (untuk admin) daftar akun. */
 class PortalState
@@ -31,6 +33,9 @@ class PortalState
 
         return [
             'session' => $viewer->publicData(),
+            'statuses' => VendorStatus::map(),
+            // Master pertanyaan: satu-satunya sumber untuk antarmuka (teks Indonesia dan English).
+            'questions' => DB::table('questions')->orderBy('position')->get(['id', 'group', 'group_en', 'text', 'text_en', 'max']),
             'vendors' => $vendors,
             'accounts' => $isAdmin ? User::where('active', true)->get()->map(fn (User $u) => $u->publicData()) : [],
         ];

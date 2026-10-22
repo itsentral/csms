@@ -3,19 +3,12 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: [
-      'node_modules/**',
-      'vendor/**',
-      'storage/**',
-      'public/build/**',
-      'playwright-report/**',
-      'test-results/**',
-    ],
+    ignores: ['node_modules/**', 'vendor/**', 'storage/**', 'public/**', 'playwright-report/**', 'test-results/**'],
   },
   js.configs.recommended,
   {
     // Skrip klasik (bukan modul): fungsi tingkat atas dipanggil lewat atribut data-click/data-change, jadi tidak dianggap tak terpakai.
-    files: ['public/assets/*.js'],
+    files: ['resources/js/*.js'],
     languageOptions: {
       sourceType: 'script',
       ecmaVersion: 2023,
@@ -33,7 +26,17 @@ export default [
     languageOptions: {
       sourceType: 'module',
       ecmaVersion: 2023,
-      globals: { ...globals.node, ...globals.browser, QR: 'readonly', jsQR: 'readonly' },
+      globals: {
+        ...globals.node,
+        ...globals.browser,
+        QR: 'readonly',
+        jsQR: 'readonly',
+        // Fungsi dan variabel global halaman yang dipakai lewat page.evaluate.
+        go: 'readonly',
+        pqToggleGroup: 'readonly',
+        mfaDialog: 'readonly',
+        currentId: 'writable',
+      },
     },
   },
 ];

@@ -38,3 +38,15 @@ test('lupa password: halaman permintaan dan pesan netral', async ({ page }) => {
   await expect(page.locator('.snackbar')).toContainText('Jika email terdaftar');
   await expect(page.locator('#authTitle')).toHaveText('Masuk ke aplikasi');
 });
+
+test('teks pertanyaan berasal dari server dan ikut berbahasa English', async ({ page }) => {
+  await login(page, 'vendor@example.test');
+  await page.click('.top-actions .lang-switch [data-lang="en"]');
+  await page.click('#nav button[data-page="vendors"]');
+  await page.locator('#vendorList [data-click="openVendorDefault"]').first().click();
+  await page.locator('.pq-group-head').first().click();
+  await expect(page.locator('.qtitle').first()).toContainText('Does the company identify internal and external issues');
+  await expect(page.locator('.pq-group-name').first()).toHaveText('Process 1. Organizational Context');
+  await page.click('.top-actions .lang-switch [data-lang="id"]');
+  await expect(page.locator('.qtitle').first()).toContainText('Apakah perusahaan melakukan identifikasi');
+});
