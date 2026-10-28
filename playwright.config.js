@@ -16,7 +16,7 @@ export const E2E_ENV = {
   NOTIFY_EMAIL: 'false',
 };
 
-// Smoke test end-to-end memakai Chrome yang terpasang (tanpa mengunduh browser) dan database SQLite terpisah.
+// End-to-end smoke tests use the installed Chrome (no browser download) and a separate SQLite database.
 export default defineConfig({
   testDir: 'e2e',
   workers: 1,

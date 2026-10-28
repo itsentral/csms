@@ -238,13 +238,13 @@ class WorkflowTest extends TestCase
         $file = UploadedFile::fake()->createWithContent('bukti.png', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl6NvEAAAAASUVORK5CYII='));
         $id = $this->actingAs($owner)->post('/api/vendors/'.$v->id.'/evidence', ['question_id' => '1.a', 'file' => $file], ['Accept' => 'application/json'])->assertOk()->json('id');
         $this->assertCount(1, Storage::disk('local')->files('evidence/'.$v->id));
-        // Hanya pemilik vendor atau admin yang dapat menghapus lampiran.
+        // Only the vendor owner or an admin can delete attachments.
         $this->actingAs($this->user('verifikator'))->deleteJson('/api/evidence/'.$id)->assertForbidden();
         $this->actingAs($owner)->deleteJson('/api/evidence/'.$id)->assertOk();
         $this->assertDatabaseMissing('evidence', ['id' => $id]);
         $this->assertEmpty(Storage::disk('local')->files('evidence/'.$v->id));
         $this->assertDatabaseHas('audit_logs', ['action' => 'evidence_deleted', 'vendor_id' => $v->id]);
-        // Setelah pengajuan dikirim, lampiran terkunci.
+        // After the submission is sent, attachments are locked.
         $id2 = $this->actingAs($owner)->post('/api/vendors/'.$v->id.'/evidence', ['question_id' => '1.b', 'file' => UploadedFile::fake()->createWithContent('bukti2.png', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl6NvEAAAAASUVORK5CYII='))], ['Accept' => 'application/json'])->assertOk()->json('id');
         $answers = DB::table('questions')->get()->map(fn ($q) => ['question_id' => $q->id, 'answer' => 'Ya', 'note' => ''])->all();
         $this->actingAs($owner)->postJson('/api/vendors/'.$v->id.'/answers', ['answers' => $answers])->assertOk();

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { login } from './helpers.js';
 
-test('halaman login: Enter masuk, password salah ditolak, CSP tidak dilanggar', async ({ page }) => {
+test('login page: Enter logs in, wrong password is rejected, CSP is not violated', async ({ page }) => {
   const violations = [];
   page.on('console', msg => {
     if (/content security policy/i.test(msg.text())) violations.push(msg.text());
@@ -19,7 +19,7 @@ test('halaman login: Enter masuk, password salah ditolak, CSP tidak dilanggar', 
   expect(violations).toEqual([]);
 });
 
-test('pengalih bahasa ID/EN bertahan setelah muat ulang', async ({ page }) => {
+test('the ID/EN language switch persists after a reload', async ({ page }) => {
   await login(page, 'vendor@example.test');
   await page.click('.top-actions .lang-switch [data-lang="en"]');
   await expect(page.locator('#view h1')).toHaveText('CSMS Dashboard');
@@ -29,7 +29,7 @@ test('pengalih bahasa ID/EN bertahan setelah muat ulang', async ({ page }) => {
   await expect(page.locator('#view h1')).toHaveText('Dashboard CSMS');
 });
 
-test('lupa password: halaman permintaan dan pesan netral', async ({ page }) => {
+test('forgot password: request page and neutral message', async ({ page }) => {
   await page.goto('/');
   await page.click('#linkForgot');
   await expect(page.locator('#authTitle')).toHaveText('Lupa password');
@@ -39,7 +39,7 @@ test('lupa password: halaman permintaan dan pesan netral', async ({ page }) => {
   await expect(page.locator('#authTitle')).toHaveText('Masuk ke aplikasi');
 });
 
-test('teks pertanyaan berasal dari server dan ikut berbahasa English', async ({ page }) => {
+test('question text comes from the server and follows English', async ({ page }) => {
   await login(page, 'vendor@example.test');
   await page.click('.top-actions .lang-switch [data-lang="en"]');
   await page.click('#nav button[data-page="vendors"]');
@@ -49,4 +49,24 @@ test('teks pertanyaan berasal dari server dan ikut berbahasa English', async ({ 
   await expect(page.locator('.pq-group-name').first()).toHaveText('Process 1. Organizational Context');
   await page.click('.top-actions .lang-switch [data-lang="id"]');
   await expect(page.locator('.qtitle').first()).toContainText('Apakah perusahaan melakukan identifikasi');
+});
+
+test('the deployed commit is shown on the login page and in the sidebar', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.footer-version')).toHaveText(/^Versi [0-9a-f]{7}$/);
+  await login(page, 'vendor@example.test');
+  await expect(page.locator('.sidefoot-version')).toHaveText(/^Versi [0-9a-f]{7}$/);
+  await page.click('#accountBtn');
+  await expect(page.locator('.sheet .app-version')).toHaveText(/^Versi [0-9a-f]{7}$/);
+});
+
+test('the KAI favicon is declared and served', async ({ page, request }) => {
+  await page.goto('/');
+  await expect(page.locator('link[rel="icon"][href^="/favicon.ico"]')).toHaveCount(1);
+  await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveCount(1);
+  for (const path of ['/favicon.ico', '/favicon-32x32.png', '/apple-touch-icon.png']) {
+    const res = await request.get(path);
+    expect(res.ok(), path).toBe(true);
+    expect(res.headers()['content-type']).toMatch(/image\//);
+  }
 });

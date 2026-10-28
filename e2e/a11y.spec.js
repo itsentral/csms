@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { login } from './helpers.js';
 
-// Audit aksesibilitas otomatis (axe-core, WCAG 2.1 A/AA + praktik terbaik) pada layar dan dialog utama.
-// Hanya pelanggaran berdampak serious/critical yang menggagalkan test; sisanya dicetak sebagai peringatan.
+// Automated accessibility audit (axe-core, WCAG 2.1 A/AA + best practices) of the main screens and dialogs.
+// Only serious/critical violations fail the test; the rest are printed as warnings.
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice'];
 
 async function audit(page, name) {
@@ -26,14 +26,14 @@ async function audit(page, name) {
   return violations;
 }
 
-test('login dan lupa password', async ({ page }) => {
+test('login and forgot password', async ({ page }) => {
   await page.goto('/');
   await audit(page, 'login');
   await page.click('#linkForgot');
   await audit(page, 'lupa password');
 });
 
-test('halaman utama (admin)', async ({ page }) => {
+test('main pages (admin)', async ({ page }) => {
   await login(page, 'admin@example.test');
   await audit(page, 'dashboard');
   for (const p of ['vendors', 'register', 'verification', 'validation', 'risk', 'accounts']) {
@@ -51,7 +51,7 @@ test('halaman utama (admin)', async ({ page }) => {
   await audit(page, 'pra-kualifikasi');
 });
 
-test('dialog, menu akun, dan layar ponsel', async ({ page }) => {
+test('dialogs, account menu, and phone screen', async ({ page }) => {
   await login(page, 'admin@example.test');
   await page.click('#accountBtn');
   await page.waitForTimeout(400);

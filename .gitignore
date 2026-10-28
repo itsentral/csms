@@ -26,7 +26,7 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 
-# Kunci dan rahasia: jangan pernah di-commit
+# Keys and secrets: never commit
 .ssh/
 id_rsa
 id_rsa.pub
@@ -43,7 +43,10 @@ id_dsa*
 !.env.example
 auth.json
 
-# Artefak pengujian
+# Test artifacts
 /test-results/
 /playwright-report/
 /blob-report/
+
+# Local Claude Code configuration
+/.claude/

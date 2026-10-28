@@ -8,7 +8,7 @@ use App\Services\Portal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-/** Pengelolaan akun internal oleh admin. */
+/** Internal account management by admins. */
 class AccountController extends Controller
 {
     public function store(CreateAccountRequest $r)

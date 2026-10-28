@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   Material Design 3 — token dasar
-   Palet diturunkan dari warna merek PT KAI: biru tua indigo (#2E2A72) dan oranye (#F06820), diukur dari logo.
-   Font: Google Sans (self-hosted, tanpa CDN eksternal).
+   Material Design 3: base tokens
+   The palette is derived from the PT KAI brand colours: indigo navy (#2E2A72) and orange (#F06820), measured from the logo.
+   Font: Google Sans (self-hosted, no external CDN).
    ========================================================================== */
 
-/* Material Symbols Outlined (Apache 2.0): subset ikon yang dipakai, dilayani sendiri tanpa CDN */
+/* Material Symbols Outlined (Apache 2.0): a subset of the icons in use, self-hosted without a CDN */
 @font-face {
   font-family: "Material Symbols Outlined";
   font-style: normal;
@@ -54,8 +54,8 @@
   --font-display: "Google Sans Flex", "Google Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "Google Sans Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* Peran warna Material 3 */
-  /* Biru tua KAI sebagai warna utama, oranye KAI sebagai aksen */
+  /* Material 3 colour roles */
+  /* KAI navy as the primary colour, KAI orange as the accent */
   --color-primary: #2e2a72;
   --color-on-primary: #ffffff;
   --color-primary-container: #e1dff5;
@@ -73,7 +73,7 @@
   --color-on-tertiary-container: #3b1500;
   --color-accent: #f06820;
 
-  /* Peringatan status (kuning-amber), terpisah dari oranye merek */
+  /* Status warning (yellow-amber), separate from the brand orange */
   --color-warning-container: #fdeeb8;
   --color-on-warning-container: #3a2b00;
 
@@ -101,7 +101,7 @@
   --color-inverse-surface: #303030;
   --color-on-inverse-surface: #f2f2f2;
 
-  /* Permukaan navigasi: terang, menyatu dengan latar halaman seperti Gmail/Drive */
+  /* Navigation surface: light, blending into the page background like Gmail/Drive */
   --color-rail: #f5f5fa;
   --color-rail-container: #ecedf5;
   --color-on-rail: #1f1f1f;
@@ -109,14 +109,14 @@
   --color-rail-navy: #25225f;
   --color-on-rail-navy-variant: #cdcbf0;
 
-  /* Skala bentuk Material 3 */
+  /* Material 3 shape scale */
   --radius-xs: 0.25rem;
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
   --radius-xl: 1.75rem;
 
-  /* Skala tipografi Material 3 */
+  /* Material 3 type scale */
   --text-display-large: 3.5625rem;
   --text-display-large--line-height: 4rem;
   --text-display-large--letter-spacing: -0.015625rem;
@@ -164,7 +164,7 @@
   --shadow-e4: 0 2px 3px 0 rgb(0 0 0 / 0.3), 0 6px 10px 4px rgb(0 0 0 / 0.15);
   --shadow-e5: 0 4px 4px 0 rgb(0 0 0 / 0.3), 0 8px 12px 6px rgb(0 0 0 / 0.15);
 
-  /* Gerak Material 3 */
+  /* Material 3 motion */
   --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
 }
@@ -173,7 +173,7 @@
 @source "../../public/assets/portal.js";
 
 /* ==========================================================================
-   Dasar
+   Base
    ========================================================================== */
 @layer base {
   * { @apply box-border; }
@@ -186,7 +186,7 @@
   button, input, select, textarea { font: inherit; }
   b, strong { font-weight: 500; }
 
-  /* Radio dan checkbox Material 3 */
+  /* Material 3 radio and checkbox */
   input[type="radio"], input[type="checkbox"] {
     @apply relative m-0 size-5 flex-none cursor-pointer appearance-none border-2 border-on-surface-variant bg-transparent align-middle
       transition-[background-color,border-color,box-shadow] duration-150 ease-standard;
@@ -208,7 +208,7 @@
   :focus-visible { @apply outline-2 outline-offset-2 outline-primary; }
   ::selection { @apply bg-primary-container text-on-primary-container; }
 
-  /* Scrollbar bergaya Material */
+  /* Material-style scrollbar */
   * { scrollbar-width: thin; scrollbar-color: var(--color-outline-variant) transparent; }
   *::-webkit-scrollbar { width: 10px; height: 10px; }
   *::-webkit-scrollbar-thumb { @apply rounded-full bg-outline-variant; }
@@ -216,10 +216,10 @@
 }
 
 /* ==========================================================================
-   Komponen Material 3
+   Material 3 components
    ========================================================================== */
 @layer components {
-  /* --- Tombol ---------------------------------------------------------- */
+  /* --- Buttons --------------------------------------------------------- */
   .btn {
     @apply relative inline-flex h-9 select-none items-center justify-center gap-2 rounded-full px-5 text-label-large
       transition-[background-color,box-shadow,transform] duration-200 ease-standard disabled:pointer-events-none disabled:opacity-38;
@@ -242,7 +242,7 @@
   .btn-accent { @apply bg-tertiary-container text-on-tertiary-container; }
   .btn-sm { @apply h-7 px-3.5 text-label-medium; }
 
-  /* Tombol tersegmen (Material 3 segmented button) */
+  /* Segmented button (Material 3) */
   .segmented { @apply inline-flex overflow-hidden rounded-full border border-outline; }
   .segmented button {
     @apply h-9 flex-1 border-0 bg-transparent px-4 text-label-large text-on-surface-variant
@@ -255,14 +255,14 @@
       transition-colors duration-200 ease-standard hover:bg-on-surface/8 disabled:pointer-events-none disabled:opacity-38;
   }
 
-  /* --- Kartu ------------------------------------------------------------ */
-  /* Kartu metrik: tonal tanpa garis. Panel: outlined. Panel di dalam panel: tonal. */
+  /* --- Cards ------------------------------------------------------------ */
+  /* Metric card: tonal, no border. Panel: outlined. Panel inside a panel: tonal. */
   .card { @apply rounded-lg bg-surface-container p-4; }
   .panel { @apply rounded-lg border border-outline-variant bg-surface-container-lowest p-4; --field-surface: var(--color-surface-container-lowest); }
   .panel .panel { @apply border-0 bg-surface-container-low; --field-surface: var(--color-surface-container-low); }
   .panel h2 { @apply mb-3 mt-0 font-display text-[1.125rem] leading-6 text-on-surface; }
   .panel h3 { @apply mb-3 mt-0 text-title-medium text-on-surface; }
-  /* Jarak antarpanel dan antara judul panel dengan isinya */
+  /* Spacing between panels and between a panel title and its content */
   .panel + .panel, .panel + .note, .note + .panel { @apply mt-4; }
   .panel .panel + .panel { @apply mt-4; }
   .panel > .row:first-child { @apply mb-3; }
@@ -276,7 +276,7 @@
   .card-outlined { @apply rounded-md border border-outline-variant bg-surface-container-lowest p-4; }
   .card-interactive { @apply cursor-pointer transition-colors duration-200 ease-standard hover:bg-surface-container-high; }
 
-  /* --- Bantuan tata letak -------------------------------------------------- */
+  /* --- Layout helpers ------------------------------------------------------ */
   .row { @apply flex flex-wrap items-center gap-2; }
   .between { @apply justify-between; }
   .main { @apply min-w-0; }
@@ -285,9 +285,9 @@
   .top-action svg { @apply size-5 flex-none fill-current; }
   .top-action { @apply gap-1.5 px-3; }
 
-  /* --- Medan isian (outlined text field Material 3) --------------------------
-     Latar transparan dengan garis 1px. Label mengambang duduk di atas garis dan
-     latar label mengikuti latar bidang sehingga garis terpotong (notch). */
+  /* --- Input fields (Material 3 outlined text field) -------------------------
+     Transparent background with a 1px border. The floating label sits on the border and
+     its background follows the field background so the border is cut out (notch). */
   .field { @apply relative flex flex-col; }
   .formgrid { @apply grid grid-cols-2 items-start gap-3; }
   .wide { @apply col-span-full; }
@@ -333,14 +333,14 @@
   .field-error > input, .field-error > select, .field-error > textarea { @apply border-error; }
   .field-error > label { @apply text-error; }
   .field-error-text { @apply text-error; }
-  /* Varian area teks: label mengambang di atas garis atas kotak. */
+  /* Textarea variant: the floating label sits on the top border of the box. */
   .field-area > textarea { @apply min-h-24 resize-y; }
   .field-area > label { @apply top-3 text-body-medium; transform: translateY(0); }
   .field-area > textarea:focus + label,
   .field-area > textarea:not(:placeholder-shown) + label { @apply top-[-8px] text-[12px] font-medium leading-4 text-on-surface-variant; }
   .field-area > textarea:focus + label { @apply text-primary; }
   .field > .field-label { @apply pointer-events-none static max-w-none overflow-visible whitespace-normal bg-transparent p-0 pb-1.5 text-label-large text-on-surface-variant; transform: none; }
-  /* Medan isian dengan tombol mata di dalam (login) */
+  /* Input with an eye button inside (login) */
   .field > .password-field { @apply relative; }
   .field > .password-field input {
     @apply h-12 w-full rounded-sm border border-field-outline bg-transparent px-3.5 pb-1.5 pt-5 text-body-medium
@@ -366,7 +366,7 @@
   .chip-filter.selected { @apply bg-secondary-container text-on-secondary-container; }
   .chip-lg { @apply h-10 rounded-lg px-4; }
 
-  /* --- Lencana ----------------------------------------------------------- */
+  /* --- Badges ------------------------------------------------------------ */
   .badge {
     @apply inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-error px-1 text-[10px] font-bold text-on-error;
   }
@@ -380,7 +380,7 @@
   .tag-error { @apply bg-error-container text-on-error-container; }
   .tag-outline { @apply border-outline-variant text-on-surface-variant; }
 
-  /* --- Navigasi (rail/drawer) --------------------------------------------- */
+  /* --- Navigation (rail/drawer) ------------------------------------------- */
   .app { @apply grid min-h-screen grid-cols-[248px_1fr]; }
   .side {
     @apply sticky top-0 flex h-screen flex-col self-start overflow-y-auto bg-rail px-3 py-4 text-on-rail;
@@ -401,7 +401,7 @@
   }
   .nav button.active { @apply bg-secondary-container font-medium text-on-secondary-container; }
   .nav button.is-hidden { @apply hidden!; }
-  /* Ikon Material Symbols Outlined (font ligature). Varian terisi (FILL 1) dipakai pada item aktif. */
+  /* Material Symbols Outlined icons (font ligature). The filled variant (FILL 1) is used on the active item. */
   .msym {
     font-family: "Material Symbols Outlined"; font-weight: 400; font-style: normal; font-size: 24px; line-height: 1;
     letter-spacing: normal; text-transform: none; white-space: nowrap; direction: ltr;
@@ -413,6 +413,9 @@
   .nav button.active .nav-icon { font-variation-settings: "FILL" 1; }
   .nav-more { @apply hidden; }
   .sidefoot { @apply mt-auto px-1 pt-4; }
+  .sidefoot-version { @apply mt-1 px-1.5 font-mono text-label-small text-on-rail-variant; }
+  .footer-version { @apply mt-1 block font-mono text-label-small text-on-surface-variant; }
+  .app-version { @apply font-mono; }
   .sidefoot-note { @apply mt-3 px-1.5 text-body-small leading-snug text-on-rail-variant; }
   .account-avatar {
     @apply flex size-9 flex-none items-center justify-center rounded-full bg-primary-container text-label-large font-medium text-on-primary-container;
@@ -425,7 +428,7 @@
   .top small { @apply text-body-small text-on-surface-variant; }
   .top-title { @apply truncate font-display text-title-medium font-normal text-on-surface-variant; }
   .top-actions { @apply flex items-center gap-3; }
-  /* Pengalih bahasa ID | EN */
+  /* ID | EN language switch */
   .lang-switch { @apply inline-flex h-7 flex-none overflow-hidden rounded-full border border-field-outline; }
   .lang-switch button {
     @apply h-full min-w-10 px-3 text-label-medium font-medium text-on-surface-variant transition-colors duration-200 ease-standard hover:bg-on-surface/8;
@@ -436,7 +439,7 @@
     @apply flex size-9 flex-none items-center justify-center rounded-full bg-primary text-label-large font-medium text-on-primary ring-2 ring-accent ring-offset-2 ring-offset-surface
       transition-shadow duration-200 ease-standard hover:shadow-[0_0_0_6px_color-mix(in_srgb,var(--color-on-surface)_8%,transparent)];
   }
-  /* Konten berada dalam kartu putih membulat di atas latar halaman, seperti Gmail/Drive */
+  /* Content sits in a rounded white card on the page background, like Gmail/Drive */
   .main { @apply flex flex-col; }
   .content { @apply w-full flex-1 bg-surface-container-lowest p-4; --field-surface: var(--color-surface-container-lowest); }
   @media (min-width: 901px) {
@@ -482,7 +485,7 @@
   /* --- Divider ------------------------------------------------------------ */
   .divider { @apply h-px w-full bg-outline-variant; }
 
-  /* --- Catatan / banner --------------------------------------------------- */
+  /* --- Notes / banners ---------------------------------------------------- */
   .note {
     @apply my-3 flex items-start gap-2.5 rounded-lg border-0 bg-surface-container-low px-4 py-3 text-body-medium text-on-surface-variant;
   }
@@ -530,7 +533,7 @@
   .sheet-account-meta b { @apply truncate text-title-small; }
   .sheet-account-meta small { @apply truncate text-body-small text-on-surface-variant; }
   @keyframes sheet-in { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  /* Di desktop, sheet bawah menjadi menu popup di dekat tombol akun (pola Google), bukan lembar layar penuh */
+  /* On desktop, the bottom sheet becomes a popup menu next to the account button (Google pattern), not a full-screen sheet */
   @media (min-width: 901px) {
     .sheet-backdrop { @apply items-stretch justify-start bg-transparent; animation: none; }
     .sheet {
@@ -586,7 +589,7 @@
     to { opacity: 1; transform: scale(1) translateY(0); }
   }
 
-  /* --- Question /步骤 -------------------------------------------------------- */
+  /* --- Question -------------------------------------------------------------- */
   .stepbar { @apply mb-5 flex flex-wrap gap-2; }
   .step {
     @apply rounded-full bg-surface-container-high px-3.5 py-1.5 text-label-medium text-on-surface-variant;
@@ -599,7 +602,7 @@
   .choices label { @apply inline-flex min-h-10 cursor-pointer items-center gap-3 text-body-medium text-on-surface; }
   .qmeta { @apply mb-1 text-label-medium text-on-surface-variant; }
 
-  /* --- Draft pra-kualifikasi ------------------------------------------------ */
+  /* --- Pre-qualification draft ---------------------------------------------- */
   .pq-bar { @apply mb-3 rounded-lg border border-outline-variant bg-surface-container-lowest p-4; }
   .pq-bar-row { @apply mb-3 flex flex-wrap items-center justify-between gap-3; }
   .pq-pct { @apply font-display text-headline-small tabular-nums text-primary; }
@@ -654,6 +657,11 @@
   .pq-save-state.saving { @apply text-primary; }
   .pq-save-state.error { @apply text-error; }
   .pq-pending { @apply text-body-small font-medium text-on-warning-container; }
+  .pq-upload { @apply mt-1 flex max-w-[420px] flex-col gap-1 text-label-medium text-on-surface-variant; }
+  .pq-upload[hidden] { @apply hidden; }
+  .pq-upload-row { @apply font-medium text-primary; }
+  .pq-upload .progress { @apply h-1.5; }
+  .pq-upload-name { @apply truncate; }
   .pq-resume { @apply mb-4 flex flex-wrap items-center justify-between gap-3 border-l-4 border-l-primary bg-primary-container text-on-primary-container; }
   .pq-missing { @apply mt-4 flex list-none flex-col gap-2 p-0; }
   .pq-missing-item {
@@ -663,9 +671,10 @@
   .pq-missing-item span { @apply text-on-surface-variant; }
 
   /* --- Login ---------------------------------------------------------------- */
-  /* Latar login: gradien radial biru tua dengan cahaya oranye di sudut, ditambah lingkaran konsentris tipis (kesan jalur rel melengkung) */
+  /* Login background: a navy radial gradient with orange light in the corner, plus thin concentric circles (the look of curved rail tracks) */
   .login-overlay {
-    @apply fixed inset-0 z-[1000] flex items-center justify-center overflow-hidden p-5;
+    @apply fixed inset-0 z-[1000] flex overflow-y-auto overflow-x-hidden px-5 pb-5 pt-14;
+    overscroll-behavior: contain;
     background-color: #19164f;
     background-image:
       radial-gradient(60% 55% at 8% 6%, rgb(92 86 205 / 0.55), transparent 62%),
@@ -674,13 +683,16 @@
       radial-gradient(45% 40% at 3% 98%, rgb(240 104 32 / 0.22), transparent 65%);
   }
   .login-overlay::before, .login-overlay::after {
-    content: ""; @apply pointer-events-none absolute rounded-full;
+    content: ""; @apply pointer-events-none fixed rounded-full;
     background: repeating-radial-gradient(circle at center, transparent 0 46px, rgb(255 255 255 / 0.07) 46px 47px);
   }
   .login-overlay::before { width: 120vmax; height: 120vmax; right: -62vmax; bottom: -70vmax; }
   .login-overlay::after { width: 70vmax; height: 70vmax; left: -38vmax; top: -44vmax; }
   .login-overlay > * { @apply relative; z-index: 1; }
   .login-overlay > .lang-switch-floating { @apply fixed; }
+  /* margin:auto centres the box when it fits and lets the overlay scroll from the top when it does not */
+  .login-overlay > .login-box { @apply m-auto; }
+  @supports (height: 100dvh) { .login-overlay { height: 100dvh; bottom: auto; } }
   .login-overlay .lang-switch { border-color: rgb(255 255 255 / 0.45); }
   .login-overlay .lang-switch button { @apply text-white hover:bg-white/15; }
   .login-overlay .lang-switch button.selected { @apply bg-white text-primary; }
@@ -718,7 +730,7 @@
   .boot-card small { @apply -mt-2 text-label-medium tracking-widest text-on-surface-variant; }
   .boot-spinner { @apply size-8 animate-spin rounded-full border-[3px] border-primary/20 border-t-primary; }
 
-  /* --- Metrik ---------------------------------------------------------------- */
+  /* --- Metrics --------------------------------------------------------------- */
   .cards { @apply my-5 grid grid-cols-2 gap-3.5 lg:grid-cols-4; }
   .cards-3 { @apply grid-cols-1 sm:grid-cols-3 lg:grid-cols-3; }
   .card-metric { @apply rounded-md border border-outline-variant bg-surface-container-lowest p-5; }
@@ -737,7 +749,7 @@
   .code { @apply font-mono; font-size: 0.9em; letter-spacing: 0; }
   .num { @apply tabular-nums; }
 
-  /* --- Pencarian dan filter daftar -------------------------------------------- */
+  /* --- List search and filters ------------------------------------------------ */
   .toolbar { @apply mb-4 flex flex-wrap items-center gap-3; }
   .search { @apply relative block min-w-[240px] flex-1; }
   .search .msym { @apply pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant; }
@@ -748,29 +760,29 @@
   .search input:focus { @apply bg-surface-container-lowest shadow-e2; }
   .chips { @apply flex flex-wrap gap-2; }
 
-  /* --- Indikator proses berjalan (bar tipis di tepi atas) ------------------------ */
+  /* --- Busy indicator (thin bar on the top edge) ----------------------------------- */
   .top-progress { @apply pointer-events-none fixed inset-x-0 top-0 z-[1300] hidden h-1 overflow-hidden bg-primary/20; }
   .is-busy .top-progress { @apply block; animation: fade-in 150ms 250ms both; }
   .is-busy { cursor: progress; }
   .top-progress div { @apply h-full w-2/5 rounded-full bg-primary; animation: progress-slide 1.1s var(--ease-standard) infinite; }
   @keyframes progress-slide { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
 
-  /* --- Lencana status pada tabel ---------------------------------------------- */
+  /* --- Status badges in tables ------------------------------------------------ */
   .status-dot { @apply inline-block size-2 rounded-full; }
 }
 
 /* ==========================================================================
-   Sertifikat cetak — tetap formal, memakai token M3
+   Printed certificate: stays formal, uses the M3 tokens
    ========================================================================== */
 @layer components {
   .cert-actions { @apply my-4 flex flex-wrap gap-2; }
-  /* Sertifikat bertema KAI: pita biru tua indigo dengan tebasan oranye (mengikuti logo), bingkai ganda, dan aksen garis kecepatan */
+  /* KAI-themed certificate: an indigo navy band with an orange slash (following the logo), a double frame, and speed-line accents */
   .certificate {
     @apply relative mx-auto mt-4 w-full max-w-[297mm] overflow-hidden rounded-md border-2 border-primary bg-white px-12 pb-9 pt-11 text-center text-on-surface shadow-e2;
     outline: 1px solid var(--color-accent);
     outline-offset: -9px;
   }
-  /* Proporsi kertas A4 landscape (297 x 210 mm) pada layar lebar; di layar sempit tinggi mengikuti isi */
+  /* A4 landscape proportions (297 x 210 mm) on wide screens; on narrow screens the height follows the content */
   @media (min-width: 900px) {
     .certificate { aspect-ratio: 297 / 210; @apply flex flex-col items-center justify-center; }
     .certificate > * { max-width: 100%; }
@@ -826,7 +838,7 @@
 }
 
 /* ==========================================================================
-   Responsif: navigasi bawah Material 3 untuk layar kecil
+   Responsive: Material 3 bottom navigation for small screens
    ========================================================================== */
 @media (max-width: 900px) {
   .app { @apply grid-cols-1 grid-rows-[auto_1fr]; }
@@ -837,7 +849,7 @@
   .brand small { @apply hidden; }
   .sidefoot { @apply hidden; }
 
-  /* Navigasi bawah Material 3 */
+  /* Material 3 bottom navigation */
   .nav {
     @apply fixed inset-x-0 bottom-0 z-[60] mt-0 flex-row items-stretch justify-around gap-0
       border-0 bg-surface-container px-1 pb-[env(safe-area-inset-bottom)] pt-1;
@@ -888,7 +900,7 @@
 }
 
 /* ==========================================================================
-   Identitas KAI: garis aksen biru tua + oranye di tepi atas, penanda menu aktif
+   KAI identity: a navy + orange accent line on the top edge, active menu marker
    ========================================================================== */
 @layer components {
   body::before {
@@ -896,11 +908,11 @@
     @apply pointer-events-none fixed inset-x-0 top-0 z-[1200] h-[3px];
     background: linear-gradient(90deg, var(--color-primary) 0 78%, var(--color-accent) 78%);
   }
-  /* Sidebar desktop: biru tua KAI (di ponsel navigasi bawah tetap terang) */
+  /* Desktop sidebar: KAI navy (on phones the bottom navigation stays light) */
   @media (min-width: 901px) {
     .side { background-color: var(--color-rail-navy); @apply text-white; }
     .side .brand strong { @apply text-white; }
-    .side .brand small, .side .sidefoot-note { color: var(--color-on-rail-navy-variant); }
+    .side .brand small, .side .sidefoot-note, .side .sidefoot-version { color: var(--color-on-rail-navy-variant); }
     .side .nav button { color: var(--color-on-rail-navy-variant); }
     .side .nav button:hover { @apply bg-white/10 text-white; }
     .side .nav button.active { @apply bg-white/15 text-white; }

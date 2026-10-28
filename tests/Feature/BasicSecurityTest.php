@@ -16,6 +16,20 @@ class BasicSecurityTest extends TestCase
         $response->assertSee('csrf-token', false);
     }
 
+    public function test_the_shell_declares_the_kai_favicon_and_the_files_exist(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('rel="icon" href="/favicon.ico', false)
+            ->assertSee('rel="apple-touch-icon" href="/apple-touch-icon.png', false);
+
+        foreach (['favicon.ico', 'favicon-32x32.png', 'apple-touch-icon.png'] as $file) {
+            $this->assertFileExists(public_path($file));
+            $this->assertGreaterThan(0, filesize(public_path($file)));
+        }
+        $this->assertSame("\x89PNG", substr((string) file_get_contents(public_path('apple-touch-icon.png')), 0, 4));
+    }
+
     public function test_guest_is_rejected_from_api_state(): void
     {
         $response = $this->getJson('/api/state');

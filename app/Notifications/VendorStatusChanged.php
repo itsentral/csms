@@ -5,7 +5,7 @@ namespace App\Notifications;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-/** Email saat status vendor berubah. $event: submitted | advanced | returned | finalized. */
+/** Email sent when the vendor status changes. $event: submitted | advanced | returned | finalized. */
 class VendorStatusChanged extends Notification
 {
     public function __construct(public string $vendorName, public string $event) {}

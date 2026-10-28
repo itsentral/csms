@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-/** Lampiran bukti: disimpan privat di disk `local`, hanya diunduh lewat endpoint berotorisasi. */
+/** Evidence attachments: stored privately on the `local` disk and downloaded only through an authorized endpoint. */
 class EvidenceService
 {
     public function __construct(private VendorService $vendors) {}

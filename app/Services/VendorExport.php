@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Enums\VendorStatus;
 use Illuminate\Support\Facades\DB;
 
-/** Menyusun data ekspor vendor menjadi sheet XLSX. Header mengikuti bahasa antarmuka (id/en). */
+/** Builds the vendor export data into XLSX sheets. Headers follow the UI language (id/en). */
 class VendorExport
 {
     private const L = [
@@ -23,7 +23,7 @@ class VendorExport
         ],
     ];
 
-    /** @param iterable<array> $vendors hasil Portal::serializeMany */
+    /** @param iterable<array> $vendors result of Portal::serializeMany */
     public static function build(iterable $vendors, string $lang, string $path): void
     {
         $l = self::L[$lang] ?? self::L['id'];

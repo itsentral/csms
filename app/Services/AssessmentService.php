@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\DB;
 
-/** Penilaian verifikator (stage `review`) dan validator (stage `validation`) beserta transisi statusnya. */
+/** Verifier (stage `review`) and validator (stage `validation`) assessments, with their status transitions. */
 class AssessmentService
 {
     private const EVENTS = ['advance' => 'advanced', 'return' => 'returned', 'finalize' => 'finalized'];
@@ -21,8 +21,8 @@ class AssessmentService
 
         $out = DB::transaction(function () use ($user, $vendor, $stage, $d) {
             $v = $this->vendors->lock($vendor);
-            // Nilai verifikasi masih boleh disimpan setelah verifikator lain meneruskan vendor; hanya advance/return yang
-            // memerlukan tahap verifikasi.
+            // Verification scores may still be saved after another verifier has forwarded the vendor; only advance/return
+            // require the verification stage.
             $allowed = $stage === 'review'
                 ? ($d['action'] === 'save' ? [VendorStatus::AwaitingVerification->value, VendorStatus::AwaitingValidation->value] : [VendorStatus::AwaitingVerification->value])
                 : [VendorStatus::AwaitingValidation->value];

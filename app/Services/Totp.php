@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-/** TOTP (RFC 6238, HMAC-SHA1, 6 digit, 30 detik) tanpa dependensi. */
+/** TOTP (RFC 6238, HMAC-SHA1, 6 digits, 30 seconds) without dependencies. */
 class Totp
 {
     private const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
@@ -31,8 +31,8 @@ class Totp
     }
 
     /**
-     * Memeriksa kode pada jendela ±$window langkah. Langkah yang sudah dipakai ($lastStep) ditolak agar kode
-     * tidak dapat dipakai ulang. Mengembalikan langkah yang cocok, atau null bila tidak ada.
+     * Checks the code within a ±$window step window. A step that was already used ($lastStep) is rejected so the code
+     * cannot be reused. Returns the matching step, or null if there is none.
      */
     public static function verify(string $secret, string $code, ?int $lastStep = null, int $window = 1, ?int $now = null): ?int
     {

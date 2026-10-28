@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-/** Bila MFA_REQUIRED=true, akun internal tanpa 2FA hanya boleh membuka state, logout, ganti password, dan menyiapkan 2FA. */
+/** When MFA_REQUIRED=true, internal accounts without 2FA may only open state, log out, change password, and set up 2FA. */
 class RequireMfaSetup
 {
     private const ALLOWED = ['api/state', 'api/logout', 'api/password', 'api/mfa/setup', 'api/mfa/confirm'];

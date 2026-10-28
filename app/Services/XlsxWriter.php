@@ -4,10 +4,10 @@ namespace App\Services;
 
 use ZipArchive;
 
-/** Penulis XLSX minimal (tanpa dependensi): setiap sheet berisi baris pertama sebagai header tebal, beku, dan berfilter. */
+/** Minimal XLSX writer (no dependencies): each sheet has its first row as a bold, frozen, filtered header. */
 class XlsxWriter
 {
-    /** @param array<string,array<int,array<int,mixed>>> $sheets nama sheet => baris-baris (baris pertama header) */
+    /** @param array<string,array<int,array<int,mixed>>> $sheets sheet name => rows (the first row is the header) */
     public static function write(array $sheets, string $path): void
     {
         $zip = new ZipArchive;

@@ -8,12 +8,12 @@ use App\Services\Totp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-/** Autentikasi dua langkah (TOTP) untuk akun internal. */
+/** Two-factor authentication (TOTP) for internal accounts. */
 class MfaController extends Controller
 {
     private const RECOVERY_CODES = 8;
 
-    /** Langkah kedua login: menerima kode TOTP atau satu kode pemulihan. */
+    /** Second login step: accepts a TOTP code or one recovery code. */
     public function verifyLogin(Request $r)
     {
         $d = $r->validate(['code' => 'required|string|max:32']);
@@ -31,7 +31,7 @@ class MfaController extends Controller
         return response()->json($user->publicData());
     }
 
-    /** Membuat rahasia baru (belum aktif sampai dikonfirmasi). */
+    /** Creates a new secret (not active until confirmed). */
     public function setup(Request $r)
     {
         $user = $this->internal($r);
@@ -84,7 +84,7 @@ class MfaController extends Controller
         return ['ok' => true];
     }
 
-    /** Admin mengatur ulang 2FA akun internal lain (perangkat hilang). */
+    /** An admin resets 2FA for another internal account (lost device). */
     public function adminReset(Request $r, User $user)
     {
         Portal::role($r->user(), 'admin');
@@ -94,7 +94,7 @@ class MfaController extends Controller
         return ['ok' => true];
     }
 
-    /** Kode pemulihan dibandingkan tanpa tanda hubung dan tanpa membedakan huruf besar/kecil. */
+    /** Recovery codes are compared without hyphens and case-insensitively. */
     private function hashCode(string $code): string
     {
         return hash('sha256', strtoupper(preg_replace('/[\s-]+/', '', $code)));
@@ -126,7 +126,7 @@ class MfaController extends Controller
 
             return true;
         }
-        // Kode pemulihan: sekali pakai.
+        // Recovery code: single use.
         $hash = $this->hashCode($input);
         $codes = $user->two_factor_recovery_codes ?? [];
         $index = array_search($hash, $codes, true);
@@ -140,7 +140,7 @@ class MfaController extends Controller
         return true;
     }
 
-    /** @return list<string> kode seperti ABCDE-12345 (huruf/angka tanpa karakter yang mudah tertukar) */
+    /** @return list<string> codes like ABCDE-12345 (letters/digits without easily confused characters) */
     private function newRecoveryCodes(): array
     {
         $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';

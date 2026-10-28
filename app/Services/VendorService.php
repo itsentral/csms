@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-/** Profil, jawaban, pengiriman, dan penghapusan vendor. Setiap perubahan mengunci barisnya (lockForUpdate). */
+/** Vendor profile, answers, submission, and deletion. Every change locks its row (lockForUpdate). */
 class VendorService
 {
     public function saveProfile(User $user, ?Vendor $vendor, array $data): array
@@ -61,7 +61,7 @@ class VendorService
                 $missing = DB::table('questions')->orderBy('position')->pluck('id')->reject(fn ($id) => in_array($id, $done, true))->values()->all();
                 throw new HttpResponseException(response()->json(['message' => __('portal.incomplete', ['total' => $total]), 'missing' => $missing, 'answered' => $answered, 'total' => $total], 422));
             }
-            // Pengiriman ulang setelah perbaikan memulai putaran penilaian baru; skor lama tetap ada di audit log.
+            // Resubmitting after a correction starts a new assessment round; the old scores remain in the audit log.
             if ($v->status === VendorStatus::NeedsRevision->value) {
                 Portal::audit('previous_round_archived', $v->id, Portal::serialize($v));
                 DB::table('assessments')->where('vendor_id', $v->id)->delete();
@@ -76,7 +76,7 @@ class VendorService
         return $out[1];
     }
 
-    /** Menghapus vendor beserta seluruh datanya dan berkas lampiran. */
+    /** Deletes a vendor together with all its data and attachment files. */
     public function destroy(Vendor $vendor): array
     {
         $out = DB::transaction(function () use ($vendor) {
@@ -98,7 +98,7 @@ class VendorService
 
             return ['paths' => $paths, 'counts' => $counts];
         });
-        // Berkas dihapus setelah baris database tersimpan, sehingga rollback tidak pernah menghapus berkas.
+        // Files are deleted after the database rows are saved, so a rollback never deletes files.
         foreach ($out['paths'] as $path) {
             Storage::disk('local')->delete($path);
         }

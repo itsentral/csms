@@ -5,7 +5,7 @@ import { test, expect } from '@playwright/test';
 const require = createRequire(import.meta.url);
 const JSQR_SOURCE = fs.readFileSync(require.resolve('jsqr'), 'utf8');
 
-// jsQR dimuat lewat CDP (evaluate) karena CSP aplikasi melarang skrip inline; semua dekode berjalan di dalam halaman.
+// jsQR is loaded through CDP (evaluate) because the app CSP forbids inline scripts; all decoding runs inside the page.
 async function prepare(page) {
   await page.goto('/');
   await page.evaluate(`${JSQR_SOURCE}\n;window.jsQR = (typeof jsQR !== 'undefined' ? jsQR : window.jsQR);`);
@@ -41,7 +41,7 @@ const roundTrip = (page, cases) =>
     return out;
   }, cases);
 
-test('QR: hasil encoder terbaca ulang untuk versi 1-10, koreksi L dan M', async ({ page }) => {
+test('QR: encoder output reads back for versions 1-10, correction L and M', async ({ page }) => {
   await prepare(page);
   const base = 'otpauth://totp/CSMS:é-' + 'abcdefghijklmnopqrstuvwxyz0123456789'.repeat(8);
   const cases = [];
@@ -51,7 +51,7 @@ test('QR: hasil encoder terbaca ulang untuk versi 1-10, koreksi L dan M', async 
   for (const r of await roundTrip(page, cases)) expect(r.decoded, `ecc=${r.ecc} panjang=${r.text.length}`).toBe(r.text);
 });
 
-test('QR: SVG untuk URI otpauth terbaca, teks terlalu panjang ditolak', async ({ page }) => {
+test('QR: SVG for an otpauth URI reads back, text that is too long is rejected', async ({ page }) => {
   await prepare(page);
   const uri = 'otpauth://totp/CSMS%3Aadmin%40example.test?secret=DKAJC7JUQYV775EX7Q345EBIXU4OG2JQ&issuer=CSMS';
   const [r] = await roundTrip(page, [{ text: uri, kind: 'svg' }]);

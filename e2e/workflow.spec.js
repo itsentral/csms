@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { login, confirmDialog } from './helpers.js';
 
-// Alur utama lintas peran pada satu vendor demo: kirim → verifikasi → validasi → hasil.
+// Main cross-role flow on one demo vendor: submit → verification → validation → result.
 test.describe.configure({ mode: 'serial' });
 
-test('vendor menjawab 49 pertanyaan dan mengirim untuk verifikasi', async ({ page }) => {
+test('vendor answers 49 questions and submits for verification', async ({ page }) => {
   await login(page, 'vendor@example.test');
   await page.click('#nav button[data-page="vendors"]');
   await page.locator('#vendorList [data-click="openVendorDefault"]').first().click();
@@ -18,10 +18,10 @@ test('vendor menjawab 49 pertanyaan dan mengirim untuk verifikasi', async ({ pag
   await expect(page.locator('.snackbar')).toContainText('antrean verifikasi');
 });
 
-test('verifikator menilai dan meneruskan ke validasi lapangan', async ({ page }) => {
+test('verifier assesses and forwards to field validation', async ({ page }) => {
   await login(page, 'verifikator@example.test');
   await expect(page.locator('#view h1')).toHaveText('Verifikasi Dokumen');
-  await expect(page.locator('#vendorPicker')).not.toHaveValue(''); // vendor yang menunggu terpilih otomatis
+  await expect(page.locator('#vendorPicker')).not.toHaveValue(''); // the waiting vendor is selected automatically
   await page.evaluate(() => {
     document.querySelectorAll('[data-review]').forEach(s => {
       s.value = '1';
@@ -33,7 +33,7 @@ test('verifikator menilai dan meneruskan ke validasi lapangan', async ({ page })
   await expect(page.locator('.snackbar')).toContainText('berhasil disimpan');
 });
 
-test('validator menetapkan hasil akhir', async ({ page }) => {
+test('validator sets the final result', async ({ page }) => {
   await login(page, 'validator@example.test');
   await expect(page.locator('#view h1')).toContainText('Validasi');
   await expect(page.locator('#vendorPicker')).not.toHaveValue('');
@@ -53,7 +53,7 @@ test('validator menetapkan hasil akhir', async ({ page }) => {
   await expect(page.locator('#view')).toContainText('Risiko Tinggi');
 });
 
-test('pengadaan melihat hasil dan pratinjau sertifikat', async ({ page }) => {
+test('procurement sees the result and the certificate preview', async ({ page }) => {
   await login(page, 'pengadaan@example.test');
   await expect(page.locator('#view h1')).toContainText('Hasil');
   await expect(page.locator('#view')).toContainText('PT Vendor Contoh');
@@ -61,6 +61,6 @@ test('pengadaan melihat hasil dan pratinjau sertifikat', async ({ page }) => {
   await page.click('[data-click="previewCert"]');
   await expect(page.locator('.certificate')).toContainText('SERTIFIKAT HASIL PENILAIAN');
   await expect(page.locator('.certificate')).toContainText('PT Vendor Contoh');
-  await expect(page.locator('.cert-score')).toHaveText(/^100\s*\/ 100$/); // skor bulat tanpa desimal
+  await expect(page.locator('.cert-score')).toHaveText(/^100\s*\/ 100$/); // whole score without decimals
   await expect(page.locator('.cert-meta')).toContainText('Oktober 2026');
 });

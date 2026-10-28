@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-/** Status alur vendor. Nilai disimpan apa adanya di `vendors.status` dan juga dikirim ke klien (lihat `map()`). */
+/** Vendor workflow status. Values are stored as-is in `vendors.status` and also sent to the client (see `map()`). */
 enum VendorStatus: string
 {
     case AwaitingFill = 'Menunggu Pengisian';
@@ -11,13 +11,13 @@ enum VendorStatus: string
     case AwaitingValidation = 'Menunggu Validasi Lapangan';
     case Validated = 'Tervalidasi';
 
-    /** Status saat vendor masih boleh mengisi atau mengubah pengajuan. @return list<string> */
+    /** Statuses in which the vendor may still fill in or change the submission. @return list<string> */
     public static function editable(): array
     {
         return [self::AwaitingFill->value, self::NeedsRevision->value];
     }
 
-    /** Peta nama (camelCase) => nilai, dipakai klien sebagai konstanta `STATUS`. @return array<string,string> */
+    /** Map of name (camelCase) => value, used by the client as the `STATUS` constant. @return array<string,string> */
     public static function map(): array
     {
         $map = [];

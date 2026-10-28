@@ -2,15 +2,15 @@ import fs from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { login, confirmDialog, openAccountMenu, totp, decodeQr } from './helpers.js';
 
-test('admin membuat akun internal lewat modal dan mengekspor Excel', async ({ page }) => {
+test('admin creates an internal account through the modal and exports Excel', async ({ page }) => {
   await login(page, 'admin@example.test');
   await page.click('#nav button[data-page="accounts"]');
-  await expect(page.locator('#internalAccountForm')).toHaveCount(0); // form tidak tampil sebelum tombol ditekan
+  await expect(page.locator('#internalAccountForm')).toHaveCount(0); // the form is not shown before the button is pressed
 
   await page.click('[data-click="createAccountDialog"]');
   const dialog = page.locator('.dialog-form');
   await dialog.locator('button[type="submit"]').click();
-  await expect(dialog.locator('.field-error')).not.toHaveCount(0); // validasi inline
+  await expect(dialog.locator('.field-error')).not.toHaveCount(0); // inline validation
   await dialog.locator('input[name="name"]').fill('Penilai Baru');
   await dialog.locator('input[name="username"]').fill('penilai.baru@example.test');
   await dialog.locator('input[name="password"]').fill('PasswordBaru2026!');
@@ -25,15 +25,15 @@ test('admin membuat akun internal lewat modal dan mengekspor Excel', async ({ pa
   const file = await download;
   expect(file.suggestedFilename()).toMatch(/\.xlsx$/);
   const bytes = fs.readFileSync(await file.path());
-  expect(bytes.subarray(0, 2).toString()).toBe('PK'); // paket OOXML (zip)
+  expect(bytes.subarray(0, 2).toString()).toBe('PK'); // OOXML package (zip)
 });
 
-test('akun internal mengaktifkan 2FA lalu login memerlukan kode', async ({ page }) => {
+test('an internal account enables 2FA, then login requires a code', async ({ page }) => {
   await login(page, 'admin@example.test');
   await openAccountMenu(page, 'Autentikasi dua langkah');
   await page.click('[data-act="start"]');
   const secret = (await page.locator('.mfa-secret').textContent()).replace(/\s/g, '');
-  const qr = await decodeQr(page, '.mfa-qr svg'); // QR berisi URI otpauth dengan kunci yang sama
+  const qr = await decodeQr(page, '.mfa-qr svg'); // the QR contains an otpauth URI with the same key
   expect(qr).toContain('otpauth://totp/');
   expect(qr).toContain(`secret=${secret}`);
   await page.fill('#mfaCode', totp(secret));
@@ -52,7 +52,7 @@ test('akun internal mengaktifkan 2FA lalu login memerlukan kode', async ({ page 
   await page.fill('#authCode', '000000');
   await page.press('#authCode', 'Enter');
   await expect(page.locator('#authError')).toContainText('tidak valid');
-  await page.fill('#authCode', totp(secret, 1)); // langkah berikutnya: kode pada langkah konfirmasi tidak boleh dipakai ulang
+  await page.fill('#authCode', totp(secret, 1)); // next step: the code from the confirmation step must not be reused
   await page.press('#authCode', 'Enter');
   await expect(page.locator('#authScreen')).toBeHidden();
 });

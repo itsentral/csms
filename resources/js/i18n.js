@@ -1,13 +1,13 @@
-/* Penerjemah antarmuka ID/EN.
-   Teks sumber aplikasi berbahasa Indonesia. Saat bahasa Inggris dipilih, teks DOM (node teks dan atribut
-   placeholder/aria-label/title) diterjemahkan berdasarkan kamus di bawah. Logika aplikasi tidak berubah,
-   karena nilai data (status, opsi, ID) tidak pernah diterjemahkan, hanya tampilannya. */
+/* ID/EN interface translator.
+   The application's source text is Indonesian. When English is selected, DOM text (text nodes and the
+   placeholder/aria-label/title attributes) is translated using the dictionary below. Application logic does not
+   change, because data values (statuses, options, IDs) are never translated, only their display. */
 (function () {
   'use strict';
   var STORE = 'rchsems.lang';
 
   var EN = {
-    // --- Navigasi & kerangka
+    // --- Navigation & shell
     Dashboard: 'Dashboard',
     'Data Vendor': 'Vendor Data',
     'Pendaftaran Vendor': 'Vendor Registration',
@@ -38,7 +38,7 @@
     'Lanjut mengisi': 'Continue filling',
     Lanjutkan: 'Continue',
 
-    // --- Login & pendaftaran akun
+    // --- Login & account registration
     'Masuk ke aplikasi': 'Sign in',
     'Pendaftaran akun': 'Create account',
     'Gunakan akun sesuai peran Anda.': 'Use the account for your role.',
@@ -105,7 +105,7 @@
     'Belum ada data vendor. Mulai dari pendaftaran vendor.': 'No vendor data yet. Start by registering a vendor.',
     'Belum ada data vendor. Daftarkan vendor terlebih dahulu.': 'No vendor data yet. Register a vendor first.',
 
-    // --- Data vendor / tabel
+    // --- Vendor data / tables
     'Database vendor': 'Vendor database',
     'Daftar dan status setiap perusahaan/lingkup yang didaftarkan.':
       'List and status of every registered company/scope.',
@@ -127,7 +127,7 @@
     'Email / username': 'Email / username',
     'Hapus vendor': 'Delete vendor',
 
-    // --- Status & risiko
+    // --- Status & risk
     'Draft Pendaftaran': 'Registration Draft',
     'Menunggu Pengisian': 'Awaiting Completion',
     'Menunggu Verifikasi Dokumen': 'Awaiting Document Verification',
@@ -154,7 +154,7 @@
     Rendah: 'Low',
     'Pilih...': 'Select...',
 
-    // --- Pendaftaran vendor
+    // --- Vendor registration
     'Isi data perusahaan dan lingkup yang akan dikualifikasi.': 'Enter the company data and the scope to be qualified.',
     '1 Pendaftaran': '1 Registration',
     '2 Pra-Kualifikasi': '2 Pre-Qualification',
@@ -179,7 +179,7 @@
     'Format email tidak valid.': 'Invalid email format.',
     'Periksa kolom yang ditandai.': 'Please check the highlighted fields.',
 
-    // --- Pra-kualifikasi
+    // --- Pre-qualification
     'Kelengkapan jawaban': 'Answer completeness',
     'Kembali ke daftar': 'Back to list',
     'Belum ada perubahan': 'No changes yet',
@@ -228,7 +228,7 @@
     Pendukung: 'Support',
     Perbaikan: 'Improvement',
 
-    // --- Verifikasi & validasi
+    // --- Verification & validation
     'Unit Keselamatan menilai dokumen dan memberi catatan per pertanyaan.':
       'The Safety Unit assesses the documents and adds notes per question.',
     'Validasi dilakukan Unit Keselamatan atau Ahli Keselamatan Daerah sesuai penetapan Unit Keselamatan.':
@@ -278,7 +278,7 @@
     'Unit Keselamatan': 'Safety Unit',
     'Validasi penilaian': 'Assessment validation',
 
-    // --- Hasil & sertifikat
+    // --- Results & certificate
     'Nilai akhir memakai hasil validasi lapangan. Lingkup sertifikat dibatasi pada perusahaan/cabang dan lingkup pekerjaan yang divalidasi.':
       'The final score uses the field validation result. The certificate scope is limited to the validated company/branch and scope of work.',
     'Ekspor Excel': 'Export Excel',
@@ -305,7 +305,7 @@
     'Vendor Management': 'Vendor Management',
     'Logo KAI': 'KAI logo',
 
-    // --- Kelola akun
+    // --- Account management
     'Administrasi sistem': 'System administration',
     'Admin dapat mendaftarkan akun Verifikator, Validator, dan Bagian Pengadaan. Satu akun dapat memiliki lebih dari satu peran internal.':
       'Admins can register Verifier, Validator, and Procurement accounts. One account can hold more than one internal role.',
@@ -334,7 +334,7 @@
     'Password berhasil diubah.': 'Password changed successfully.',
     'Password diubah dan sesi akun tersebut dihentikan.': "Password changed and that account's sessions were ended.",
 
-    // --- Dialog konfirmasi
+    // --- Confirmation dialogs
     'Simpan data pendaftaran?': 'Save registration data?',
     'Data perusahaan disimpan ke server dan Anda lanjut ke pengisian pra-kualifikasi.':
       'The company data will be saved to the server and you will continue to the pre-qualification form.',
@@ -394,10 +394,21 @@
     'Akun internal berhasil dibuat.': 'Internal account created successfully.',
     'Data berhasil disimpan di server.': 'Data saved to the server.',
     'Draft tersimpan di server.': 'Draft saved to the server.',
+    'Kemajuan unggahan': 'Upload progress',
+    'Jangan tutup atau muat ulang halaman sampai selesai.': 'Do not close or reload this page until it finishes.',
+    'Koneksi terputus saat mengunggah. Periksa jaringan Anda atau ukuran berkas (maks. 15 MB), lalu coba lagi.':
+      'The connection dropped while uploading. Check your network or the file size (max. 15 MB), then try again.',
+    'Unggahan terhenti terlalu lama. Periksa koneksi Anda, lalu coba lagi.':
+      'The upload stalled for too long. Check your connection, then try again.',
+    'Unggahan dibatalkan.': 'Upload cancelled.',
+    'Berkas ditolak server karena terlalu besar. Hubungi administrator untuk menaikkan batas unggah.':
+      'The server rejected the file because it is too large. Contact the administrator to raise the upload limit.',
+    'Server tidak menjawab tepat waktu. Coba lagi beberapa saat lagi.':
+      'The server did not respond in time. Please try again shortly.',
     'Pra-kualifikasi tersimpan dan masuk antrean verifikasi.':
       'Pre-qualification saved and added to the verification queue.',
 
-    // --- Autentikasi dua langkah, lupa password
+    // --- Two-factor authentication, forgot password
     'Verifikasi dua langkah': 'Two-step verification',
     'Masukkan kode dari aplikasi autentikator Anda.': 'Enter the code from your authenticator app.',
     'Lupa password': 'Forgot password',
@@ -464,7 +475,7 @@
     'akan masuk hanya dengan password sampai mengaktifkannya kembali. Gunakan ini bila perangkat pemilik akun hilang.':
       "will sign in with a password only until they enable it again. Use this if the account owner's device is lost.",
 
-    // --- Pesan dari klien (pesan server dilokalkan di sisi server: lang/*/portal.php)
+    // --- Client messages (server messages are localised on the server: lang/*/portal.php)
     'Permintaan gagal.': 'Request failed.',
     'Permintaan gagal': 'Request failed',
     'Respons server tidak valid.': 'Invalid server response.',
@@ -473,7 +484,7 @@
       "This account's session will end. Please sign in again with the new password.",
   };
 
-  // Pola untuk teks dinamis. Fungsi mengembalikan teks Inggris; tr() menerjemahkan potongan bersarang.
+  // Patterns for dynamic text. Each function returns English text; tr() translates nested pieces.
   var PATTERNS = [
     [
       /^([\d]+\.[a-z])\. (.+)$/,
@@ -486,6 +497,30 @@
       function (m, tr) {
         var o = tr(m[1]);
         return o === m[1] ? m[0] : o + ' *';
+      },
+    ],
+    [
+      /^Versi ([0-9a-f]{7})$/,
+      function (m) {
+        return 'Version ' + m[1];
+      },
+    ],
+    [
+      /^Mengunggah berkas (\d+) dari (\d+) · (\d+)%$/,
+      function (m) {
+        return 'Uploading file ' + m[1] + ' of ' + m[2] + ' · ' + m[3] + '%';
+      },
+    ],
+    [
+      /^(.+): lebih dari 15 MB, tidak ditambahkan\.$/,
+      function (m) {
+        return m[1] + ': larger than 15 MB, not added.';
+      },
+    ],
+    [
+      /^(.+): (Koneksi terputus saat mengunggah\..*|Unggahan .+|Berkas ditolak server.+|Server tidak menjawab.+)$/,
+      function (m, tr) {
+        return m[1] + ': ' + tr(m[2]);
       },
     ],
     [
@@ -739,8 +774,8 @@
   function textNode(node) {
     var parent = node.parentNode;
     if (!parent || SKIP[parent.nodeName]) return;
-    if (parent.classList && parent.classList.contains('msym')) return; // nama ikon (ligature) bukan teks tampilan
-    if (node.__t !== undefined && node.nodeValue === node.__t) return; // sudah diterjemahkan
+    if (parent.classList && parent.classList.contains('msym')) return; // icon name (ligature), not display text
+    if (node.__t !== undefined && node.nodeValue === node.__t) return; // already translated
     var orig = node.nodeValue;
     var out = tr(orig);
     if (out === orig) {
@@ -748,7 +783,7 @@
       node.__t = undefined;
       return;
     }
-    // <option> tanpa atribut value memakai teksnya sebagai nilai: kunci nilai asli agar data tidak ikut berubah
+    // An <option> without a value attribute uses its text as the value: lock the original value so data does not change
     if (parent.nodeName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', orig.trim());
     node.__o = orig;
     node.__t = out;
@@ -849,7 +884,7 @@
     try {
       localStorage.setItem(STORE, next);
     } catch (e) {
-      /* penyimpanan dapat diblokir */
+      /* storage may be blocked */
     }
     document.documentElement.lang = next;
     apply();
@@ -862,7 +897,7 @@
       var saved = localStorage.getItem(STORE);
       if (saved === 'en' || saved === 'id') lang = saved;
     } catch (e) {
-      /* abaikan */
+      /* ignore */
     }
     document.documentElement.lang = lang;
     document.addEventListener('click', function (e) {
@@ -880,7 +915,7 @@
     syncSwitchers();
   }
 
-  /** Menambah terjemahan dari data dinamis (misalnya teks pertanyaan dari server) lalu menerapkannya bila English aktif. */
+  /** Adds translations from dynamic data (for example question text from the server) and applies them when English is active. */
   function extend(map) {
     Object.assign(EN, map);
     cache = {};

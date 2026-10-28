@@ -36,7 +36,7 @@ class Portal
         return (float) DB::table('questions')->sum('max');
     }
 
-    /** Email notifikasi perubahan status (bila NOTIFY_EMAIL aktif). Kegagalan kirim tidak boleh menggagalkan alur kerja. */
+    /** Status change email notifications (when NOTIFY_EMAIL is on). A send failure must not break the workflow. */
     public static function notify(Vendor $v, string $event): void
     {
         if (! config('rchsems.notify_email')) {

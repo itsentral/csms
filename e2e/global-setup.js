@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import { E2E_ENV } from '../playwright.config.js';
 
-// Menyiapkan database e2e yang bersih (terpisah dari database pengembangan) sebelum server dijalankan.
+// Prepares a clean e2e database (separate from the development database) before the server starts.
 export default function globalSetup() {
   fs.rmSync(E2E_ENV.DB_DATABASE, { force: true });
   fs.writeFileSync(E2E_ENV.DB_DATABASE, '');

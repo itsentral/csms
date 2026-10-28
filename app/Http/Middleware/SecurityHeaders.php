@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class SecurityHeaders
 {
-    /** CSP ketat untuk skrip: tidak ada skrip inline maupun handler inline (lihat data-click di portal.js). Gaya inline masih diizinkan. */
+    /** Strict CSP for scripts: no inline scripts or inline handlers (see data-click in portal.js). Inline styles are still allowed. */
     public const CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'";
 
     public function handle(Request $r, Closure $next)

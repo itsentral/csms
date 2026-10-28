@@ -63,11 +63,11 @@ class SecurityFeaturesTest extends TestCase
         $this->postJson('/api/login', ['username' => $user->email, 'password' => 'Testing12345!'])->assertStatus(202)->assertJson(['mfa' => true]);
         $this->getJson('/api/state')->assertUnauthorized();
         $this->postJson('/api/login/mfa', ['code' => '000000'])->assertUnprocessable();
-        $this->postJson('/api/login/mfa', ['code' => Totp::code($secret, $step)])->assertUnprocessable(); // langkah sudah dipakai saat konfirmasi
+        $this->postJson('/api/login/mfa', ['code' => Totp::code($secret, $step)])->assertUnprocessable(); // the step was already used during confirmation
         $this->postJson('/api/login/mfa', ['code' => Totp::code($secret, $step + 1)])->assertOk()->assertJsonPath('username', $user->email);
         $this->getJson('/api/state')->assertOk();
 
-        // Kode pemulihan: berlaku sekali.
+        // Recovery code: valid once.
         $this->postJson('/api/logout');
         $this->flushSession();
         $this->postJson('/api/login', ['username' => $user->email, 'password' => 'Testing12345!'])->assertStatus(202);
@@ -100,7 +100,7 @@ class SecurityFeaturesTest extends TestCase
         $this->enableMfa($admin);
         $this->actingAs($admin->fresh())->get('/api/export')->assertOk();
         $this->actingAs($admin->fresh())->postJson('/api/mfa/disable', ['current_password' => 'Testing12345!'])->assertUnprocessable();
-        // Vendor tidak diwajibkan.
+        // Vendors are not required to.
         $this->actingAs($this->user('vendor'))->getJson('/api/state')->assertOk()->assertJsonPath('session.mfaSetupRequired', false);
     }
 
@@ -124,7 +124,7 @@ class SecurityFeaturesTest extends TestCase
         $this->postJson('/api/password/reset', ['username' => $user->email, 'token' => $token, 'password' => 'short'])->assertUnprocessable();
         $this->postJson('/api/password/reset', ['username' => $user->email, 'token' => $token, 'password' => 'NewPassword12345!'])->assertOk();
         $this->assertDatabaseMissing('sessions', ['id' => 'old-session']);
-        $this->postJson('/api/password/reset', ['username' => $user->email, 'token' => $token, 'password' => 'AnotherPassword123!'])->assertUnprocessable(); // token sekali pakai
+        $this->postJson('/api/password/reset', ['username' => $user->email, 'token' => $token, 'password' => 'AnotherPassword123!'])->assertUnprocessable(); // single-use token
         $this->postJson('/api/login', ['username' => $user->email, 'password' => 'NewPassword12345!'])->assertOk();
     }
 
@@ -148,7 +148,7 @@ class SecurityFeaturesTest extends TestCase
         $scores = fn (float $n) => DB::table('questions')->get()->map(fn ($q) => ['question_id' => $q->id, 'score' => $n, 'comment' => ''])->all();
         $vendor = Vendor::create(['id' => 'RCH-N1', 'owner_id' => $owner->id, 'name' => 'PT Notif', 'scope' => 'x', 'status' => 'Menunggu Pengisian']);
 
-        // Dimatikan secara bawaan.
+        // Off by default.
         $this->actingAs($owner)->postJson('/api/vendors/RCH-N1/answers', ['answers' => $answers])->assertOk();
         $this->actingAs($owner)->postJson('/api/vendors/RCH-N1/submit')->assertOk();
         Notification::assertNothingSent();

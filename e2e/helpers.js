@@ -9,11 +9,11 @@ export async function login(page, email, password = PASSWORD) {
   await page.goto('/');
   await page.fill('#authUser', email);
   await page.fill('#authPass', password);
-  await page.press('#authPass', 'Enter'); // Enter harus menjalankan login
+  await page.press('#authPass', 'Enter'); // Enter must trigger login
   await expect(page.locator('#authScreen')).toBeHidden();
 }
 
-/** Klik tombol konfirmasi (tombol terakhir) pada dialog Material 3 yang sedang terbuka. */
+/** Clicks the confirm button (the last button) of the Material 3 dialog that is currently open. */
 export async function confirmDialog(page) {
   const dialog = page.locator('.dialog-backdrop .dialog').last();
   await expect(dialog).toBeVisible();
@@ -34,7 +34,7 @@ function base32Decode(text) {
   return Buffer.from(bytes);
 }
 
-/** Kode TOTP 6 digit (RFC 6238) untuk langkah ke-(sekarang + offset). */
+/** 6-digit TOTP code (RFC 6238) for step (now + offset). */
 export function totp(secret, offset = 0) {
   const counter = Buffer.alloc(8);
   counter.writeBigUInt64BE(BigInt(Math.floor(Date.now() / 30000) + offset));
@@ -46,7 +46,7 @@ export function totp(secret, offset = 0) {
 
 const JSQR_SOURCE = fs.readFileSync(createRequire(import.meta.url).resolve('jsqr'), 'utf8');
 
-/** Membaca isi kode QR dari elemen <svg> di halaman. jsQR dimuat lewat CDP karena CSP melarang skrip inline. */
+/** Reads the QR code content from an <svg> element on the page. jsQR is loaded through CDP because the CSP forbids inline scripts. */
 export async function decodeQr(page, selector) {
   await page.evaluate(`${JSQR_SOURCE}\n;window.jsQR = (typeof jsQR !== 'undefined' ? jsQR : window.jsQR);`);
   return page.evaluate(async selector => {

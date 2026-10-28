@@ -1,9 +1,9 @@
-/* Pembuat kode QR (ISO/IEC 18004) tanpa dependensi: mode byte (UTF-8), versi 1-10, koreksi galat L atau M.
-   Dipakai untuk kunci pengaturan 2FA. Pemakaian: QR.svg(teks) -> string <svg> atau null bila teks terlalu panjang. */
+/* Dependency-free QR code generator (ISO/IEC 18004): byte mode (UTF-8), versions 1-10, error correction L or M.
+   Used for the 2FA setup key. Usage: QR.svg(text) -> <svg> string, or null if the text is too long. */
 (function () {
   'use strict';
 
-  // --- Aritmetika GF(256) dan Reed-Solomon (polinomial 0x11D)
+  // --- GF(256) arithmetic and Reed-Solomon (polynomial 0x11D)
   var EXP = new Array(512);
   var LOG = new Array(256);
   (function () {
@@ -45,7 +45,7 @@
     return result;
   }
 
-  // --- Tabel: per versi [kodeword koreksi per blok, [[jumlah blok, kodeword data per blok], ...]]
+  // --- Table: per version [error-correction codewords per block, [[block count, data codewords per block], ...]]
   var BLOCKS = {
     L: {
       1: [7, [[1, 19]]],
@@ -129,11 +129,11 @@
     for (var i = length - 1; i >= 0; i--) bits.push((value >>> i) & 1);
   }
 
-  // --- Data -> kodeword akhir (data + koreksi, sudah di-interleave)
+  // --- Data -> final codewords (data + correction, already interleaved)
   function buildCodewords(bytes, version, ecl) {
     var total = dataCodewords(version, ecl);
     var bits = [];
-    pushBits(bits, 0x4, 4); // mode byte
+    pushBits(bits, 0x4, 4); // byte mode
     pushBits(bits, bytes.length, version <= 9 ? 8 : 16);
     bytes.forEach(function (b) {
       pushBits(bits, b, 8);
@@ -172,7 +172,7 @@
     return result;
   }
 
-  // --- Matriks
+  // --- Matrix
   function makeMatrix(version, ecl, codewords) {
     var size = 17 + 4 * version;
     var modules = [];
@@ -213,7 +213,7 @@
       for (var b = 9; b < 15; b++) setFn(14 - b, 8, bit(b));
       for (var c = 0; c < 8; c++) setFn(size - 1 - c, 8, bit(c));
       for (var d = 8; d < 15; d++) setFn(8, size - 15 + d, bit(d));
-      setFn(8, size - 8, true); // modul gelap
+      setFn(8, size - 8, true); // dark module
     }
 
     for (var i = 0; i < size; i++) {
@@ -231,7 +231,7 @@
         if (!onFinder) align(px, py);
       });
     });
-    formatBits(0); // menandai area format
+    formatBits(0); // mark the format area
     if (version >= 7) {
       var rem = version;
       for (var v = 0; v < 12; v++) rem = (rem << 1) ^ ((rem >>> 11) * 0x1f25);
@@ -245,7 +245,7 @@
       }
     }
 
-    // Penempatan data (zig-zag dua kolom)
+    // Data placement (two-column zig-zag)
     var idx = 0;
     for (var right = size - 1; right >= 1; right -= 2) {
       if (right === 6) right = 5;
@@ -343,7 +343,7 @@
         bestScore = s2;
         best = mask;
       }
-      applyMask(mask); // batalkan
+      applyMask(mask); // undo
     }
     applyMask(best);
     formatBits(best);
@@ -360,7 +360,7 @@
     return null;
   }
 
-  /** Mengembalikan string <svg> (latar putih, zona tenang 4 modul) atau null bila teks tidak muat. */
+  /** Returns an <svg> string (white background, 4-module quiet zone), or null if the text does not fit. */
   function svg(text, options) {
     var opts = options || {};
     var matrix = encode(String(text), opts.ecc === 'L' ? 'L' : 'M');

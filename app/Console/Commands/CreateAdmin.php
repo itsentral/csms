@@ -10,7 +10,7 @@ class CreateAdmin extends Command
 {
     protected $signature = 'rchsems:create-admin {email?} {--name=Administrator RCHSEMS}';
 
-    protected $description = 'Buat admin pertama dengan password interaktif; tidak mengubah akun yang sudah ada';
+    protected $description = 'Create the first admin with an interactive password; does not modify existing accounts';
 
     public function handle(): int
     {

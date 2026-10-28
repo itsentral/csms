@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'portal')->name('login');
 
-// Publik (dibatasi laju)
+// Public (rate limited)
 Route::post('/api/login', [AuthController::class, 'login'])->middleware('throttle:login');
 Route::post('/api/login/mfa', [MfaController::class, 'verifyLogin'])->middleware('throttle:mfa');
 Route::post('/api/register', [AuthController::class, 'register'])->middleware('throttle:register');

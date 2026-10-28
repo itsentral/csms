@@ -1,7 +1,7 @@
-// Master pertanyaan dan konstanta status berasal dari server (GET /api/state), bukan disalin di sini.
-let groups = [], // [[nama grup, [[teks, bobot], ...]], ...]
-  questions = [], // [{ id, group, text, max }, ...] berurutan
-  STATUS = {}; // { awaitingFill, needsRevision, awaitingVerification, awaitingValidation, validated } => teks status
+// The question master and status constants come from the server (GET /api/state); they are not copied here.
+let groups = [], // [[group name, [[text, weight], ...]], ...]
+  questions = [], // [{ id, group, text, max }, ...] in order
+  STATUS = {}; // { awaitingFill, needsRevision, awaitingVerification, awaitingValidation, validated } => status text
 
 function setQuestions(list) {
   questions = list.map(q => ({ id: q.id, group: q.group, text: q.text, max: Number(q.max) }));
@@ -11,7 +11,7 @@ function setQuestions(list) {
     if (!g) groups.push((g = [q.group, []]));
     g[1].push([q.text, q.max]);
   }
-  // Terjemahan English teks pertanyaan dan nama grup (juga nama pendek tanpa "Proses N.") ikut dari server.
+  // English translations of the question text and group names (also the short name without "Proses N.") come from the server.
   const shortName = name => name.replace(/^(Proses|Process) \d+\.\s*/, '');
   const en = {};
   for (const q of list) {
@@ -220,8 +220,13 @@ function accountInitials() {
       .toUpperCase() || '?'
   );
 }
+// The deployed commit comes from <meta name="app-version"> (rendered by the server).
+function appVersionHtml() {
+  const commit = document.querySelector('meta[name="app-version"]')?.content;
+  return commit ? `<small class="app-version">Versi ${esc(commit)}</small>` : '';
+}
 function openAccountSheet() {
-  const head = `<div class="sheet-account"><span class="account-avatar">${esc(accountInitials())}</span><div class="sheet-account-meta"><b>${esc(session?.name || session?.username || '')}</b><small>${esc(session?.username || '')}</small><small>${esc(roleLabel(session?.role))}</small></div></div>`;
+  const head = `<div class="sheet-account"><span class="account-avatar">${esc(accountInitials())}</span><div class="sheet-account-meta"><b>${esc(session?.name || session?.username || '')}</b><small>${esc(session?.username || '')}</small><small>${esc(roleLabel(session?.role))}</small>${appVersionHtml()}</div></div>`;
   m3Sheet(
     '',
     [
@@ -243,7 +248,7 @@ function openMoreSheet() {
   if (!overflow.length) return;
   const backdrop = document.createElement('div');
   backdrop.className = 'sheet-backdrop';
-  backdrop.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-label="Menu lainnya"><div class="sheet-handle"></div><div class="sheet-list">${overflow.map(b => `<button type="button" class="sheet-item" data-page="${b.dataset.page}">${b.querySelector('.nav-icon') ? b.querySelector('.nav-icon').outerHTML : ''}<span>${esc(b.querySelector('span') ? b.querySelector('span').textContent : b.dataset.page)}</span></button>`).join('')}</div></div>`;
+  backdrop.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-label="Menu lainnya"><div class="sheet-handle"></div><div class="sheet-list">${overflow.map(b => `<button type="button" class="sheet-item" data-page="${b.dataset.page}">${b.querySelector('.nav-icon') ? b.querySelector('.nav-icon').outerHTML : ''}<span>${esc(b.querySelector('span:not(.msym)') ? b.querySelector('span:not(.msym)').textContent : b.dataset.page)}</span></button>`).join('')}</div></div>`;
   function close() {
     backdrop.remove();
     document.removeEventListener('keydown', onKey);
@@ -330,7 +335,7 @@ function newVendor() {
     fieldDate: '',
   };
 }
-// Kelas warna tag: status vendor dari STATUS; teks lain (jawaban "Ya"/"Tidak", dst.) dikenali dari katanya.
+// Tag colour class: vendor statuses come from STATUS; other text (answers "Ya"/"Tidak", etc.) is recognised by its wording.
 function statusClass(s) {
   if (s === STATUS.validated) return 'tag-success';
   if ([STATUS.awaitingFill, STATUS.needsRevision, STATUS.awaitingVerification, STATUS.awaitingValidation].includes(s))
@@ -410,7 +415,8 @@ function goNow(p) {
   document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('active', b.dataset.page === p));
   render();
 }
-document.querySelectorAll('#nav button').forEach(b => (b.onclick = () => go(b.dataset.page)));
+// #navMore has no data-page: it only opens the sheet and must not navigate.
+document.querySelectorAll('#nav button[data-page]').forEach(b => (b.onclick = () => go(b.dataset.page)));
 function renderSkeleton() {
   const el = document.getElementById('view');
   if (!el) return;
@@ -458,7 +464,7 @@ function vendorTable(vs, adminMode = false) {
   return `<div class="tablewrap"><table><thead><tr><th>ID / Perusahaan</th><th>Lingkup</th><th>Status</th><th>Nilai PK</th><th>Kategori</th><th>Aksi</th></tr></thead><tbody>${vs.map(v => `<tr><td><b>${esc(v.name || '(Nama belum diisi)')}</b><br><small class="muted code">${esc(v.id)}</small></td><td>${esc(v.scope || '-')}</td><td>${statusTag(v.status)}${adminMode && v.draft_saved_at && v.answered < v.total ? `<br><span class="tag tag-warning">Draft ${v.answered}/${v.total}</span>` : ''}</td><td class="num">${fmtScore(((v.status === STATUS.validated ? score(v, 'validation') : score(v, 'review')) / maxTotal()) * 100)}</td><td>${v.status === STATUS.validated ? badgeRisk((score(v, 'validation') / maxTotal()) * 100) : '-'}</td><td><button class="btn btn-tonal" data-click="openVendorDefault" data-args='["${v.id}"]'>Buka</button>${adminMode && isAdmin() ? ` <button class="btn btn-danger" data-click="deleteVendor" data-args='["${v.id}"]'>Hapus</button>` : ''}</td></tr>`).join('')}</tbody></table></div>`;
 }
 let vendorFilter = { q: '', status: '' };
-// Urutan filter status pada daftar vendor (nilainya dari STATUS, dimuat setelah /api/state).
+// Order of the status filters in the vendor list (values come from STATUS, loaded after /api/state).
 const vendorStatuses = () => [
   STATUS.awaitingFill,
   STATUS.awaitingVerification,
@@ -609,7 +615,7 @@ function m3Dialog(opts) {
             m3Snackbar(a.requiresInput, { type: 'error' });
             return;
           }
-          // Nilai medan isian harus diambil sebelum dialog ditutup.
+          // The field value must be read before the dialog is closed.
           close(a.captureInput ? { value: a.value, input: input ? input.value.trim() : '' } : a.value);
         })
     );
@@ -626,7 +632,7 @@ function m3Dialog(opts) {
   });
 }
 function m3Confirm(title, body, confirmLabel = 'Lanjutkan', danger = false) {
-  // `body` boleh berupa objek {body, bodyHtml} untuk isi berformat.
+  // `body` may be an object {body, bodyHtml} for formatted content.
   const opts = body && typeof body === 'object' ? body : { body };
   return m3Dialog({
     title,
@@ -638,7 +644,7 @@ function m3Confirm(title, body, confirmLabel = 'Lanjutkan', danger = false) {
   }).then(v => v === true);
 }
 
-// ===== Draft pra-kualifikasi =====
+// ===== Pre-qualification draft =====
 let pqEls = {},
   pqTimer = null,
   pqSaving = false,
@@ -684,7 +690,7 @@ function questionnairePage(el) {
  <div class="pq-chips" id="pqChips"></div>
  <p class="muted small pq-hint">Jawaban dan keterangan tersimpan otomatis. Berkas lampiran baru diunggah ke server setelah tombol simpan ditekan. Format: ${DOC_FORMATS}.</p></div>
  <form id="qForm">${groups.map((g, gi) => pqGroupHtml(g, gi, a, false)).join('')}
- <div class="pq-actions"><div class="pq-actions-info"><span class="pq-save-state" id="pqSaveState">Belum ada perubahan</span><span class="pq-pending" id="pqPending"></span></div>
+ <div class="pq-actions"><div class="pq-actions-info"><span class="pq-save-state" id="pqSaveState">Belum ada perubahan</span><span class="pq-pending" id="pqPending"></span><div class="pq-upload" id="pqUpload" hidden><div class="pq-upload-row"><span id="pqUploadText" role="status" aria-live="polite"></span></div><div class="progress" id="pqUploadBar" role="progressbar" aria-label="Kemajuan unggahan" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="pqUploadFill"></div></div><small id="pqUploadName" class="pq-upload-name"></small><small>Jangan tutup atau muat ulang halaman sampai selesai.</small></div></div>
  <div class="pq-actions-btns"><button type="button" class="btn btn-tonal" data-click="saveDraft">Simpan Draft</button><button class="btn btn-filled"  type="button" data-click="submitQuestionnaire">Kirim untuk Verifikasi →</button></div></div></form>`;
   pqSavedAt = v.draft_saved_at || null;
   pqDirty = false;
@@ -761,7 +767,7 @@ function pqUpdateProgress() {
       })
       .join('');
 }
-// Hanya satu akordeon yang boleh terbuka pada satu waktu.
+// Only one accordion may be open at a time.
 function pqCloseOthers(gi) {
   groups.forEach((g, i) => {
     if (i === gi) return;
@@ -922,7 +928,7 @@ async function pqAutosave() {
     }
   }
 }
-// Simpan terakhir saat tab ditutup atau halaman disembunyikan.
+// Final save when the tab is closed or the page is hidden.
 function pqFlushOnExit() {
   if (!pqDirty || !currentId || pqLocked()) return;
   const changed = pqDiff();
@@ -947,6 +953,12 @@ document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') pqFlushOnExit();
 });
 window.addEventListener('pagehide', () => pqFlushOnExit());
+window.addEventListener('beforeunload', e => {
+  if (uploadState) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
 function pqSetSaveState(state, msg) {
   const el = document.getElementById('pqSaveState');
   if (!el) return;
@@ -1172,8 +1184,8 @@ function riskPage(el) {
       ''
     )}</select><label for="certVendor">Pilih vendor tervalidasi</label></div><button class="btn btn-filled"  style="margin-top:12px" data-click="previewCert">Buat Pratinjau Sertifikat</button><div id="certPreview"></div><p class="muted small">Penerbitan resmi sertifikat tetap dilakukan Vendor Management sesuai kewenangan dan persetujuan internal.</p></div>`;
 }
-// Skor sertifikat: bilangan bulat ditampilkan tanpa desimal; bila ada pecahan (rata-rata beberapa penilai), maksimal 2 angka di belakang koma.
-// Dipotong (bukan dibulatkan) agar 69,996 tidak tampil "70" sementara kategorinya masih di bawah ambang 70.
+// Certificate score: integers are shown without decimals; fractions (the average of several assessors) get at most 2 decimal places.
+// Truncated (not rounded) so 69.996 is not shown as "70" while its category is still below the 70 threshold.
 function fmtScore(n) {
   const truncated = Math.floor(n * 100 + 1e-6) / 100;
   return truncated.toLocaleString(window.I18N ? I18N.locale() : 'id-ID', {
@@ -1227,26 +1239,93 @@ async function api(path, method = 'GET', data = null) {
   } catch {
     result = { message: 'Respons server tidak valid.' };
   }
-  if (!res.ok) {
-    if (res.status === 401) {
-      session = null;
-      loginReady();
-    }
-    if (res.status === 403 && result.code === 'mfa_setup_required' && session) mfaDialog(true);
-    if (res.status === 419) result.message = 'Sesi kedaluwarsa. Muat ulang halaman dan login kembali.';
-    const error = new Error(
-      Object.values(result.errors || {})
-        .flat()
-        .join('\n') ||
-        result.message ||
-        'Permintaan gagal.'
-    );
-    error.status = res.status;
-    error.data = result;
-    throw error;
-  }
+  if (!res.ok) throwApiError(res.status, result);
   return result;
 }
+function throwApiError(status, result) {
+  if (status === 401) {
+    session = null;
+    loginReady();
+  }
+  if (status === 403 && result.code === 'mfa_setup_required' && session) mfaDialog(true);
+  if (status === 419) result.message = 'Sesi kedaluwarsa. Muat ulang halaman dan login kembali.';
+  if (status === 413)
+    result.message = 'Berkas ditolak server karena terlalu besar. Hubungi administrator untuk menaikkan batas unggah.';
+  if ([502, 503, 504, 524].includes(status) && !result.errors)
+    result.message = 'Server tidak menjawab tepat waktu. Coba lagi beberapa saat lagi.';
+  const error = new Error(
+    Object.values(result.errors || {})
+      .flat()
+      .join('\n') ||
+      result.message ||
+      'Permintaan gagal.'
+  );
+  error.status = status;
+  error.data = result;
+  throw error;
+}
+// Uploads use XMLHttpRequest because fetch does not report upload progress.
+// An upload is considered stalled after UPLOAD_STALL_MS without progress, or if the server does not answer within UPLOAD_REPLY_MS after all data was sent.
+const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
+const UPLOAD_STALL_MS = 90000;
+const UPLOAD_REPLY_MS = 180000;
+function apiUpload(path, formData, onProgress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    let timer = null;
+    let stalled = false;
+    const arm = ms => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        stalled = true;
+        xhr.abort();
+      }, ms);
+    };
+    const fail = message => {
+      clearTimeout(timer);
+      const error = new Error(message);
+      error.status = 0;
+      reject(error);
+    };
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    xhr.open('POST', '/api' + path);
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.setRequestHeader('X-Lang', window.I18N ? I18N.lang : 'id');
+    xhr.setRequestHeader('X-CSRF-TOKEN', meta.content);
+    xhr.upload.onprogress = e => {
+      arm(UPLOAD_STALL_MS);
+      if (e.lengthComputable && onProgress) onProgress(e.loaded / e.total);
+    };
+    xhr.upload.onload = () => {
+      arm(UPLOAD_REPLY_MS);
+      if (onProgress) onProgress(1);
+    };
+    xhr.onload = () => {
+      clearTimeout(timer);
+      const csrf = xhr.getResponseHeader('X-CSRF-TOKEN');
+      if (csrf) meta.content = csrf;
+      let result;
+      try {
+        result = JSON.parse(xhr.responseText);
+      } catch {
+        result = { message: 'Respons server tidak valid.' };
+      }
+      if (xhr.status >= 200 && xhr.status < 300) return resolve(result);
+      try {
+        throwApiError(xhr.status, result);
+      } catch (error) {
+        reject(error);
+      }
+    };
+    xhr.onerror = () =>
+      fail('Koneksi terputus saat mengunggah. Periksa jaringan Anda atau ukuran berkas (maks. 15 MB), lalu coba lagi.');
+    xhr.onabort = () =>
+      fail(stalled ? 'Unggahan terhenti terlalu lama. Periksa koneksi Anda, lalu coba lagi.' : 'Unggahan dibatalkan.');
+    arm(UPLOAD_STALL_MS);
+    xhr.send(formData);
+  });
+}
+
 function setBusy(on) {
   let bar = document.getElementById('topProgress');
   if (!bar) {
@@ -1458,21 +1537,64 @@ function stageEvidence(inp) {
   const v = vendor();
   if (!v) return;
   const qid = inp.dataset.doc;
-  (pendingFiles[v.id] ??= {})[qid] = [...inp.files];
+  const chosen = [...inp.files];
+  const tooBig = chosen.filter(f => f.size > MAX_UPLOAD_BYTES);
+  if (tooBig.length) {
+    m3Snackbar(tooBig.map(f => f.name).join(', ') + ': lebih dari 15 MB, tidak ditambahkan.', { type: 'error' });
+    if (tooBig.length === chosen.length) inp.value = '';
+  }
+  (pendingFiles[v.id] ??= {})[qid] = chosen.filter(f => f.size <= MAX_UPLOAD_BYTES);
   pqRenderFiles();
 }
-async function uploadStagedEvidence() {
+let uploadState = null;
+let uploadPromise = null;
+function pqSetUpload(state) {
+  uploadState = state;
+  document.querySelectorAll('.pq-actions-btns button').forEach(b => (b.disabled = !!state));
+  const box = document.getElementById('pqUpload');
+  if (!box) return;
+  box.hidden = !state;
+  if (!state) {
+    document.getElementById('pqUploadName').textContent = '';
+    return;
+  }
+  document.getElementById('pqUploadText').textContent =
+    `Mengunggah berkas ${state.index} dari ${state.total} · ${state.percent}%`;
+  document.getElementById('pqUploadName').textContent = state.name;
+  document.getElementById('pqUploadFill').style.width = state.percent + '%';
+  document.getElementById('pqUploadBar').setAttribute('aria-valuenow', String(state.percent));
+}
+// One call at a time: pressing Save Draft twice does not upload files twice.
+function uploadStagedEvidence() {
+  uploadPromise ??= uploadStagedEvidenceNow().finally(() => {
+    uploadPromise = null;
+    pqSetUpload(null);
+  });
+  return uploadPromise;
+}
+async function uploadStagedEvidenceNow() {
   const v = vendor();
   if (!v || !pendingFiles[v.id]) return;
   const store = pendingFiles[v.id];
+  const total = Object.values(store).reduce((n, list) => n + list.length, 0);
+  let index = 0;
   for (const qid of Object.keys(store)) {
     while (store[qid] && store[qid].length) {
       const file = store[qid][0];
-      if (file.size > 15 * 1024 * 1024) throw new Error(file.name + ': maksimal 15 MB.');
+      if (file.size > MAX_UPLOAD_BYTES) throw new Error(file.name + ': maksimal 15 MB.');
+      index++;
+      const show = fraction => pqSetUpload({ index, total, name: file.name, percent: Math.round(fraction * 100) });
+      show(0);
       const fd = new FormData();
       fd.append('question_id', qid);
       fd.append('file', file);
-      const stored = await api('/vendors/' + v.id + '/evidence', 'POST', fd);
+      let stored;
+      try {
+        stored = await apiUpload('/vendors/' + v.id + '/evidence', fd, show);
+      } catch (e) {
+        e.message = file.name + ': ' + e.message;
+        throw e;
+      }
       v.answers[qid] ??= { answer: '', note: '', files: [] };
       v.answers[qid].files ??= [];
       v.answers[qid].files.push(stored);
@@ -1712,7 +1834,7 @@ function go(p) {
     goNow(p);
   });
 }
-// Setelah halaman digambar: kunci formulir yang sudah tidak dapat diubah dan tampilkan catatan perbaikan.
+// After the page is rendered: lock forms that can no longer be changed and show the correction notes.
 function render() {
   renderPage();
   const v = vendor();
@@ -1813,7 +1935,7 @@ async function resetInternalPassword(encoded) {
   });
 }
 
-// ===== Autentikasi dua langkah (TOTP), hanya untuk akun internal =====
+// ===== Two-factor authentication (TOTP), internal accounts only =====
 function currentPasswordDialog(title, body, confirmLabel, danger = false) {
   return new Promise(resolve => {
     const backdrop = document.createElement('div');
@@ -2036,7 +2158,7 @@ async function resetAccountMfa(id) {
     m3Snackbar('Autentikasi dua langkah akun diatur ulang.');
   });
 }
-// Tautan atur ulang password dari email: /?reset=TOKEN&email=...
+// Password reset link from the email: /?reset=TOKEN&email=...
 (function () {
   const q = new URLSearchParams(location.search);
   if (q.get('reset') && q.get('email')) {
@@ -2047,7 +2169,7 @@ async function resetAccountMfa(id) {
   }
 })();
 
-// --- Pengikat event (CSP tanpa inline handler): data-click="namaFungsi" data-args='[...]' dan data-change="namaFungsi"
+// --- Event binding (CSP without inline handlers): data-click="functionName" data-args='[...]' and data-change="functionName"
 function newVendorPage() {
   currentId = null;
   go('register');

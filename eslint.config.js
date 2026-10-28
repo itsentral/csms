@@ -7,7 +7,7 @@ export default [
   },
   js.configs.recommended,
   {
-    // Skrip klasik (bukan modul): fungsi tingkat atas dipanggil lewat atribut data-click/data-change, jadi tidak dianggap tak terpakai.
+    // Classic scripts (not modules): top-level functions are called through data-click/data-change attributes, so they are not treated as unused.
     files: ['resources/js/*.js'],
     languageOptions: {
       sourceType: 'script',
@@ -31,10 +31,11 @@ export default [
         ...globals.browser,
         QR: 'readonly',
         jsQR: 'readonly',
-        // Fungsi dan variabel global halaman yang dipakai lewat page.evaluate.
+        // Page globals (functions and variables) used through page.evaluate.
         go: 'readonly',
         pqToggleGroup: 'readonly',
         mfaDialog: 'readonly',
+        pqGoGroup: 'readonly',
         currentId: 'writable',
       },
     },

@@ -1,28 +1,29 @@
-# Deployment production (Ubuntu 24.04)
+# Production deployment (Ubuntu 24.04)
 
-Panduan ini men-deploy aplikasi ke VPS Ubuntu 24.04 dengan Nginx, PHP-FPM, dan MySQL. Contoh domain: `csms.example.com`, lokasi aplikasi `/var/www/rchsems-kai`. Ganti domain dan password sebelum menjalankan perintah.
+This guide deploys the application to an Ubuntu 24.04 VPS with Nginx, PHP-FPM, and MySQL. Example domain: `csms.example.com`, application location `/var/www/rchsems-kai`. Replace the domain and passwords before running the commands.
 
-Sebelum go-live, selesaikan [go-live-checklist.md](go-live-checklist.md). Backup, update, dan restore ada di [operasional.md](operasional.md).
+Complete [go-live-checklist.md](go-live-checklist.md) before going live. Backup, update, and restore are covered in [operations.md](operations.md).
 
-> **Penting:** Jangan langsung mengubah konfigurasi Nginx global, PHP, atau database yang sudah berjalan. Periksa kondisi server dan buat backup terlebih dahulu agar aplikasi lain di server tidak terganggu.
+> **Important:** Do not directly change the global Nginx, PHP, or database configuration of a server that is already running. Check the server's condition and make a backup first, so other applications on the server are not disturbed.
 
-## 1. Arsitektur
+## 1. Architecture
 
-Pengguna → domain dan HTTPS → Nginx + PHP-FPM (Laravel 13) → MySQL khusus aplikasi ini. Bukti dokumen disimpan di disk server pada `storage/app/private` dan hanya diunduh melalui endpoint berotorisasi. Tidak ada queue worker, scheduler, atau layanan email: semua operasi sinkron. Gunakan subdomain khusus bila domain utama sudah dipakai aplikasi lain.
+Users → domain and HTTPS → Nginx + PHP-FPM (Laravel 13) → a MySQL database dedicated to this application. Evidence documents are stored on the server disk in `storage/app/private` and are only downloaded through an authorized endpoint. There is no queue worker, scheduler, or email service: all operations are synchronous. Use a dedicated subdomain if the main domain is already used by another application.
 
-## 2. Kebutuhan
+## 2. Requirements
 
-- Ubuntu 24.04 LTS, PHP **8.3+** (FPM dan CLI), Composer 2, MySQL **8.0+**, Nginx.
-- Ekstensi PHP: ctype, curl, dom, fileinfo, filter, hash, mbstring, openssl, pcre, PDO, pdo_mysql, session, tokenizer, xml, zip.
-- Akses internet untuk `composer install` dan sertifikat HTTPS (port 80/443 terbuka untuk verifikasi HTTP-01).
-- Disk untuk dokumen. Batas aplikasi 15 MB **per berkas**; antarmuka mengunggah berkas satu per satu.
+- Ubuntu 24.04 LTS, PHP **8.3+** (FPM and CLI), Composer 2, MySQL **8.0+**, Nginx.
+- A **patched PHP**: 8.5.12, 8.4.27, 8.3.36, or newer (security release of 21 October 2026, CVE-2026-109618 and CVE-2026-109619, remote code execution). On Ubuntu, install the distribution update (`sudo apt update && sudo apt upgrade`); Ubuntu keeps its own version numbers, so confirm the fix with `apt changelog php8.3-fpm | grep -i CVE-2026-10961`. Restart PHP-FPM afterwards. See [operations.md](operations.md#php-security-updates).
+- PHP extensions: ctype, curl, dom, fileinfo, filter, hash, mbstring, openssl, pcre, PDO, pdo_mysql, session, tokenizer, xml, zip.
+- Internet access for `composer install` and the HTTPS certificate (ports 80/443 open for HTTP-01 verification).
+- Disk space for documents. The application limit is 15 MB **per file**; the interface uploads files one at a time.
 
-## 3. Memeriksa server yang sudah berisi aplikasi lain
+## 3. Checking a server that already hosts other applications
 
-Lewati bagian ini bila server baru dan kosong.
+Skip this section if the server is new and empty.
 
 ```bash
-ssh USER_SSH@IP_VPS
+ssh SSH_USER@VPS_IP
 lsb_release -a
 php -v && php -m
 composer --version
@@ -32,19 +33,19 @@ sudo ss -lntp
 ls -l /run/php/
 ```
 
-Catat versi PHP dan socket PHP-FPM. PHP CLI dan PHP-FPM yang dipakai Nginx bisa berbeda; jangan mengganti versi PHP yang dipakai aplikasi lain. Backup konfigurasi dan database yang berpotensi terdampak:
+Note the PHP version and the PHP-FPM socket. The PHP CLI and the PHP-FPM used by Nginx can differ; do not change the PHP version used by other applications. Back up the configuration and databases that may be affected:
 
 ```bash
 sudo mkdir -p /var/backups/rchsems-preinstall
 sudo cp -a /etc/nginx /var/backups/rchsems-preinstall/nginx-$(date +%F-%H%M)
 sudo mysql -e "SHOW DATABASES;"
-sudo mysqldump --single-transaction --routines --triggers --events NAMA_DATABASE_LAMA \
-  > /var/backups/rchsems-preinstall/database-lama.sql
+sudo mysqldump --single-transaction --routines --triggers --events OLD_DATABASE_NAME \
+  > /var/backups/rchsems-preinstall/old-database.sql
 ```
 
-Ganti `NAMA_DATABASE_LAMA` dengan nama yang benar dan uji pemulihannya. **Jangan** menjalankan `DROP DATABASE`, menghapus folder aplikasi lama, atau menimpa konfigurasi Nginx tanpa memahami dampaknya.
+Replace `OLD_DATABASE_NAME` with the correct name and test the restore. **Do not** run `DROP DATABASE`, delete old application folders, or overwrite the Nginx configuration without understanding the impact.
 
-## 4. Paket server dan database
+## 4. Server packages and database
 
 ```bash
 sudo apt update
@@ -52,11 +53,11 @@ sudo apt install -y nginx mysql-server php8.3-fpm php8.3-cli php8.3-mysql php8.3
 sudo systemctl enable --now nginx mysql php8.3-fpm
 ```
 
-Buat database dan pengguna khusus seperti di [instalasi-lokal.md](instalasi-lokal.md#ubuntu) (nama `rchsems`, password kuat milik Anda). Database tidak boleh dibuka ke internet.
+Create the dedicated database and user as described in [local-setup.md](local-setup.md#ubuntu) (name `rchsems`, with your own strong password). The database must not be exposed to the internet.
 
-## 5. Source dan konfigurasi
+## 5. Source and configuration
 
-Jalankan sebagai akun deploy, bukan root:
+Run as the deploy account, not root:
 
 ```bash
 sudo git clone https://github.com/itsentral/csms.git /var/www/rchsems-kai
@@ -67,12 +68,12 @@ composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 php artisan key:generate
 ```
 
-Isi `.env` production:
+Fill in the production `.env`:
 
 ```dotenv
 APP_NAME="CSMS PT KAI"
 APP_ENV=production
-APP_KEY=base64:KUNCI_YANG_DIBUAT_ARTISAN
+APP_KEY=base64:KEY_GENERATED_BY_ARTISAN
 APP_DEBUG=false
 APP_URL=https://csms.example.com
 APP_TIMEZONE=Asia/Jakarta
@@ -81,7 +82,7 @@ DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=rchsems
 DB_USERNAME=rchsems
-DB_PASSWORD="PASSWORD_DATABASE_ANDA"
+DB_PASSWORD="YOUR_DATABASE_PASSWORD"
 SESSION_DRIVER=database
 SESSION_ENCRYPT=true
 SESSION_SECURE_COOKIE=true
@@ -91,26 +92,26 @@ QUEUE_CONNECTION=sync
 FILESYSTEM_DISK=local
 LOG_LEVEL=warning
 MAIL_MAILER=smtp
-MAIL_HOST=smtp.domain-perusahaan.co.id
+MAIL_HOST=smtp.company-domain.co.id
 MAIL_PORT=587
-MAIL_USERNAME=akun-smtp
-MAIL_PASSWORD="PASSWORD_SMTP"
-MAIL_FROM_ADDRESS="noreply@domain-perusahaan.co.id"
+MAIL_USERNAME=smtp-account
+MAIL_PASSWORD="SMTP_PASSWORD"
+MAIL_FROM_ADDRESS="noreply@company-domain.co.id"
 MAIL_FROM_NAME="CSMS PT KAI"
 MFA_REQUIRED=true
 NOTIFY_EMAIL=true
 ```
 
-Pertahankan `APP_KEY` hasil `key:generate`; **jangan** memasukkan placeholder di atas dan jangan menggantinya pada deployment rutin, karena sesi terenkripsi akan batal. Email dipakai untuk tautan **lupa password** (wajib agar fitur itu berfungsi) dan, bila `NOTIFY_EMAIL=true`, notifikasi perubahan status. Isi `MAIL_*` sesuai SMTP perusahaan dan uji pengiriman sebelum go-live. `MFA_REQUIRED=true` mewajibkan 2FA bagi akun internal; buat admin pertama, aktifkan 2FA-nya, lalu buat akun internal lain.
+Keep the `APP_KEY` produced by `key:generate`; **do not** paste in the placeholder above and do not change it on routine deployments, because encrypted sessions would be invalidated. Email is used for the **forgot password** link (required for that feature to work) and, when `NOTIFY_EMAIL=true`, for status change notifications. Fill in `MAIL_*` according to the company SMTP and test sending before going live. `MFA_REQUIRED=true` makes 2FA mandatory for internal accounts; create the first admin, enable its 2FA, then create the other internal accounts.
 
 ```bash
 php artisan migrate --seed --force
-php artisan rchsems:create-admin admin@domain-perusahaan.co.id
+php artisan rchsems:create-admin admin@company-domain.co.id
 ```
 
-Perintah admin meminta password secara tersembunyi (minimal 12 karakter). Seeder production tidak membuat akun atau password bawaan. Admin membuat akun internal lewat menu **Kelola Akun Internal**; vendor mendaftar sendiri.
+The admin command asks for the password with hidden input (at least 12 characters). The production seeder does not create default accounts or passwords. The admin creates internal accounts through the **Kelola Akun Internal** ("Manage Internal Accounts") menu; vendors register themselves.
 
-## 6. Izin direktori
+## 6. Directory permissions
 
 ```bash
 sudo find /var/www/rchsems-kai -type d -exec chmod 750 {} \;
@@ -120,11 +121,11 @@ sudo find storage bootstrap/cache -type d -exec chmod g+s {} \;
 sudo chmod 640 .env
 ```
 
-Hanya `storage` dan `bootstrap/cache` membutuhkan akses tulis PHP-FPM; jangan menjadikan seluruh proyek dapat ditulis web server. **Tidak perlu** `php artisan storage:link`, dan jangan mempublikasikan folder bukti.
+Only `storage` and `bootstrap/cache` need write access for PHP-FPM; do not make the whole project writable by the web server. `php artisan storage:link` is **not needed**, and do not publish the evidence folder.
 
-## 7. PHP-FPM dan Nginx
+## 7. PHP-FPM and Nginx
 
-Konfigurasi siap pakai ada di folder `deploy/` (`nginx.conf`, `php-rchsems.ini`).
+Ready-to-use configuration is in the `deploy/` folder (`nginx.conf`, `php-rchsems.ini`).
 
 ```bash
 sudo cp deploy/php-rchsems.ini /etc/php/8.3/fpm/conf.d/99-rchsems.ini
@@ -132,7 +133,7 @@ sudo cp deploy/nginx.conf /etc/nginx/sites-available/rchsems
 sudo ln -s /etc/nginx/sites-available/rchsems /etc/nginx/sites-enabled/rchsems
 ```
 
-Ubah `server_name` di `/etc/nginx/sites-available/rchsems`. Document root harus `/var/www/rchsems-kai/public`, bukan root proyek. Periksa konfigurasi yang sudah ada (`ls -l /etc/nginx/sites-enabled/`) agar tidak bentrok, dan jangan menghapus situs lain.
+Change `server_name` in `/etc/nginx/sites-available/rchsems`. The document root must be `/var/www/rchsems-kai/public`, not the project root. Check the existing configuration (`ls -l /etc/nginx/sites-enabled/`) to avoid conflicts, and do not remove other sites.
 
 ```bash
 sudo nginx -t
@@ -142,7 +143,7 @@ sudo systemctl restart php8.3-fpm
 
 ## 8. HTTPS
 
-Arahkan DNS ke server, pastikan port 80/443 terbuka, lalu:
+Point DNS to the server, make sure ports 80/443 are open, then:
 
 ```bash
 sudo certbot --nginx -d csms.example.com
@@ -151,24 +152,24 @@ cd /var/www/rchsems-kai
 php artisan config:cache && php artisan route:cache && php artisan view:cache
 ```
 
-Aplikasi mengirim header `Content-Security-Policy` ketat (tanpa skrip inline) dan, pada HTTPS, `Strict-Transport-Security`. `SESSION_SECURE_COOKIE=true` mengharuskan aplikasi dibuka lewat HTTPS. Bila memakai reverse proxy atau load balancer, atur *trusted proxy* Laravel sesuai alamat proxy yang Anda kendalikan; contoh di sini untuk Nginx langsung. Health endpoint: `https://csms.example.com/up` (menandakan Laravel dapat boot, bukan pemeriksaan semua dependensi).
+The application sends a strict `Content-Security-Policy` header (no inline scripts) and, over HTTPS, `Strict-Transport-Security`. `SESSION_SECURE_COOKIE=true` requires the application to be opened over HTTPS. If you use a reverse proxy or load balancer, configure Laravel's *trusted proxies* for the proxy addresses you control; the example here is for Nginx directly. If a proxy, WAF, or CDN (for example Cloudflare) sits in front of the application, make sure its request body limit is at least 20 MB, and disable automatic script injection (such as Cloudflare Web Analytics), which the CSP blocks by design. Health endpoint: `https://csms.example.com/up` (it only shows that Laravel can boot, not a check of all dependencies).
 
-## 9. Verifikasi setelah deployment
+## 9. Verification after deployment
 
-1. Buka HTTPS dan login sebagai admin; ganti password lewat menu akun bila perlu.
-2. Buat akun verifikator, validator, dan pengadaan. Satu akun boleh memiliki peran verifikator dan validator sekaligus.
-3. Daftarkan akun vendor, lengkapi profil, isi 49 jawaban, unggah satu bukti, lalu kirim.
-4. Login verifikator: unduh bukti, simpan nilai, minta perbaikan atau teruskan ke validasi.
-5. Login validator: isi tanggal, lokasi, dan hasil validasi, simpan skor, tetapkan hasil.
-6. Login pengadaan: pilih vendor tervalidasi, pratinjau sertifikat, **Cetak / Simpan PDF**.
-7. Pastikan vendor lain tidak melihat pengajuan tersebut, lalu coba ekspor Excel dari menu akun.
-8. Uji lupa password (email diterima, tautan membuka form password baru), dan aktifkan 2FA pada satu akun internal lalu login memakai kode.
-9. Periksa `storage/logs/laravel.log` dan `/var/log/nginx/error.log` tidak berisi error kritis.
+1. Open the HTTPS site and log in as admin; change the password through the account menu if needed.
+2. Create verifier, validator, and procurement accounts. One account may hold both the verifier and validator roles.
+3. Register a vendor account, complete the profile, fill in the 49 answers, upload one piece of evidence, then submit.
+4. Log in as the verifier: download the evidence, save scores, request a correction or forward to validation.
+5. Log in as the validator: fill in the date, location, and validation result, save the scores, set the result.
+6. Log in as procurement: pick a validated vendor, preview the certificate, **Cetak / Simpan PDF** ("Print / Save PDF").
+7. Make sure other vendors do not see that submission, then try the Excel export from the account menu.
+8. Test forgot password (the email arrives, the link opens the new-password form), and enable 2FA on one internal account and then log in with a code.
+9. Check that `storage/logs/laravel.log` and `/var/log/nginx/error.log` contain no critical errors.
 
-Instalasi pertama sebaiknya dicoba di staging atau subdomain uji sebelum dipakai resmi.
+Try the first installation on staging or a test subdomain before official use.
 
-## Referensi
+## References
 
-- [Laravel — Deployment](https://laravel.com/docs/13.x/deployment)
-- [Laravel — Migrations](https://laravel.com/docs/13.x/migrations)
-- [Ubuntu Server — Obtain TLS certificates](https://ubuntu.com/server/docs/how-to/security/obtain-tls-certificates/)
+- [Laravel: Deployment](https://laravel.com/docs/13.x/deployment)
+- [Laravel: Migrations](https://laravel.com/docs/13.x/migrations)
+- [Ubuntu Server: Obtain TLS certificates](https://ubuntu.com/server/docs/how-to/security/obtain-tls-certificates/)

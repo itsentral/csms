@@ -19,9 +19,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Pembatasan laju login: ketat per akun, longgar per alamat IP.
-        // Banyak pengguna Kantor Ernasi berbagi satu IP sehingga batas per IP
-        // saja dapat mengunci pengguna yang sah.
+        // Login rate limiting: strict per account, loose per IP address.
+        // Many users at the Ernasi office share one IP, so a per-IP limit
+        // alone could lock out legitimate users.
         RateLimiter::for('login', function (Request $request) {
             $email = Str::lower((string) $request->input('username'));
 
@@ -56,7 +56,7 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(10)->by('reset-ip:'.$request->ip());
         });
 
-        // Tautan reset membuka halaman utama (SPA) dengan token di query; bahasa email mengikuti locale permintaan.
+        // The reset link opens the main page (SPA) with the token in the query; the email language follows the request locale.
         ResetPassword::createUrlUsing(fn ($user, string $token) => url('/').'?reset='.$token.'&email='.urlencode($user->getEmailForPasswordReset()));
         ResetPassword::toMailUsing(function ($user, string $token) {
             $url = url('/').'?reset='.$token.'&email='.urlencode($user->getEmailForPasswordReset());

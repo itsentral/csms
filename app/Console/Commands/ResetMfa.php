@@ -9,7 +9,7 @@ class ResetMfa extends Command
 {
     protected $signature = 'rchsems:reset-mfa {email}';
 
-    protected $description = 'Mengatur ulang autentikasi dua langkah sebuah akun (misalnya admin terakhir yang kehilangan perangkat)';
+    protected $description = 'Reset two-factor authentication for an account (for example the last admin who lost their device)';
 
     public function handle(): int
     {

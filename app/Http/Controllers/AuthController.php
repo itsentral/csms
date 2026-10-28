@@ -19,7 +19,7 @@ class AuthController extends Controller
         $user = Auth::getProvider()->retrieveByCredentials(['email' => strtolower($d['username']), 'active' => true]);
         abort_unless($user && Hash::check($d['password'], $user->password), 422, __('portal.login_failed'));
 
-        // Akun dengan autentikasi dua langkah belum masuk: simpan sementara, tunggu kode (lihat MfaController::verifyLogin).
+        // Accounts with two-factor authentication are not logged in yet: park them and wait for the code (see MfaController::verifyLogin).
         if ($user->hasMfa()) {
             $r->session()->put('mfa.user_id', $user->id);
             $r->session()->put('mfa.expires', time() + config('rchsems.mfa_login_ttl'));
@@ -71,7 +71,7 @@ class AuthController extends Controller
         return ['ok' => true];
     }
 
-    /** Selalu menjawab sama agar tidak membocorkan apakah email terdaftar. */
+    /** Always answers the same way so it does not reveal whether an email is registered. */
     public function forgotPassword(Request $r)
     {
         $d = $r->validate(['username' => 'required|email']);
