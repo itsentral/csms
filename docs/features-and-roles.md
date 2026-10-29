@@ -48,7 +48,7 @@ The form has 49 questions with file attachments; filling it in does not have to 
 | Mechanism | Behavior |
 | --------- | -------- |
 | Answers and notes | Saved automatically to the server 2 seconds after the last change, only for the questions that changed |
-| Attachments | A selected file is only sent when the vendor presses **Simpan Draft** ("Save Draft") or **Kirim untuk Verifikasi** ("Submit for Verification"); it is never sent automatically. Files are sent one at a time with visible progress ("Mengunggah berkas 2 dari 5 · 45%", i.e. "Uploading file 2 of 5 · 45%"), the save buttons are locked during the upload, files over 15 MB are rejected when picked, and a stalled or dropped upload shows a clear message (the file keeps waiting so it can be retried) |
+| Attachments | A file starts uploading **as soon as it is picked**; no button is needed. Files are sent one at a time (the rest wait their turn). Each file shows its own progress: "Mengirim 45%" ("Sending 45%") while the bytes leave the browser, then "Menyimpan di server…" ("Saving on the server…") until the server has stored it; the bar never shows 100% before the server has answered, because browsers report bytes handed to the network (and proxies buffer the body), which can run ahead of the server. Files over 15 MB are rejected when picked. A stalled or dropped upload shows "Gagal: …" with **Coba lagi** ("Try again") and a `×` to remove it. **Kirim untuk Verifikasi** waits until nothing is uploading and refuses to submit while a file has failed |
 | Draft | Stored on the server (`answers`, `vendors.draft_saved_at`); it can be continued from another device with the same login |
 | Submission | Checks that all 49 questions are complete (showing the list of unanswered ones), locks the submission, and moves the status to Menunggu Verifikasi Dokumen |
 
@@ -60,7 +60,7 @@ After submission the inputs are locked; changes are only possible through the **
 
 | Situation | Result |
 | --------- | ------ |
-| A file is chosen but not yet saved | The `×` button removes the file from the list; it is never sent to the server |
+| A file is waiting in the upload queue or has failed | The `×` button removes it from the list; it is not on the server |
 | A file is already saved on the server | The `×` button deletes it permanently from the server (`DELETE /api/evidence/{id}`) |
 
 Only the vendor owner (while the submission can still be filled in) and admins may delete attachments. After submission, attachments are locked for the vendor and only an admin can delete them. Every deletion is recorded in `audit_logs` with the action `evidence_deleted`. Attachment formats: PDF, Word, Excel, JPG, and PNG, at most 15 MB **per file** (not in total).

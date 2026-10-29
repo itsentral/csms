@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
             $email = Str::lower((string) $request->input('username'));
 
             return [
-                Limit::perMinute(10)->by('login-akun:'.$email.'|'.$request->ip()),
+                Limit::perMinute((int) config('rchsems.login_attempts_per_minute'))->by('login-akun:'.$email.'|'.$request->ip()),
                 Limit::perMinute(60)->by('login-ip:'.$request->ip()),
             ];
         });

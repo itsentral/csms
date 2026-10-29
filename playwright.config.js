@@ -14,6 +14,8 @@ export const E2E_ENV = {
   MAIL_MAILER: 'array',
   MFA_REQUIRED: 'false',
   NOTIFY_EMAIL: 'false',
+  // The suite logs in far more often than the production limit of 10 per minute per account allows.
+  LOGIN_ATTEMPTS_PER_MINUTE: '1000',
 };
 
 // End-to-end smoke tests use the installed Chrome (no browser download) and a separate SQLite database.

@@ -651,7 +651,6 @@ let pqEls = {},
   pqSavedAt = null,
   pqDirty = false,
   pqRev = 0;
-const pendingFiles = {};
 const DOC_FORMATS = 'PDF, Word (.doc/.docx), Excel (.xls/.xlsx), JPG, dan PNG · maks. 15 MB per berkas';
 function pqFormatTime(iso) {
   if (!iso) return '-';
@@ -688,9 +687,9 @@ function questionnairePage(el) {
  <div class="pq-bar"><div class="pq-bar-row"><div><b>Kelengkapan jawaban</b> <span class="muted small" id="pqCount">0 / ${total} pertanyaan terisi</span></div><div class="pq-pct" id="pqPct">0%</div></div>
  <div class="progress"><div id="pqFill" style="width:0%"></div></div>
  <div class="pq-chips" id="pqChips"></div>
- <p class="muted small pq-hint">Jawaban dan keterangan tersimpan otomatis. Berkas lampiran baru diunggah ke server setelah tombol simpan ditekan. Format: ${DOC_FORMATS}.</p></div>
+ <p class="muted small pq-hint">Jawaban, keterangan, dan berkas lampiran tersimpan otomatis ke server. Format: ${DOC_FORMATS}.</p></div>
  <form id="qForm">${groups.map((g, gi) => pqGroupHtml(g, gi, a, false)).join('')}
- <div class="pq-actions"><div class="pq-actions-info"><span class="pq-save-state" id="pqSaveState">Belum ada perubahan</span><span class="pq-pending" id="pqPending"></span><div class="pq-upload" id="pqUpload" hidden><div class="pq-upload-row"><span id="pqUploadText" role="status" aria-live="polite"></span></div><div class="progress" id="pqUploadBar" role="progressbar" aria-label="Kemajuan unggahan" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="pqUploadFill"></div></div><small id="pqUploadName" class="pq-upload-name"></small><small>Jangan tutup atau muat ulang halaman sampai selesai.</small></div></div>
+ <div class="pq-actions"><div class="pq-actions-info"><span class="pq-save-state" id="pqSaveState">Belum ada perubahan</span><span class="pq-pending" id="pqPending" role="status" aria-live="polite"></span></div>
  <div class="pq-actions-btns"><button type="button" class="btn btn-tonal" data-click="saveDraft">Simpan Draft</button><button class="btn btn-filled"  type="button" data-click="submitQuestionnaire">Kirim untuk Verifikasi →</button></div></div></form>`;
   pqSavedAt = v.draft_saved_at || null;
   pqDirty = false;
@@ -720,7 +719,7 @@ function pqBind() {
   document.querySelectorAll('#qForm .pq-noteinput').forEach(n => n.addEventListener('input', () => pqTouch()));
   document
     .querySelectorAll('#qForm input[type=file]')
-    .forEach(inp => inp.addEventListener('change', () => stageEvidence(inp)));
+    .forEach(inp => inp.addEventListener('change', () => startUploads(inp)));
   pqRenderFiles();
   pqUpdateProgress();
   pqSetSaveState(pqSavedAt ? 'saved' : 'idle');
@@ -954,7 +953,7 @@ document.addEventListener('visibilitychange', () => {
 });
 window.addEventListener('pagehide', () => pqFlushOnExit());
 window.addEventListener('beforeunload', e => {
-  if (uploadState) {
+  if (hasActiveUploads()) {
     e.preventDefault();
     e.returnValue = '';
   }
@@ -974,45 +973,37 @@ function canRemoveEvidence(v) {
   if (!rolesOf(session?.role).includes('vendor')) return false;
   return [STATUS.awaitingFill, STATUS.needsRevision].includes(v.status);
 }
-function pqRenderFiles() {
+function pqFileHtml(item) {
+  const name = esc(item.file.name);
+  const remove = label =>
+    `<button type="button" class="pq-file-x" data-click="removeUploadItem" data-args='["${item.id}"]' aria-label="${label} ${name}" title="${label}">×</button>`;
+  if (item.state === 'queued')
+    return `<span class="pq-file uploading" data-upload="${item.id}">📄 ${name} <em>Menunggu giliran</em>${remove('Batalkan unggahan')}</span>`;
+  if (item.state === 'sending')
+    return `<span class="pq-file uploading" data-upload="${item.id}">📄 ${name} <em data-upload-text>Mengirim ${item.percent}%</em><span class="progress pq-file-bar" role="progressbar" aria-label="Kemajuan unggahan" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${item.percent}"><div style="width:${item.percent}%"></div></span></span>`;
+  if (item.state === 'processing')
+    return `<span class="pq-file uploading" data-upload="${item.id}">📄 ${name} <em data-upload-text>Menyimpan di server…</em><span class="progress pq-file-bar linear-indeterminate" role="progressbar" aria-label="Kemajuan unggahan"><div></div></span></span>`;
+  return `<span class="pq-file failed" data-upload="${item.id}">📄 ${name} <em>Gagal: ${esc(item.error)}</em><button type="button" class="pq-file-retry" data-click="retryUpload" data-args='["${item.id}"]'>Coba lagi</button>${remove('Hapus dari daftar')}</span>`;
+}
+// Renders the attachments of one question (or all of them): saved files first, then uploads in progress or failed.
+function pqRenderFiles(onlyQid) {
   const v = vendor(),
     removable = canRemoveEvidence(v);
   for (const q of questions) {
+    if (onlyQid && q.id !== onlyQid) continue;
     const el = document.getElementById('pqFiles_' + q.id);
     if (!el) continue;
     const saved = (v && v.answers && v.answers[q.id] && v.answers[q.id].files) || [],
-      pend = stagedFiles(q.id),
       parts = [];
-    saved.forEach((f, i) =>
+    saved.forEach(f =>
       parts.push(
         `<span class="pq-file"><a href="#" data-click="downloadEvidence" data-args='["${v.id}","${q.id}","${f.id}"]' title="Unduh ${esc(f.name)}">📄 ${esc(f.name)}</a>${removable ? `<button type="button" class="pq-file-x" data-click="removeSavedFile" data-args='["${q.id}","${f.id}"]' aria-label="Hapus lampiran ${esc(f.name)}" title="Hapus lampiran">×</button>` : ''}</span>`
       )
     );
-    pend.forEach((f, i) =>
-      parts.push(
-        `<span class="pq-file pending">📄 ${esc(f.name)} <em>menunggu simpan</em><button type="button" class="pq-file-x" data-click="removeStagedFile" data-args='["${q.id}",${i}]' aria-label="Batalkan pilihan ${esc(f.name)}" title="Batalkan pilihan berkas">×</button></span>`
-      )
-    );
+    uploadItems(q.id).forEach(item => parts.push(pqFileHtml(item)));
     el.innerHTML = parts.length ? parts.join('') : '<span class="muted small">Belum ada lampiran</span>';
   }
-  pqUpdatePending();
-}
-async function removeStagedFile(qid, index) {
-  const v = vendor();
-  if (!v) return;
-  if (
-    !(await m3Confirm(
-      'Keluarkan berkas dari daftar?',
-      'Berkas ini belum diunggah ke server dan akan dikeluarkan dari daftar lampiran.',
-      'Keluarkan',
-      true
-    ))
-  )
-    return;
-  const list = (pendingFiles[v.id] && pendingFiles[v.id][qid]) || [];
-  if (index < 0 || index >= list.length) return;
-  list.splice(index, 1);
-  pqRenderFiles();
+  pqSyncUploadUi();
 }
 async function removeSavedFile(qid, fileId) {
   const v = vendor();
@@ -1032,18 +1023,11 @@ async function removeSavedFile(qid, fileId) {
     m3Snackbar('Lampiran dihapus dari server.');
   });
 }
-function pqUpdatePending() {
-  let n = 0;
-  for (const q of questions) n += stagedFiles(q.id).length;
-  const el = document.getElementById('pqPending');
-  if (!el) return;
-  el.textContent = n ? `${n} berkas belum diunggah · tekan Simpan Draft` : '';
-}
 async function saveDraft() {
   if (
     !(await m3Confirm(
       'Simpan draft?',
-      'Jawaban dan lampiran yang dipilih akan disimpan ke server. Anda dapat melanjutkan kapan saja sebelum mengirim.',
+      'Jawaban dan keterangan akan disimpan ke server. Anda dapat melanjutkan kapan saja sebelum mengirim.',
       'Simpan'
     ))
   )
@@ -1052,8 +1036,6 @@ async function saveDraft() {
   pqSetSaveState('saving');
   try {
     await pqSaveNow();
-    await uploadStagedEvidence();
-    pqRenderFiles();
     pqSetSaveState('saved');
     m3Snackbar('Draft tersimpan di server.');
   } catch (e) {
@@ -1269,7 +1251,7 @@ function throwApiError(status, result) {
 const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
 const UPLOAD_STALL_MS = 90000;
 const UPLOAD_REPLY_MS = 180000;
-function apiUpload(path, formData, onProgress) {
+function apiUpload(path, formData, { onProgress, onSent } = {}) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     let timer = null;
@@ -1298,7 +1280,7 @@ function apiUpload(path, formData, onProgress) {
     };
     xhr.upload.onload = () => {
       arm(UPLOAD_REPLY_MS);
-      if (onProgress) onProgress(1);
+      if (onSent) onSent();
     };
     xhr.onload = () => {
       clearTimeout(timer);
@@ -1501,6 +1483,14 @@ async function submitQuestionnaire() {
     pqShowMissing(missing);
     return;
   }
+  if (hasActiveUploads()) {
+    m3Snackbar('Tunggu hingga semua berkas selesai diunggah.', { type: 'error' });
+    return;
+  }
+  if (failedUploads().length) {
+    m3Snackbar('Ada berkas yang gagal diunggah. Coba lagi atau hapus dari daftar sebelum mengirim.', { type: 'error' });
+    return;
+  }
   if (
     !(await m3Confirm(
       'Kirim pra-kualifikasi?',
@@ -1512,8 +1502,6 @@ async function submitQuestionnaire() {
   await action(async () => {
     try {
       await pqSaveNow();
-      await uploadStagedEvidence();
-      pqRenderFiles();
       const v = await api('/vendors/' + currentId + '/submit', 'POST', {});
       replaceVendor(v);
       go(canAccess('verification') ? 'verification' : 'vendors');
@@ -1527,82 +1515,121 @@ async function submitQuestionnaire() {
     }
   });
 }
-// Evidence files are staged in the browser only. They reach the server when the
-// vendor presses "Simpan Draft" or "Kirim untuk Verifikasi", never at selection time.
-function stagedFiles(qid) {
+// Attachments upload as soon as they are picked, one at a time. Each upload item moves through
+// queued -> sending (bytes leaving the browser) -> processing (all bytes sent, waiting for the server to store the file)
+// and is removed on success or left as "failed" so it can be retried. Items live here, not in the DOM, so they survive navigation.
+const uploads = []; // { id, vendorId, qid, file, state, percent, error }
+let uploadSeq = 0;
+let uploadRunning = false;
+function uploadItems(qid) {
   const v = vendor();
-  return (v && pendingFiles[v.id] && pendingFiles[v.id][qid]) || [];
+  return v ? uploads.filter(u => u.vendorId === v.id && u.qid === qid) : [];
 }
-function stageEvidence(inp) {
+function hasActiveUploads() {
+  return uploads.some(u => u.state !== 'failed');
+}
+function failedUploads() {
+  const v = vendor();
+  return uploads.filter(u => u.state === 'failed' && v && u.vendorId === v.id);
+}
+// Summary under the form buttons; "Kirim untuk Verifikasi" waits until nothing is uploading.
+function pqSyncUploadUi() {
+  const active = uploads.filter(u => u.state !== 'failed').length;
+  const failed = failedUploads().length;
+  const el = document.getElementById('pqPending');
+  if (el) {
+    el.textContent = active
+      ? `Mengunggah ${active} berkas… jangan tutup halaman`
+      : failed
+        ? `${failed} berkas gagal diunggah`
+        : '';
+    el.classList.toggle('error', !active && failed > 0);
+  }
+  const submit = document.querySelector('#qForm [data-click="submitQuestionnaire"]');
+  if (submit && !pqLocked()) submit.disabled = active > 0;
+}
+function startUploads(inp) {
   const v = vendor();
   if (!v) return;
   const qid = inp.dataset.doc;
   const chosen = [...inp.files];
+  inp.value = ''; // allow picking the same file again
   const tooBig = chosen.filter(f => f.size > MAX_UPLOAD_BYTES);
-  if (tooBig.length) {
+  if (tooBig.length)
     m3Snackbar(tooBig.map(f => f.name).join(', ') + ': lebih dari 15 MB, tidak ditambahkan.', { type: 'error' });
-    if (tooBig.length === chosen.length) inp.value = '';
+  for (const file of chosen.filter(f => f.size <= MAX_UPLOAD_BYTES))
+    uploads.push({ id: 'u' + ++uploadSeq, vendorId: v.id, qid, file, state: 'queued', percent: 0, error: '' });
+  pqRenderFiles(qid);
+  runUploadQueue();
+}
+function updateUploadItem(item) {
+  const el = document.querySelector(`[data-upload="${item.id}"]`);
+  if (!el) return;
+  if (item.state === 'sending') {
+    el.querySelector('[data-upload-text]').textContent = `Mengirim ${item.percent}%`;
+    el.querySelector('.progress div').style.width = item.percent + '%';
+    el.querySelector('.progress').setAttribute('aria-valuenow', String(item.percent));
+  } else {
+    pqRenderFiles(item.qid);
   }
-  (pendingFiles[v.id] ??= {})[qid] = chosen.filter(f => f.size <= MAX_UPLOAD_BYTES);
-  pqRenderFiles();
 }
-let uploadState = null;
-let uploadPromise = null;
-function pqSetUpload(state) {
-  uploadState = state;
-  document.querySelectorAll('.pq-actions-btns button').forEach(b => (b.disabled = !!state));
-  const box = document.getElementById('pqUpload');
-  if (!box) return;
-  box.hidden = !state;
-  if (!state) {
-    document.getElementById('pqUploadName').textContent = '';
-    return;
-  }
-  document.getElementById('pqUploadText').textContent =
-    `Mengunggah berkas ${state.index} dari ${state.total} · ${state.percent}%`;
-  document.getElementById('pqUploadName').textContent = state.name;
-  document.getElementById('pqUploadFill').style.width = state.percent + '%';
-  document.getElementById('pqUploadBar').setAttribute('aria-valuenow', String(state.percent));
-}
-// One call at a time: pressing Save Draft twice does not upload files twice.
-function uploadStagedEvidence() {
-  uploadPromise ??= uploadStagedEvidenceNow().finally(() => {
-    uploadPromise = null;
-    pqSetUpload(null);
-  });
-  return uploadPromise;
-}
-async function uploadStagedEvidenceNow() {
-  const v = vendor();
-  if (!v || !pendingFiles[v.id]) return;
-  const store = pendingFiles[v.id];
-  const total = Object.values(store).reduce((n, list) => n + list.length, 0);
-  let index = 0;
-  for (const qid of Object.keys(store)) {
-    while (store[qid] && store[qid].length) {
-      const file = store[qid][0];
-      if (file.size > MAX_UPLOAD_BYTES) throw new Error(file.name + ': maksimal 15 MB.');
-      index++;
-      const show = fraction => pqSetUpload({ index, total, name: file.name, percent: Math.round(fraction * 100) });
-      show(0);
+async function runUploadQueue() {
+  if (uploadRunning) return;
+  uploadRunning = true;
+  try {
+    let item;
+    while ((item = uploads.find(u => u.state === 'queued'))) {
+      item.state = 'sending';
+      item.percent = 0;
+      pqRenderFiles(item.qid);
       const fd = new FormData();
-      fd.append('question_id', qid);
-      fd.append('file', file);
-      let stored;
+      fd.append('question_id', item.qid);
+      fd.append('file', item.file);
       try {
-        stored = await apiUpload('/vendors/' + v.id + '/evidence', fd, show);
+        const stored = await apiUpload('/vendors/' + item.vendorId + '/evidence', fd, {
+          // Browsers report bytes handed to the network stack, which can run ahead of what the server has received
+          // (proxies buffer the body), so never show 100% until the server has answered.
+          onProgress: fraction => {
+            item.percent = Math.min(99, Math.round(fraction * 100));
+            updateUploadItem(item);
+          },
+          onSent: () => {
+            item.state = 'processing';
+            updateUploadItem(item);
+          },
+        });
+        const owner = db.vendors.find(x => x.id === item.vendorId);
+        if (owner) {
+          owner.answers[item.qid] ??= { answer: '', note: '', files: [] };
+          owner.answers[item.qid].files ??= [];
+          owner.answers[item.qid].files.push(stored);
+        }
+        uploads.splice(uploads.indexOf(item), 1);
       } catch (e) {
-        e.message = file.name + ': ' + e.message;
-        throw e;
+        item.state = 'failed';
+        item.error = e.message;
       }
-      v.answers[qid] ??= { answer: '', note: '', files: [] };
-      v.answers[qid].files ??= [];
-      v.answers[qid].files.push(stored);
-      store[qid].shift();
+      pqRenderFiles(item.qid);
     }
-    const inp = document.querySelector(`[data-doc="${qid}"]`);
-    if (inp) inp.value = '';
+  } finally {
+    uploadRunning = false;
+    pqSyncUploadUi();
   }
+}
+function retryUpload(id) {
+  const item = uploads.find(u => u.id === id);
+  if (!item || item.state !== 'failed') return;
+  item.state = 'queued';
+  item.error = '';
+  pqRenderFiles(item.qid);
+  runUploadQueue();
+}
+// Removes a queued or failed upload from the list (an upload that is already being sent cannot be cancelled).
+function removeUploadItem(id) {
+  const i = uploads.findIndex(u => u.id === id);
+  if (i < 0 || ['sending', 'processing'].includes(uploads[i].state)) return;
+  const [item] = uploads.splice(i, 1);
+  pqRenderFiles(item.qid);
 }
 async function pqSwitchVendor(id) {
   await pqFlush();

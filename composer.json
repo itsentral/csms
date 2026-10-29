@@ -31,7 +31,7 @@
         }
     },
     "scripts": {
-        "dev": "@php artisan serve",
+        "dev": ["Composer\\Config::disableProcessTimeout", "php -d upload_max_filesize=15M -d post_max_size=20M -d memory_limit=256M -S 127.0.0.1:8000 -t public deploy/dev-router.php"],
         "test": [
             "@php artisan config:clear --ansi @no_additional_args",
             "@php artisan test"

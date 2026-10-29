@@ -28,7 +28,6 @@
     'Memuat aplikasi...': 'Loading application...',
     'Memuat data': 'Loading data',
     'Aplikasi belum dapat dimuat': 'The application could not be loaded',
-    'Coba lagi': 'Try again',
     Tutup: 'Close',
     Batal: 'Cancel',
     Simpan: 'Save',
@@ -194,13 +193,19 @@
     'Tambah keterangan': 'Add note',
     Keterangan: 'Note',
     'Keterangan tersimpan': 'Note saved',
-    'Batalkan pilihan berkas': 'Remove selected file',
     'Pengisian belum lengkap': 'Form incomplete',
     'Pilih vendor untuk melihat isian pra-kualifikasinya.': 'Select a vendor to view its pre-qualification answers.',
     'Pilih vendor terlebih dahulu dari': 'First select a vendor from',
     'atau daftarkan vendor baru.': 'or register a new vendor.',
     'Lanjutkan pengisian': 'Continue filling',
-    'menunggu simpan': 'pending save',
+    'Menunggu giliran': 'Waiting',
+    'Menyimpan di server…': 'Saving on the server…',
+    'Coba lagi': 'Try again',
+    'Batalkan unggahan': 'Cancel upload',
+    'Hapus dari daftar': 'Remove from the list',
+    'Tunggu hingga semua berkas selesai diunggah.': 'Wait until all files have finished uploading.',
+    'Ada berkas yang gagal diunggah. Coba lagi atau hapus dari daftar sebelum mengirim.':
+      'Some files failed to upload. Retry them or remove them from the list before submitting.',
     'Pengajuan sedang diproses atau telah final. Formulir terkunci sampai dikembalikan untuk perbaikan.':
       'The submission is being processed or is final. The form is locked until it is returned for revision.',
     'Catatan perbaikan verifikator': 'Verifier revision notes',
@@ -339,8 +344,8 @@
     'Data perusahaan disimpan ke server dan Anda lanjut ke pengisian pra-kualifikasi.':
       'The company data will be saved to the server and you will continue to the pre-qualification form.',
     'Simpan draft?': 'Save draft?',
-    'Jawaban dan lampiran yang dipilih akan disimpan ke server. Anda dapat melanjutkan kapan saja sebelum mengirim.':
-      'Your answers and selected attachments will be saved to the server. You can continue at any time before submitting.',
+    'Jawaban dan keterangan akan disimpan ke server. Anda dapat melanjutkan kapan saja sebelum mengirim.':
+      'Your answers and notes will be saved to the server. You can continue at any time before submitting.',
     'Kirim pra-kualifikasi?': 'Submit pre-qualification?',
     Kirim: 'Submit',
     'Setelah dikirim, jawaban dan lampiran dikunci dan diproses oleh verifikator. Pastikan semuanya sudah benar.':
@@ -374,10 +379,6 @@
     'Keluar dari aplikasi?': 'Sign out?',
     'Anda perlu masuk kembali untuk melanjutkan. Jawaban pra-kualifikasi yang sudah diubah akan disimpan lebih dulu.':
       'You will need to sign in again to continue. Modified pre-qualification answers will be saved first.',
-    'Keluarkan berkas dari daftar?': 'Remove file from the list?',
-    Keluarkan: 'Remove',
-    'Berkas ini belum diunggah ke server dan akan dikeluarkan dari daftar lampiran.':
-      'This file has not been uploaded to the server yet and will be removed from the attachment list.',
     'Hapus lampiran?': 'Delete attachment?',
     'Hapus lampiran': 'Delete attachment',
     'Berkas yang dihapus akan dihapus permanen dari server dan tidak dapat dikembalikan.':
@@ -395,7 +396,6 @@
     'Data berhasil disimpan di server.': 'Data saved to the server.',
     'Draft tersimpan di server.': 'Draft saved to the server.',
     'Kemajuan unggahan': 'Upload progress',
-    'Jangan tutup atau muat ulang halaman sampai selesai.': 'Do not close or reload this page until it finishes.',
     'Koneksi terputus saat mengunggah. Periksa jaringan Anda atau ukuran berkas (maks. 15 MB), lalu coba lagi.':
       'The connection dropped while uploading. Check your network or the file size (max. 15 MB), then try again.',
     'Unggahan terhenti terlalu lama. Periksa koneksi Anda, lalu coba lagi.':
@@ -506,9 +506,21 @@
       },
     ],
     [
-      /^Mengunggah berkas (\d+) dari (\d+) · (\d+)%$/,
+      /^Mengirim (\d+)%$/,
       function (m) {
-        return 'Uploading file ' + m[1] + ' of ' + m[2] + ' · ' + m[3] + '%';
+        return 'Sending ' + m[1] + '%';
+      },
+    ],
+    [
+      /^Gagal: (.+)$/,
+      function (m, tr) {
+        return 'Failed: ' + tr(m[1]);
+      },
+    ],
+    [
+      /^Mengunggah (\d+) berkas… jangan tutup halaman$/,
+      function (m) {
+        return 'Uploading ' + m[1] + ' file' + (m[1] === '1' ? '' : 's') + '… do not close the page';
       },
     ],
     [
@@ -524,9 +536,9 @@
       },
     ],
     [
-      /^(\d+) berkas belum diunggah · tekan Simpan Draft$/,
+      /^(\d+) berkas gagal diunggah$/,
       function (m) {
-        return m[1] + ' file' + (m[1] === '1' ? '' : 's') + ' not yet uploaded · press Save Draft';
+        return m[1] + ' file' + (m[1] === '1' ? '' : 's') + ' failed to upload';
       },
     ],
     [
@@ -616,10 +628,10 @@
       },
     ],
     [
-      /^Jawaban dan keterangan tersimpan otomatis\. Berkas lampiran baru diunggah ke server setelah tombol simpan ditekan\. Format: (.*)\.$/,
+      /^Jawaban, keterangan, dan berkas lampiran tersimpan otomatis ke server\. Format: (.*)\.$/,
       function (m) {
         return (
-          'Answers and notes are saved automatically. New attachments are uploaded to the server after you press save. Formats: ' +
+          'Answers, notes, and attachments are saved to the server automatically. Formats: ' +
           m[1].replace(/, dan /, ', and ').replace('maks. 15 MB per berkas', 'max. 15 MB per file') +
           '.'
         );

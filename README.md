@@ -18,7 +18,7 @@ php artisan key:generate
 # fill in the MySQL connection (DB_*) in .env first
 php artisan migrate --seed
 php artisan rchsems:create-admin
-php artisan serve
+composer dev   # or: php artisan serve (uses your php.ini upload limits, usually 2 MB per file)
 ```
 
 Open http://127.0.0.1:8000. For local demo accounts: `php artisan db:seed --class=DemoSeeder` (only `local`/`testing`). Never run `DemoSeeder` or `migrate:fresh` in production.
@@ -38,8 +38,8 @@ Open http://127.0.0.1:8000. For local demo accounts: `php artisan db:seed --clas
 ## Frequently used commands
 
 ```bash
-php artisan test                  # 36 PHPUnit tests, in-memory SQLite
-npm install && npm run test:e2e   # 12 smoke tests + 3 upload tests + 3 accessibility audits (Playwright + installed Chrome)
+php artisan test                  # 42 PHPUnit tests, in-memory SQLite
+npm install && npm run test:e2e   # 12 smoke tests + 6 upload tests + 4 mobile tests + 3 accessibility audits (Playwright + installed Chrome)
 composer lint && npm run lint     # Pint (PHP) and ESLint (JavaScript); fix formatting with: composer format && npm run format
 npm run build                     # required after changing resources/css or resources/js
 php artisan rchsems:create-admin  # create the first admin (the password is asked interactively)

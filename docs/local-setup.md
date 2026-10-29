@@ -49,8 +49,10 @@ Edit `.env`: set `DB_PASSWORD`; make sure `DB_HOST=127.0.0.1`, `DB_DATABASE=rchs
 ```bash
 php artisan migrate --seed
 php artisan db:seed --class=DemoSeeder
-php artisan serve --host=127.0.0.1 --port=8000
+composer dev
 ```
+
+`composer dev` runs the PHP built-in server through `deploy/dev-router.php`, a development server that raises the upload limits to match the application (15 MB per file). Plain `php artisan serve` also works but uses your php.ini defaults (usually 2 MB per upload and 8 MB per request), so larger attachments fail with "berkas gagal diunggah" or "ditolak server karena terlalu besar".
 
 Open http://127.0.0.1:8000. The following demo accounts use the password **LocalDemo2026!**:
 
