@@ -38,8 +38,8 @@ Open http://127.0.0.1:8000. For local demo accounts: `php artisan db:seed --clas
 ## Frequently used commands
 
 ```bash
-php artisan test                  # 42 PHPUnit tests, in-memory SQLite
-npm install && npm run test:e2e   # 12 smoke tests + 6 upload tests + 4 mobile tests + 3 accessibility audits (Playwright + installed Chrome)
+php artisan test                  # 43 PHPUnit tests, in-memory SQLite
+npm install && npm run test:e2e   # 12 smoke tests + 7 upload tests + 4 mobile tests + 3 accessibility audits (Playwright + installed Chrome)
 composer lint && npm run lint     # Pint (PHP) and ESLint (JavaScript); fix formatting with: composer format && npm run format
 npm run build                     # required after changing resources/css or resources/js
 php artisan rchsems:create-admin  # create the first admin (the password is asked interactively)

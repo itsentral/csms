@@ -117,3 +117,24 @@ test('a failed upload can be removed from the list', async ({ page }) => {
   await expect(page.locator('.pq-file.failed')).toHaveCount(0);
   await expect(page.locator('#pqPending')).toHaveText('');
 });
+
+test('an attachment opens in a new tab and is served inline, not as a download', async ({ page }) => {
+  await openQuestionnaire(page);
+  await page.locator(FILE_INPUT).setInputFiles(pdf('bukti-e.pdf', 64 * 1024));
+  const link = page.locator(SAVED('bukti-e.pdf'));
+  await expect(link).toBeVisible();
+  const fileId = JSON.parse(await link.getAttribute('data-args'))[2];
+
+  // The server answers with an inline disposition and its own CSP so a PDF viewer can load it.
+  const response = await page.request.get('/api/evidence/' + fileId);
+  expect(response.headers()['content-disposition']).toMatch(/^inline;/);
+  expect(response.headers()['content-type']).toContain('application/pdf');
+  expect(response.headers()['content-security-policy']).toContain("object-src 'self'");
+
+  // The link opens a new tab and leaves the app where it is.
+  const [popup] = await Promise.all([page.context().waitForEvent('page'), link.click()]);
+  expect(popup.url()).toContain('/api/evidence/' + fileId);
+  await popup.close();
+  await expect(page.locator('#view h1')).toHaveText('Pra-Kualifikasi');
+  await removeSaved(page, 'bukti-e.pdf');
+});

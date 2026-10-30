@@ -119,6 +119,35 @@ class WorkflowTest extends TestCase
         $this->actingAs($this->user('verifikator'))->get('/api/evidence/'.$id)->assertOk();
     }
 
+    public function test_pdf_and_image_evidence_is_shown_inline_and_other_types_are_downloaded(): void
+    {
+        Storage::fake('local');
+        $u = $this->user('vendor');
+        $v = $this->vendor($u);
+        $file = UploadedFile::fake()->createWithContent('bukti.png', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl6NvEAAAAASUVORK5CYII='));
+        $id = $this->actingAs($u)->post('/api/vendors/'.$v->id.'/evidence', ['question_id' => '1.a', 'file' => $file], ['Accept' => 'application/json'])->assertOk()->json('id');
+
+        $png = $this->actingAs($u)->get('/api/evidence/'.$id)->assertOk();
+        $this->assertStringStartsWith('inline;', $png->headers->get('Content-Disposition'));
+        $this->assertSame('image/png', $png->headers->get('Content-Type'));
+        $this->assertSame('nosniff', $png->headers->get('X-Content-Type-Options'));
+        // A dedicated CSP lets a PDF viewer load (the app-wide one has object-src 'none') while allowing no scripts.
+        $this->assertStringContainsString("default-src 'none'", $png->headers->get('Content-Security-Policy'));
+        $this->assertStringNotContainsString('script-src', $png->headers->get('Content-Security-Policy'));
+
+        // Word and Excel files cannot be shown by a browser, so they stay downloads.
+        Storage::disk('local')->put('evidence/'.$v->id.'/laporan.docx', 'docx-bytes');
+        DB::table('evidence')->insert([
+            'id' => 'doc-1', 'vendor_id' => $v->id, 'question_id' => '1.b', 'uploaded_by' => $u->id, 'name' => 'laporan.docx',
+            'path' => 'evidence/'.$v->id.'/laporan.docx', 'mime' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'size' => 10, 'created_at' => now(), 'updated_at' => now(),
+        ]);
+        $doc = $this->actingAs($u)->get('/api/evidence/doc-1')->assertOk();
+        $this->assertStringStartsWith('attachment;', $doc->headers->get('Content-Disposition'));
+        // Everything else keeps the strict app-wide policy.
+        $this->assertStringContainsString("object-src 'none'", $doc->headers->get('Content-Security-Policy'));
+    }
+
     public function test_state_query_count_does_not_grow_with_vendor_count(): void
     {
         $admin = $this->user('admin');

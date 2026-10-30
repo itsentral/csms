@@ -20,7 +20,9 @@ class SecurityHeaders
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
         $response->headers->set('Referrer-Policy', 'same-origin');
         $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Content-Security-Policy', self::CSP);
+        if (! $response->headers->has('Content-Security-Policy')) {
+            $response->headers->set('Content-Security-Policy', self::CSP);
+        }
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
         if ($r->isSecure()) {
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');

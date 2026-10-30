@@ -63,7 +63,7 @@ After submission the inputs are locked; changes are only possible through the **
 | A file is waiting in the upload queue or has failed | The `×` button removes it from the list; it is not on the server |
 | A file is already saved on the server | The `×` button deletes it permanently from the server (`DELETE /api/evidence/{id}`) |
 
-Only the vendor owner (while the submission can still be filled in) and admins may delete attachments. After submission, attachments are locked for the vendor and only an admin can delete them. Every deletion is recorded in `audit_logs` with the action `evidence_deleted`. Attachment formats: PDF, Word, Excel, JPG, and PNG, at most 15 MB **per file** (not in total).
+Only the vendor owner (while the submission can still be filled in) and admins may delete attachments. After submission, attachments are locked for the vendor and only an admin can delete them. Every deletion is recorded in `audit_logs` with the action `evidence_deleted`. Attachment formats: PDF, Word, Excel, JPG, and PNG, at most 15 MB **per file** (not in total). Clicking an attachment opens it in a **new tab**: PDF and image files are shown there by the browser, while Word and Excel files cannot be shown by a browser and are downloaded instead. The Excel export and the 2FA recovery codes file remain downloads.
 
 ## Data management
 

@@ -997,7 +997,7 @@ function pqRenderFiles(onlyQid) {
       parts = [];
     saved.forEach(f =>
       parts.push(
-        `<span class="pq-file"><a href="#" data-click="downloadEvidence" data-args='["${v.id}","${q.id}","${f.id}"]' title="Unduh ${esc(f.name)}">📄 ${esc(f.name)}</a>${removable ? `<button type="button" class="pq-file-x" data-click="removeSavedFile" data-args='["${q.id}","${f.id}"]' aria-label="Hapus lampiran ${esc(f.name)}" title="Hapus lampiran">×</button>` : ''}</span>`
+        `<span class="pq-file"><a href="#" data-click="openEvidence" data-args='["${v.id}","${q.id}","${f.id}"]' title="Buka ${esc(f.name)}">📄 ${esc(f.name)}</a>${removable ? `<button type="button" class="pq-file-x" data-click="removeSavedFile" data-args='["${q.id}","${f.id}"]' aria-label="Hapus lampiran ${esc(f.name)}" title="Hapus lampiran">×</button>` : ''}</span>`
       )
     );
     uploadItems(q.id).forEach(item => parts.push(pqFileHtml(item)));
@@ -1082,7 +1082,7 @@ function verificationPage(el) {
                 .filter(q => q.group === g[0])
                 .map(
                   q =>
-                    `<tr><td>${esc(q.id)}. ${esc(q.text)}</td><td>${q.max}</td><td>${statusTag(v.answers[q.id]?.answer || 'Belum diisi')}<br><small>${v.answers[q.id]?.files?.length || v.answers[q.id]?.fileId ? (v.answers[q.id]?.files?.length ? v.answers[q.id].files.map((f, i) => `<a href="#" data-click="downloadEvidence" data-args='["${v.id}","${q.id}","${f.id}"]'>Unduh ${i + 1}: ${esc(f.name)}</a>`).join('<br>') : `<a href="#" data-click="downloadEvidence" data-args='["${v.id}","${q.id}"]'>Unduh: ${esc(v.answers[q.id].fileName || 'File bukti')}</a>`) : 'Tanpa bukti'}</small></td><td><select data-review="${q.id}">${[0, 0.25, 0.5, 0.75, 1].map(n => `<option value="${n}" ${Number(v.reviewByUser?.[session?.username]?.scores?.[q.id]?.score ?? v.review[q.id]?.score ?? 0) === n ? 'selected' : ''}>${n.toLocaleString('id-ID')}</option>`).join('')}</select></td><td><b id="val_${q.id}">${fmtScore(averageMatrix(v, 'review', q.id) * q.max)}</b></td><td><input data-comment="${q.id}" value="${esc(v.reviewByUser?.[session?.username]?.scores?.[q.id]?.comment ?? v.review[q.id]?.comment ?? '')}" placeholder="Catatan pemeriksa"></td></tr>`
+                    `<tr><td>${esc(q.id)}. ${esc(q.text)}</td><td>${q.max}</td><td>${statusTag(v.answers[q.id]?.answer || 'Belum diisi')}<br><small>${v.answers[q.id]?.files?.length || v.answers[q.id]?.fileId ? (v.answers[q.id]?.files?.length ? v.answers[q.id].files.map((f, i) => `<a href="#" data-click="openEvidence" data-args='["${v.id}","${q.id}","${f.id}"]'>Buka ${i + 1}: ${esc(f.name)}</a>`).join('<br>') : `<a href="#" data-click="openEvidence" data-args='["${v.id}","${q.id}"]'>Buka: ${esc(v.answers[q.id].fileName || 'File bukti')}</a>`) : 'Tanpa bukti'}</small></td><td><select data-review="${q.id}">${[0, 0.25, 0.5, 0.75, 1].map(n => `<option value="${n}" ${Number(v.reviewByUser?.[session?.username]?.scores?.[q.id]?.score ?? v.review[q.id]?.score ?? 0) === n ? 'selected' : ''}>${n.toLocaleString('id-ID')}</option>`).join('')}</select></td><td><b id="val_${q.id}">${fmtScore(averageMatrix(v, 'review', q.id) * q.max)}</b></td><td><input data-comment="${q.id}" value="${esc(v.reviewByUser?.[session?.username]?.scores?.[q.id]?.comment ?? v.review[q.id]?.comment ?? '')}" placeholder="Catatan pemeriksa"></td></tr>`
                 )
                 .join('')}</tbody></table></div></div>`
           )
@@ -1636,7 +1636,8 @@ async function pqSwitchVendor(id) {
   currentId = id;
   render();
 }
-function downloadEvidence(vendorId, qid, fileId) {
+// Attachments open in a new tab (PDF and images are shown there; Word and Excel files are downloaded by the browser).
+function openEvidence(vendorId, qid, fileId) {
   if (fileId) window.open('/api/evidence/' + encodeURIComponent(fileId), '_blank', 'noopener');
 }
 async function deleteVendor(id) {

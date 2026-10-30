@@ -638,9 +638,9 @@
       },
     ],
     [
-      /^Unduh:? (.*)$/,
+      /^Buka:? (.*)$/,
       function (m, tr) {
-        return 'Download: ' + tr(m[1]);
+        return 'Open: ' + tr(m[1]);
       },
     ],
     [

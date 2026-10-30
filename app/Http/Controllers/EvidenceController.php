@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Storage;
 
 class EvidenceController extends Controller
 {
+    /** File types a browser can show in a tab; everything else is downloaded. */
+    private const INLINE_TYPES = ['application/pdf', 'image/jpeg', 'image/png'];
+
     public function __construct(private EvidenceService $evidence) {}
 
     public function upload(UploadEvidenceRequest $r, Vendor $vendor)
@@ -28,7 +31,18 @@ class EvidenceController extends Controller
         abort_if(Portal::isHiddenDraft($r->user(), $vendor), 403, __('portal.draft_attachment_forbidden'));
         Portal::audit('evidence_downloaded', $file->vendor_id, ['id' => $id]);
 
-        return Storage::disk('local')->download($file->path, $file->name, ['X-Content-Type-Options' => 'nosniff']);
+        $headers = ['X-Content-Type-Options' => 'nosniff'];
+        if (in_array($file->mime, self::INLINE_TYPES, true)) {
+            // Shown in the browser tab (the UI opens attachments in a new tab). These types cannot run scripts, and the
+            // response gets its own CSP because the app-wide one (object-src 'none') would stop a PDF viewer from loading.
+            $headers['Content-Type'] = $file->mime;
+            $headers['Content-Security-Policy'] = "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; object-src 'self'";
+
+            return Storage::disk('local')->response($file->path, $file->name, $headers);
+        }
+
+        // Word and Excel files cannot be shown by a browser, so they are downloaded.
+        return Storage::disk('local')->download($file->path, $file->name, $headers);
     }
 
     public function destroy(Request $r, string $id)
