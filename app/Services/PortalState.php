@@ -35,7 +35,14 @@ class PortalState
             'session' => $viewer->publicData(),
             'statuses' => VendorStatus::map(),
             // Question master: the single source for the interface (Indonesian and English text).
-            'questions' => DB::table('questions')->orderBy('position')->get(['id', 'group', 'group_en', 'text', 'text_en', 'max']),
+            'questions' => DB::table('questions')->orderBy('position')->get(['id', 'group', 'group_en', 'text', 'text_en', 'max', 'rubric', 'rubric_en'])
+                ->map(function ($q) {
+                    // Scoring rubric: five criteria for matrix 0, 0.25, 0.5, 0.75, 1 (null when not seeded yet).
+                    $q->rubric = $q->rubric ? json_decode($q->rubric, true) : null;
+                    $q->rubric_en = $q->rubric_en ? json_decode($q->rubric_en, true) : null;
+
+                    return $q;
+                }),
             'vendors' => $vendors,
             'accounts' => $isAdmin ? User::where('active', true)->get()->map(fn (User $u) => $u->publicData()) : [],
         ];

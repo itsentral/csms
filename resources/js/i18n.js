@@ -280,6 +280,32 @@
     'Nilai lapangan': 'Field score',
     'Rata-rata nilai lapangan': 'Average field score',
     'Rata-rata verifikasi dokumen': 'Average document verification',
+    'Matriks Anda': 'Your matrix',
+    'Nilai Anda': 'Your score',
+    'Rata-rata tim': 'Team average',
+    'Nilai gabungan': 'Combined score',
+    Anda: 'You',
+    'Belum disimpan': 'Not saved',
+    'Beda dari tim': 'Differs from team',
+    Sejalan: 'In line',
+    'Baru Anda': 'Only you',
+    'Belum ada penilai': 'No assessors yet',
+    'Tampil setelah Anda menyimpan': 'Shown after you save',
+    'Pilih kriteria': 'Choose a criterion',
+    'Pilih kriteria yang paling sesuai dengan bukti': 'Choose the criterion that best matches the evidence',
+    'Tekan 1–5 untuk memilih; pertanyaan berikutnya terbuka otomatis. Esc menutup.':
+      'Press 1–5 to choose; the next question opens automatically. Esc closes.',
+    'Rata-rata tim tampil setelah Anda menyimpan penilaian, agar penilaian Anda tidak terpengaruh penilai lain.':
+      "The team average is shown after you save your assessment, so other assessors don't influence it.",
+    'Ada perubahan yang belum disimpan': 'Unsaved changes',
+    'Rata-rata semua verifikator, dipakai sebagai nilai dokumen.':
+      'Average of all verifiers, used as the document score.',
+    'Rata-rata semua validator, dipakai sebagai nilai akhir dan kategori risiko.':
+      'Average of all validators, used as the final score and risk category.',
+    'Skala matriks sesuai formulir: 0; 0,25; 0,5; 0,75; 1. Nilai Anda = matriks Anda × bobot. Rata-rata tim menggabungkan semua verifikator dan menjadi nilai dokumen sementara; nilai akhir mengikuti hasil validasi lapangan.':
+      'Matrix scale per the form: 0; 0.25; 0.5; 0.75; 1. Your score = your matrix × weight. The team average combines all verifiers and is the provisional document score; the final score follows the field validation result.',
+    'Masukkan nilai matriks berdasarkan bukti yang telah dikonfirmasi saat validasi lapangan. Nilai Anda = matriks Anda × bobot. Rata-rata tim menggabungkan semua validator dan menjadi nilai akhir penetapan kategori RCHSEMS.':
+      'Enter matrix scores based on evidence confirmed during field validation. Your score = your matrix × weight. The team average combines all validators and is the final score that determines the RCHSEMS category.',
     'Unit Keselamatan': 'Safety Unit',
     'Validasi penilaian': 'Assessment validation',
 
@@ -551,6 +577,36 @@
       /^Menunggu tindakan Anda \((\d+)\)$/,
       function (m) {
         return 'Awaiting your action (' + m[1] + ')';
+      },
+    ],
+    [
+      /^(\d+) penilai$/,
+      function (m) {
+        return m[1] + ' assessor' + (m[1] === '1' ? '' : 's');
+      },
+    ],
+    [
+      /^(\d+) (verifikator|validator)$/,
+      function (m) {
+        return m[1] + ' ' + (m[2] === 'verifikator' ? 'verifier' : 'validator') + (m[1] === '1' ? '' : 's');
+      },
+    ],
+    [
+      /^(Keterangan verifikasi|Catatan lapangan) (\d+\.[a-z])$/,
+      function (m, tr) {
+        return tr(m[1]) + ' ' + m[2];
+      },
+    ],
+    [
+      /^Kriteria (\d+\.[a-z])$/,
+      function (m) {
+        return 'Criteria ' + m[1];
+      },
+    ],
+    [
+      /^(\d+) pertanyaan belum dinilai(\.?)$/,
+      function (m) {
+        return m[1] + ' question' + (m[1] === '1' ? '' : 's') + ' not rated yet' + m[2];
       },
     ],
     [

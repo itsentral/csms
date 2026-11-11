@@ -477,6 +477,62 @@
       transition-colors duration-200 hover:border-outline focus:border-primary focus:outline-none;
   }
 
+  /* --- Individual score vs team average (verification and validation) ------ */
+  .score-table th.score-mine, .score-table td.score-mine { @apply bg-primary-container/35; }
+  .score-table th.score-mine { @apply text-on-primary-container; }
+  .score-table tbody tr:hover td.score-mine { @apply bg-primary-container/50; }
+  .score-own { @apply flex flex-col items-start gap-0.5; }
+  .score-own > b { @apply text-title-medium text-on-surface; }
+  .score-own .tag { @apply mt-1; }
+  .score-own > span:empty { @apply hidden; }
+  .score-team-inline { @apply hidden; }
+  .score-table tr { scroll-margin-top: 88px; scroll-margin-bottom: 24px; }
+
+  /* Scoring rubric: the five criteria are the choices (LAMPIRAN 3-A) */
+  .rubric-toggle {
+    @apply flex w-56 items-start gap-2 rounded-md border border-outline-variant bg-surface-container-lowest p-2 text-left
+      text-body-small text-on-surface transition-colors duration-150 hover:border-outline focus-visible:outline-2
+      focus-visible:outline-offset-2 focus-visible:outline-primary;
+  }
+  .rubric-toggle[aria-expanded="true"] { @apply border-primary bg-primary-container/40; }
+  .rubric-static { @apply flex w-64 items-start gap-2 whitespace-normal text-body-small text-on-surface; }
+
+  /* Assessor notes: long text, so a growing textarea while editing and plain text once closed */
+  .score-table td.note-cell { @apply min-w-64 whitespace-normal align-top; }
+  .score-table tr:not(.rubric-row) > td:first-child { @apply min-w-60; }
+  .score-table textarea[data-autogrow] {
+    @apply block max-h-80 min-h-16 w-full resize-y rounded-md border border-outline-variant bg-surface-container-lowest px-2.5 py-2
+      text-body-medium leading-snug text-on-surface transition-colors duration-200 hover:border-outline focus:border-primary
+      focus:outline-none;
+  }
+  .note-text { @apply max-w-sm whitespace-pre-wrap break-words text-body-medium text-on-surface; }
+  .rubric-toggle .rubric-text { @apply line-clamp-3 whitespace-normal; }
+  .rubric-level {
+    @apply inline-flex h-6 w-12 shrink-0 items-center justify-center rounded-full bg-primary px-2 text-label-medium
+      font-medium text-on-primary;
+  }
+  .rubric-level-empty { @apply bg-warning-container text-on-warning-container; }
+  .score-table .rubric-row td { @apply whitespace-normal bg-primary-container/20 py-3; }
+  .score-table tbody tr.rubric-row:hover { @apply bg-transparent; }
+  .rubric-panel { @apply grid max-w-5xl gap-2; }
+  .rubric-options { @apply grid gap-1.5; }
+  .rubric-option {
+    @apply flex items-start gap-3 rounded-md border border-outline-variant bg-surface-container-lowest px-3 py-2.5 text-left
+      text-body-medium text-on-surface transition-colors duration-150 hover:border-outline focus-visible:outline-2
+      focus-visible:outline-offset-2 focus-visible:outline-primary;
+  }
+  .rubric-option .rubric-level { @apply bg-surface-container-high text-on-surface-variant; }
+  .rubric-option[aria-checked="true"] { @apply border-primary bg-primary-container/60; }
+  .rubric-option[aria-checked="true"] .rubric-level { @apply bg-primary text-on-primary; }
+  .score-hold { @apply whitespace-normal italic; }
+  .score-hold-card { @apply mt-1.5 max-w-80; }
+  .score-team summary { @apply cursor-pointer whitespace-nowrap rounded-md text-body-medium; }
+  .score-team summary:focus-visible { @apply outline-2 outline-offset-2 outline-primary; }
+  .score-team-detail { @apply mt-1.5 max-w-64 whitespace-normal leading-relaxed; }
+  .score-summary { @apply grid gap-3 sm:grid-cols-2; }
+  .score-card { @apply rounded-lg bg-surface-container-low p-4; }
+  .score-card-mine { @apply border border-primary/40 bg-primary-container/35; }
+
   /* --- Progress ----------------------------------------------------------- */
   .progress { @apply h-1 w-full overflow-hidden rounded-full bg-primary/20; }
   .progress div { @apply h-full rounded-full bg-primary transition-[width] duration-300 ease-emphasized; }
@@ -888,6 +944,12 @@
   .card, .panel { @apply p-4; }
   .metric { @apply text-headline-small; }
   td:first-child { @apply min-w-44; }
+  /* Phones: the team average moves under "Nilai Anda" instead of taking its own column */
+  .score-table .col-team { @apply hidden; }
+  .score-team-inline { @apply mt-1 block; }
+  .score-team-inline:empty { @apply hidden; }
+  /* Keep the rubric inside the screen while the wide table scrolls sideways */
+  .rubric-panel { @apply sticky left-0 max-w-[calc(100vw-4.5rem)]; }
   .heading { @apply block; }
   .heading button { @apply mt-3 w-full; }
   .wide { @apply col-auto; }

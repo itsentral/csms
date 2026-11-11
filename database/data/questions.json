@@ -5,7 +5,21 @@
     "group_en": "Process 1. Organizational Context",
     "text": "Apakah perusahaan melakukan identifikasi isu internal dan isu eksternal yang berpengaruh terhadap kinerja HSE?",
     "text_en": "Does the company identify internal and external issues that affect HSE performance?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Tidak melakukan identifikasi Isu Internal dan Isu Eksternal yang relevan terkait HSE",
+      "Terdapat identifikasi isu internal dan isu eksternal namun tidak relevan dengan HSE",
+      "Terdapat identifikasi isu internal dan isu eksternal namun hanya terkait Health & Safety saja atau hanya Environment saja",
+      "Terdapat identifikasi isu internal dan isu eksternal terkait HSE namun baru sekedar identifikasi belum ada rencana tindakan untuk mengatasi isu tersebut.",
+      "Terdapat identifikasi isu internal dan isu eksternal terkait HSE dan sudah ada rencana tindakan untuk mitigasi risiko atas isu tersebut."
+    ],
+    "rubric_en": [
+      "Does not identify relevant internal and external issues related to HSE",
+      "Internal and external issues are identified but are not relevant to HSE",
+      "Internal and external issues are identified but relate only to Health & Safety or only to Environment",
+      "Internal and external issues related to HSE are identified, but this is merely identification and there is no action plan yet to address those issues.",
+      "Internal and external issues related to HSE are identified and there is already an action plan to mitigate the risks arising from those issues."
+    ]
   },
   {
     "id": "1.b",
@@ -13,7 +27,21 @@
     "group_en": "Process 1. Organizational Context",
     "text": "Apakah perusahaan melakukan identifikasi kebutuhan dan harapan pihak berkepentingan yang berpengaruh terhadap kinerja HSE?",
     "text_en": "Does the company identify the needs and expectations of interested parties that affect HSE performance?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Tidak melakukan identifikasi Kebutuhan dan Harapan Pihak Berkepentingan yang relevan terkait HSE",
+      "Terdapat identifikasi kebutuhan dan harapan pihak berkepentingan namun tidak relevan dengan HSE",
+      "Terdapat identifikasi kebutuhan dan harapan pihak berkepentingan namun hanya terkait Health & Safety saja atau hanya Environment saja",
+      "Terdapat identifikasi kebutuhan dan harapan pihak berkepentingan terkait HSE namun baru sekedar identifikasi belum ada rencana tindakan untuk merepson kebutuhan dan harapan tersebut.",
+      "Terdapat identifikasi kebutuhan dan harapan pihak berkepentingan terkait HSE dan sudah ada rencana tindakan untuk merepson kebutuhan dan harapan serta mitigasi risiko tersebut."
+    ],
+    "rubric_en": [
+      "Does not identify the relevant needs and expectations of interested parties related to HSE",
+      "The needs and expectations of interested parties are identified but are not relevant to HSE",
+      "The needs and expectations of interested parties are identified but relate only to Health & Safety or only to Environment",
+      "The needs and expectations of interested parties related to HSE are identified, but this is merely identification and there is no action plan yet to respond to those needs and expectations.",
+      "The needs and expectations of interested parties related to HSE are identified and there is already an action plan to respond to those needs and expectations and to mitigate the associated risks."
+    ]
   },
   {
     "id": "1.c",
@@ -21,7 +49,21 @@
     "group_en": "Process 1. Organizational Context",
     "text": "Apakah perusahaan menetapkan dan menerapkan sistem manajemen HSE yang terintegrasi dengan bisnis proses perusahaan?",
     "text_en": "Does the company establish and implement an HSE management system integrated with its business processes?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Tidak menerapkan sistem manajemen HSE",
+      "Menerapkan sistem manajemen namun Hanya Health & Safety saja atau Environmental Saja",
+      "Menerapkan sistem Manajemen HSE dengan ditunjukan adanya bisnis proses yang terintegrasi dan prosedur implementasi namun tidak melakukan sertifikasi",
+      "Menerapkan sistem Manajemen HSE dengan ditunjukan adanya bisnis proses yang terintegrasi dan prosedur implementasi serta melakukan sertifikasi oleh lembaga terakreditasi",
+      "Menerapkan sistem manajemen HSE yang terintegrasi dengan bisnis proses organisasi digambarkan dengan tujuan HSE yang melekat pada setiap proses yang ditetapkan serta melakukan sertifikasi oleh lembaga terakreditasi"
+    ],
+    "rubric_en": [
+      "Does not implement an HSE management system",
+      "Implements a management system but only for Health & Safety or only for Environment",
+      "Implements an HSE management system, demonstrated by an integrated business process and implementation procedures, but is not certified",
+      "Implements an HSE management system, demonstrated by an integrated business process and implementation procedures, and is certified by an accredited body",
+      "Implements an HSE management system integrated with the organization's business processes, shown by HSE objectives embedded in every defined process, and is certified by an accredited body"
+    ]
   },
   {
     "id": "2.a",
@@ -29,7 +71,21 @@
     "group_en": "Process 2. Leadership",
     "text": "Apakah manajemen puncak terlibat aktif dalam pengelolaan aspek HSE, termasuk rencana kerja, budaya HSE dan inspeksi manajemen?",
     "text_en": "Is top management actively involved in managing HSE aspects, including work plans, HSE culture, and management inspections?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Tidak ada keterlibatan manajemen puncak terkait dengan pengelolaan aspek HSE",
+      "ManaJemen puncak hanya terlibat menyetujui (menandatangani) dan menyusun Rencana bisnis HSE, Program implementasi HSE, Rencana peningkatan budaya HSE/ mempromosikan budaya HSE, inspeksi manajemen (MWT) atau Manajemen Senior terlibat dalam penerapan program HSE secara informal dan pelaksanaannya tidak terdokumentasi.",
+      "Manajemen Puncak telah terlibat dalam penyusunan dan menyetujui rencana/ program pengelolaan aspek HSE namun Manajemen masih jarang terlibat dalam implementasi rencana/ program HSE tersebut.",
+      "Manajemen Puncak telah terlibat dalam penyusunan, persetujuan dan pelaksanaan rencana/ program pengelolaan aspek HSE namun pelaksanaannya belum direview secara periodik",
+      "Manajemen Puncak telah terlibat dalam penyusunan, persetujuan dan pelaksanaan rencana/ program pengelolaan aspek HSE dan secara periodik telah direview oleh Manajemen Puncak untuk memastikan efektivitas pemenuhannya."
+    ],
+    "rubric_en": [
+      "There is no top management involvement in managing HSE aspects",
+      "Top management is only involved in approving (signing) and preparing the HSE business plan, the HSE implementation program, the plan to improve/promote HSE culture, and management inspections (MWT), or senior management is involved in implementing the HSE program informally and the implementation is not documented.",
+      "Top management has been involved in preparing and approving the plans/programs for managing HSE aspects, but management is still rarely involved in implementing those HSE plans/programs.",
+      "Top management has been involved in preparing, approving, and implementing the plans/programs for managing HSE aspects, but their implementation has not been reviewed periodically",
+      "Top management has been involved in preparing, approving, and implementing the plans/programs for managing HSE aspects, and these have been reviewed periodically by top management to ensure the effectiveness of their fulfillment."
+    ]
   },
   {
     "id": "2.b",
@@ -37,7 +93,21 @@
     "group_en": "Process 2. Leadership",
     "text": "Apakah perusahaan mempunyai kebijakan HSE tertulis dan dikomunikasikan kepada seluruh pekerja?",
     "text_en": "Does the company have a written HSE policy that is communicated to all workers?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Tidak memiliki kebijakan HSE",
+      "Terdapat pernyataan kebijakan HSE tertulis dan telah ditandatangani oleh Pimpinan Tertinggi perusahaan namun komitmen yang diatur belum mencakup seluruh aspek Health Safety Security & Environment.",
+      "Terdapat pernyataan kebijakan yang sudah mengakomodir aspek HSE secara tertulis dan telah ditandatangani oleh pimpinan tertinggi perusahaan tetapi belum dikomunikasikan kepada seluruh pekerja",
+      "Pernyataan kebijakan HSE tertulis yang telah ditandatangani oleh pimpinan tertinggi perusahaan telah dikomunikasikan secara formal kepada seluruh pekerja namun belum dilakukan evaluasi efektivitas implementasinya",
+      "Pernyataan kebijakan HSE tertulis yang telah ditandatangani oleh pimpinan tertinggi perusahaan telah dikomunikasikan secara formal kepada seluruh pekerja dan telah dilakukan evaluasi efektivitas implementasinya"
+    ],
+    "rubric_en": [
+      "Does not have an HSE policy",
+      "There is a written HSE policy statement signed by the company's highest leader, but the commitments it sets out do not yet cover all aspects of Health, Safety, Security & Environment.",
+      "There is a written policy statement that covers HSE aspects and has been signed by the company's highest leader, but it has not been communicated to all workers",
+      "The written HSE policy statement signed by the company's highest leader has been formally communicated to all workers, but the effectiveness of its implementation has not been evaluated",
+      "The written HSE policy statement signed by the company's highest leader has been formally communicated to all workers, and the effectiveness of its implementation has been evaluated"
+    ]
   },
   {
     "id": "2.c",
@@ -45,7 +115,21 @@
     "group_en": "Process 2. Leadership",
     "text": "Apakah perusahaan memiliki struktur HSE yang memadai dan diisi personel kompeten?",
     "text_en": "Does the company have an adequate HSE structure staffed by competent personnel?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak memiliki struktur HSE dalam organisasi Perusahaan",
+      "Struktur organisasi HSE sudah tersedia dalam organisasi perusahaan namun jumlahnya posisinya tidak mencukupi dan jabatan tertinggi personil HSE hanya setingkat pengawas/ supervisor (tidak setara dengan fungsi lainnya).",
+      "Struktur organisasi HSE sudah tersedia dalam organisasi perusahaan dengan jabatan yang setara dengan fungsi lainnya, namun personil HSE yang mengisi jabatan tersebut adalah pekerja paruh waktu/ temporary yang tidak memiliki kualifikasi yang ditunjukan dengan sertifikat AK3 Umum.",
+      "Struktur organisasi HSE sudah tersedia dalam organisasi perusahaan dengan jabatan yang setara dengan fungsi lainnya. Personil HSE yang mengisi jabatan tersebut telah memiliki kualifikasi yang ditunjukan dengan sertifikat AK3 Umum namun pekerja tersebut berstatus paruh waktu/ temporary",
+      "Struktur organisasi HSE sudah tersedia dalam organisasi perusahaan dengan jabatan yang setara dengan fungsi lainnya dengan personil HSE yang mengisi jabatan tersebut adalah pekerja permanen yang memiliki kualifikasi yang ditunjukan dengan sertifikat AK3 Umum."
+    ],
+    "rubric_en": [
+      "The company does not have an HSE structure in its organization",
+      "An HSE organizational structure exists within the company, but the number of positions is insufficient and the highest HSE position is only at supervisor level (not equivalent to other functions).",
+      "An HSE organizational structure exists within the company with positions equivalent to other functions, but the HSE personnel filling those positions are part-time/temporary workers who lack qualifications, as shown by the AK3 Umum certificate.",
+      "An HSE organizational structure exists within the company with positions equivalent to other functions. The HSE personnel filling those positions have the qualifications shown by the AK3 Umum certificate, but they are part-time/temporary workers",
+      "An HSE organizational structure exists within the company with positions equivalent to other functions, and the HSE personnel filling those positions are permanent workers with the qualifications shown by the AK3 Umum certificate."
+    ]
   },
   {
     "id": "2.d",
@@ -53,7 +137,21 @@
     "group_en": "Process 2. Leadership",
     "text": "Apakah tugas dan tanggung jawab HSE tercantum dalam uraian tugas seluruh level pekerja?",
     "text_en": "Are HSE duties and responsibilities included in the job descriptions of workers at all levels?",
-    "max": 5
+    "max": 5,
+    "rubric": [
+      "Tidak ada tugas dan tanggungjawab aspek HSE yang ditetapkan oleh Perusahaan bagi para pekerja",
+      "Tanggungjawab HSE tidak tertulis dan dianggap penerapan HSE menjadi tugas dan tanggungjawab fungsi HSE saja.",
+      "Tugas dan tanggungjawab aspek HSE telah disusun secara tertulis dan telah di tandatangani (sesuai prosedur perusahaan) pada Job Description pekerja HSE, sedangkan job description pekerja non HSE belum mencantumkan aspek HSE.",
+      "Tugas dan tanggungjawab aspek HSE telah disusun secara tertulis dan telah di tandatangani (sesuai prosedur perusahaan) pada Job Description pekerja HSE dan sebagian pekerja non HSE.",
+      "Tugas dan tanggungjawab aspek HSE telah disusun secara tertulis dan telah di tandatangani (sesuai prosedur perusahaan) pada Job Description setiap pekerja sesuai dengan aktivitas dan risiko kerjanya."
+    ],
+    "rubric_en": [
+      "The company has not established any HSE duties and responsibilities for its workers",
+      "HSE responsibilities are not written down, and HSE implementation is regarded as the duty and responsibility of the HSE function only.",
+      "HSE duties and responsibilities have been written down and signed (in accordance with company procedures) in the job descriptions of HSE workers, while the job descriptions of non-HSE workers do not yet include HSE aspects.",
+      "HSE duties and responsibilities have been written down and signed (in accordance with company procedures) in the job descriptions of HSE workers and some non-HSE workers.",
+      "HSE duties and responsibilities have been written down and signed (in accordance with company procedures) in the job description of every worker according to their work activities and risks."
+    ]
   },
   {
     "id": "2.e",
@@ -61,7 +159,21 @@
     "group_en": "Process 2. Leadership",
     "text": "Apakah Komite HSE (P2K3) telah dibentuk di perusahaan?",
     "text_en": "Has an HSE Committee (P2K3) been established in the company?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Tidak ada komite HSE (P2K3) yang dibentuk oleh perusahaan",
+      "Perusahaan sudah membentuk Komite HSE namun organisasi Komite HSE tersebut belum disahkan menjadi P2K3 sesuai perundangan yang berlaku (UU No. 1 tahun 1970 tentang keselamatan kerja, Permenaker No. PER-04/MEN/1987 tentang P2K3)",
+      "Perusahaan sudah membentuk P2K3 dan telah disahkan oleh Dinas ketenagakerjaan setempat sesuai perundangan yang berlaku (UU No. 1 tahun 1970 tentang keselamatan kerja, Permenaker No. PER-04/MEN/1987 tentang P2K3) namun belum melaksanakan rapat rutin sesuai dengan periode waktu yang telah ditetapkan.",
+      "P2K3 (komite telah dibentuk dan disahkan oleh Disnaker) telah melaksanakan rapat rutin sesuai dengan periode yang ditetapkan namun hasil rapat P2K3 belum dikomunikasikan kepada pekerja terkait.",
+      "Hasil rapat P2K3 (komite telah dibentuk dan disahkan oleh Disnaker) telah dikomunkasikan kepada para pekerja terkait dan rekomendasi dari P2K3 telah ditindaklanjuti oleh Manajemen perusahaan."
+    ],
+    "rubric_en": [
+      "The company has not established an HSE committee (P2K3)",
+      "The company has established an HSE Committee, but the committee has not been ratified as a P2K3 in accordance with applicable laws (Law No. 1 of 1970 on occupational safety, Permenaker No. PER-04/MEN/1987 on P2K3)",
+      "The company has established a P2K3 and it has been ratified by the local manpower office in accordance with applicable laws (Law No. 1 of 1970 on occupational safety, Permenaker No. PER-04/MEN/1987 on P2K3), but it has not held regular meetings according to the set schedule.",
+      "The P2K3 (committee established and ratified by Disnaker) has held regular meetings according to the set schedule, but the results of P2K3 meetings have not been communicated to the relevant workers.",
+      "The results of P2K3 meetings (committee established and ratified by Disnaker) have been communicated to the relevant workers and the P2K3's recommendations have been followed up by company management."
+    ]
   },
   {
     "id": "3.a",
@@ -69,7 +181,21 @@
     "group_en": "Process 3. Planning",
     "text": "Apakah perusahaan memiliki sistem pengelolaan risiko HSE terkait aktivitas operasional?",
     "text_en": "Does the company have an HSE risk management system for its operational activities?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak memiliki prosedur yang mengatur tentang pengendalian risiko HSE",
+      "Perusahaan telah memiliki prosedur yang mengatur pengelolaan risiko HSE dengan cakupan yang belum lengkap (salah satu cakupan berikut belum di atur : identifikasi bahaya, evaluasi risiko, pengendalian risiko dan pemantauan risiko).",
+      "Perusahaan telah memiliki prosedur yang mengatur pengelolaan risiko HSE yang meliputi identifikasi bahaya, evaluasi risiko, pengendalian risiko dan pemantauan risiko namun praktek implementasi JSA (Job Safety Analysis) belum dimasukan dalam prosedur",
+      "Perusahaan telah memiliki prosedur yang mengatur pengelolaan risiko HSE yang meliputi identifikasi bahaya, evaluasi risiko, pengendalian risiko dan pemantauan risiko dan praktek implementasi JSA (Job Safety Analysis) sudah dimasukan dalam prosedur",
+      "Prosedur pengelolaan risiko yang telah disusun lengkap yang mencakup identifikasi bahaya, evaluasi risiko, pengendalian risiko dan pemantauan risiko dan praktek implementasi JSA (Job Safety Analysis) telah dikomunikasikan kepada seluruh pekerja terkait."
+    ],
+    "rubric_en": [
+      "The company does not have a procedure governing HSE risk control",
+      "The company has a procedure governing HSE risk management, but its scope is incomplete (one of the following is not covered: hazard identification, risk evaluation, risk control, and risk monitoring).",
+      "The company has a procedure governing HSE risk management covering hazard identification, risk evaluation, risk control, and risk monitoring, but the practical implementation of JSA (Job Safety Analysis) has not been included in the procedure",
+      "The company has a procedure governing HSE risk management covering hazard identification, risk evaluation, risk control, and risk monitoring, and the practical implementation of JSA (Job Safety Analysis) has been included in the procedure",
+      "The risk management procedure has been completely prepared, covering hazard identification, risk evaluation, risk control, and risk monitoring, and the practical implementation of JSA (Job Safety Analysis), and has been communicated to all relevant workers."
+    ]
   },
   {
     "id": "3.b",
@@ -77,7 +203,21 @@
     "group_en": "Process 3. Planning",
     "text": "Apakah daftar risiko HSE didokumentasikan dan dikomunikasikan kepada pekerja terkait?",
     "text_en": "Is the HSE risk register documented and communicated to the relevant workers?",
-    "max": 5
+    "max": 5,
+    "rubric": [
+      "Perusahaan tidak memiliki dokumen HSE Risk Register/ Daftar Risiko HSE/ HIRADC/IADL",
+      "Perusahaan sudah menyusun dokumen Risk Register/ Daftar Risiko/ HIRADC dengan isi yang tidak lengkap (salah satu aspek berikut tidak tersedia : Health/ Safety/ Security/ Environment)",
+      "Perusahaan sudah menyusun dokumen Risk Register/ Daftar Risiko/ HIRADC yang sudah mencakup aspek HSE namun dalam isinya belum mencakup salah satu item berikut : Aktivitas yang dilakukan, Potensi bahaya, Dampak, Penilaian Risiko awal, Pengendalian yang dilakukan, Penilaian Risiko akhir",
+      "Perusahaan sudah menyusun dokumen HSE Risk Register/ Daftar Risiko HSE/ HIRADC dengan cakupan meliputi seluruh item berikut : Aktivitas yang dilakukan, Potensi bahaya, Dampak, Penilaian Risiko awal, Pengendalian yang dilakukan, Penilaian Risiko akhir. Dokumen Risk Register belum dikomunikasikan kepada seluruh pekerja terkait.",
+      "Perusahaan telah mengkomunikasikan dokumen Risk Register yang telah disusun dengan isi yang lengkap yang mencakup Aktivitas yang dilakukan, Potensi bahaya, Dampak, Penilaian Risiko awal, Pengendalian yang dilakukan, Penilaian Risiko akhir kepada seluruh pekerja yang terkait."
+    ],
+    "rubric_en": [
+      "The company does not have an HSE Risk Register / HSE Risk List / HIRADC/IADL document",
+      "The company has prepared a Risk Register / Risk List / HIRADC document with incomplete content (one of the following aspects is missing: Health/ Safety/ Security/ Environment)",
+      "The company has prepared a Risk Register / Risk List / HIRADC document that covers HSE aspects, but its content does not yet include one of the following items: Activities performed, Potential hazards, Impacts, Initial risk assessment, Controls implemented, Final risk assessment",
+      "The company has prepared an HSE Risk Register / HSE Risk List / HIRADC document covering all of the following items: Activities performed, Potential hazards, Impacts, Initial risk assessment, Controls implemented, Final risk assessment. The Risk Register document has not been communicated to all relevant workers.",
+      "The company has communicated the completed Risk Register document, with complete content covering Activities performed, Potential hazards, Impacts, Initial risk assessment, Controls implemented, Final risk assessment, to all relevant workers."
+    ]
   },
   {
     "id": "3.c",
@@ -85,7 +225,21 @@
     "group_en": "Process 3. Planning",
     "text": "Apakah mitigasi/tindakan dalam daftar risiko telah dilaksanakan dan dipastikan pemenuhannya?",
     "text_en": "Have the mitigations/actions in the risk register been implemented and their fulfilment verified?",
-    "max": 5
+    "max": 5,
+    "rubric": [
+      "Perusahaan tidak melaksanakan mitigasi/ pengendalian terhadap potensi bahaya yang terkait dengan aktivitas perusahaan",
+      "Perusahaan hanya menggunakan dokumen Risk Register/ HIRADC/ Daftar Risiko HSE sebagai acuan dalam pengendalian risiko HSE",
+      "Perusahaan telah menggunakan JSA (Job Safety Analysis) sebagai acuan dalam pengendalian risiko HSE (selain dokumen Risk Register/ HIRADC/ Daftar Risiko HSE)",
+      "Perusahaan telah melakukan pemeriksaan (inspeksi/ audit) terkait dengan pemenuhan mitigasi yang tercantum dalam dokumen JSA dan Risk Register/ HIRADC",
+      "Perusahaan telah menindaklanjuti hasil pemeriksaan (inspeksi/ audit) implementasi JSA dan Risk Register untuk melakukan perbaikan dalam penerapan pengendalian risiko HSE."
+    ],
+    "rubric_en": [
+      "The company does not carry out mitigation/control of the potential hazards associated with the company's activities",
+      "The company only uses the Risk Register / HIRADC / HSE Risk List document as the reference for HSE risk control",
+      "The company has used JSA (Job Safety Analysis) as a reference for HSE risk control (in addition to the Risk Register / HIRADC / HSE Risk List document)",
+      "The company has conducted checks (inspections/audits) on the fulfillment of the mitigations stated in the JSA and Risk Register/HIRADC documents",
+      "The company has followed up on the results of checks (inspections/audits) of JSA and Risk Register implementation to make improvements in applying HSE risk controls."
+    ]
   },
   {
     "id": "3.d",
@@ -93,7 +247,21 @@
     "group_en": "Process 3. Planning",
     "text": "Apakah perusahaan mengidentifikasi dan mengevaluasi kewajiban kepatuhan terkait HSE?",
     "text_en": "Does the company identify and evaluate its HSE compliance obligations?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak melaksanaan identifikasi dan evaluasi kewajiban kepatuhan terkait HSE",
+      "Perusahaan memiliki prosedur untuk identifikasi dan evaluasi kewajiban kepatuhan terkait HSE namun tidak update, banyak kewajiban kepatuhan yang terlewat.",
+      "Perusahaan sudah melakukan identifikasi dan evaluasi kewajiban kepatuhan terkait HSE namun banyak yang belum terpenuhi dan belum ada program kerja pemenuhannya",
+      "Perusahaan sudah melakukan identifikasi dan evaluasi kewajiban kepatuhan terkait HSE terdapat beberapa kewajiban kepatuhan yang belum terpenuhi namun sudah program kerja pemenuhannya",
+      "Perusahaan sudah melakukan identifikasi dan evaluasi kewajiban kepatuhan terkait HSE dan sudah semua kewajiban kepatuhan terpenuhi"
+    ],
+    "rubric_en": [
+      "The company does not identify and evaluate HSE-related compliance obligations",
+      "The company has a procedure for identifying and evaluating HSE-related compliance obligations, but it is not up to date and many compliance obligations are missed.",
+      "The company has identified and evaluated HSE-related compliance obligations, but many have not been met and there is no work program yet to fulfill them",
+      "The company has identified and evaluated HSE-related compliance obligations; some compliance obligations have not been met but there is already a work program to fulfill them",
+      "The company has identified and evaluated HSE-related compliance obligations and all compliance obligations have been met"
+    ]
   },
   {
     "id": "3.e",
@@ -101,7 +269,21 @@
     "group_en": "Process 3. Planning",
     "text": "Apakah perusahaan memiliki dokumen/persetujuan lingkungan sesuai lingkup kegiatan (AMDAL/DELH, UKL-UPL/DPLH, SPPLH)?",
     "text_en": "Does the company have environmental documents/approvals appropriate to the scope of its activities (AMDAL/DELH, UKL-UPL/DPLH, SPPLH)?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Belum memiliki dokumen lingkungan Hidup / Persetujuan Lingkungan",
+      "Sudah memiliki dokumen lingkungan / persetujuan lingkungan namun tidak dijalankan sudah lebih dari 3 tahun",
+      "Sudah memiliki dokumen lingkungan / persetujuan lingkungan namun tidak dijalankan sudah lebih dari 1 tahun",
+      "Sudah memiliki dokumen lingkungan hidup namun ada perubahan kegiatan yang belum update pada dokumen lingkungan",
+      "Sudah memiliki dokumen lingkungan hidup yang update sesuai dengan kondisi kegiataan saat ini"
+    ],
+    "rubric_en": [
+      "Does not yet have an environmental document / Environmental Approval",
+      "Already has an environmental document / environmental approval, but it has not been implemented for more than 3 years",
+      "Already has an environmental document / environmental approval, but it has not been implemented for more than 1 year",
+      "Already has an environmental document, but there are changes in activities that have not been updated in the environmental document",
+      "Already has an environmental document that is updated in line with the current conditions of the activities"
+    ]
   },
   {
     "id": "3.f",
@@ -109,7 +291,21 @@
     "group_en": "Process 3. Planning",
     "text": "Apakah perusahaan memiliki sasaran kinerja HSE?",
     "text_en": "Does the company have HSE performance objectives?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Target kinerja HSE Perusahaan tidak tersedia",
+      "Target kinerja HSE tidak ditetapkan secara formal (tertulis) di perusahaan",
+      "Target kinerja HSE hanya tercantum di fungsi HSE saja",
+      "Perusahaan sudah menetapkan target kinerja HSE Perusahaan namun hanya sebagian dari fungsi / bagian organisasi perusahaan yang dibebankan terget kinerja HSE tersebut.",
+      "Perusahaan sudah menetapkan target kinerja HSE Perusahaan dan diturunkan kepada seluruh fungsi / bagian organisasi perusahaan."
+    ],
+    "rubric_en": [
+      "The company's HSE performance targets are not available",
+      "HSE performance targets are not formally (in writing) established in the company",
+      "HSE performance targets are only listed in the HSE function",
+      "The company has established company HSE performance targets, but only some functions/organizational units of the company are assigned those HSE performance targets.",
+      "The company has established company HSE performance targets and cascaded them to all functions/organizational units of the company."
+    ]
   },
   {
     "id": "3.g",
@@ -117,7 +313,21 @@
     "group_en": "Process 3. Planning",
     "text": "Apakah perusahaan memiliki rencana kerja HSE yang mengacu pada target kinerja HSE?",
     "text_en": "Does the company have an HSE work plan that refers to the HSE performance targets?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak memiliki rencana kerja HSE",
+      "Rencana kerja HSE yang dimiliki oleh perusahaan adalah rencana kerja untuk fungsi HSE saja (rencana kerja tersebut tidak menjadi rencana kerja perusahaan)",
+      "Perusahaan sudah memiliki rencana kerja HSE namun tidak mengacu pada target Kinerja HSE",
+      "Perusahaan sudah memiliki rencana kerja HSE yang disusun berdasarkan pada target Kinerja HSE Perusahaan",
+      "Rencana HSE Perusahaan yang disusun dan target kinerja HSE Perusahaan telah direview pencapaiannya secara periodik"
+    ],
+    "rubric_en": [
+      "The company does not have an HSE work plan",
+      "The HSE work plan the company has is a work plan for the HSE function only (it is not part of the company's work plan)",
+      "The company has an HSE work plan, but it does not refer to the HSE performance targets",
+      "The company has an HSE work plan prepared based on the company's HSE performance targets",
+      "The prepared company HSE plan and the company's HSE performance targets have their achievement reviewed periodically"
+    ]
   },
   {
     "id": "4.a",
@@ -125,7 +335,21 @@
     "group_en": "Process 4. Support",
     "text": "Apakah perusahaan memiliki sistem pelatihan HSE untuk seluruh level organisasi?",
     "text_en": "Does the company have an HSE training system for all levels of the organization?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Perusahaan tidak memiliki prosedur pelatihan yang mengakomodir pelatihan terkait HSE dan tidak pernah menyelenggarakaan training HSE/ mengikutsertakan pekerjanya dalam pelatihan HSE",
+      "Perusahaan tidak memiliki prosedur pelatihan yang mengakomodir pelatihan terkait HSE meskipun beberapa pekerjanya pernah mendapatkan pelatihan HSE yang bersifat tidak terprogram/ tidak terencana (insidentil).",
+      "Perusahaan sudah memiliki prosedur pelatihan yang mengakomodir pelatihan terkait HSE dengan cakupan yang sederhana (hanya mengatur prosedur penyelenggaraan training) bagi pekerja. Tidak terdapat pengaturan khusus terkait dengan program training untuk pekerja baru, pekerja dan manajemen (semua tingkatan pekerja diberikan pelatihan HSE yang sama).",
+      "Perusahaan sudah memiliki prosedur pelatihan yang mengakomodir pelatihan terkait HSE dengan cakupan meliputi : Identifikasi kebutuhan training HSE, penyusunan program training, pelaksanaan training dan evaluasi terhadap efektivitas training untuk seluruh tingkatan pekerja namun pada matrik kompetensi/training yang disusun belum memasukan aspek HSE sebagai bagian kompetensi yang harus dimiliki oleh pekerja",
+      "Prosedur pelatihan yang mengakomodir pelatihan terkait HSE sudah lengkap dan komprehensif (Identifikasi kebutuhan training HSE, penyusunan program training, pelaksanaan training dan evaluasi terhadap efektivitas training untuk seluruh tingkatan pekerja) dan perusahaan telah memasukan aspek HSE kedalam persyaratan kompetensi yang harus dimiliki oleh Pekerja (Pekerja baru, pekerja dan manajemen) ke dalam training/ competency matrix serta pencapaian kompetensinya telah diupdate secara rutin."
+    ],
+    "rubric_en": [
+      "The company does not have a training procedure that accommodates HSE-related training and has never conducted HSE training / enrolled its workers in HSE training",
+      "The company does not have a training procedure that accommodates HSE-related training, although some of its workers have received HSE training that was unprogrammed/unplanned (ad hoc).",
+      "The company has a training procedure that accommodates HSE-related training with simple coverage (only governing the procedure for conducting training) for workers. There are no specific provisions for training programs for new workers, workers, and management (all levels of workers are given the same HSE training).",
+      "The company has a training procedure that accommodates HSE-related training covering: identification of HSE training needs, preparation of the training program, delivery of training, and evaluation of training effectiveness for all levels of workers, but the competency/training matrix prepared does not yet include HSE aspects as part of the competencies workers must have",
+      "The training procedure that accommodates HSE-related training is complete and comprehensive (identification of HSE training needs, preparation of the training program, delivery of training, and evaluation of training effectiveness for all levels of workers) and the company has included HSE aspects in the competency requirements workers must have (new workers, workers, and management) in the training/competency matrix, and competency achievement is updated regularly."
+    ]
   },
   {
     "id": "4.b",
@@ -133,7 +357,21 @@
     "group_en": "Process 4. Support",
     "text": "Apakah perusahaan menyusun program training HSE dan memastikan efektivitas pelaksanaannya?",
     "text_en": "Does the company prepare an HSE training program and verify that its implementation is effective?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Perusahaan tidak memiliki program training HSE",
+      "Perusahaan telah menyusun training plan yang berisi aspek HSE namun judul training yang disusun tidak berdasarkan training need analysis (analisa kebutuhan training) untuk setiap jabatan",
+      "Perusahaan telah menyusun training plan yang berisi aspek HSE berdasarkan training need analysis untuk setiap jabatan namun tidak dilakukan monitoring terkait realisasi training plan tersebut.",
+      "Perusahaan telah menyusun training plan yang berisi aspek HSE berdasarkan training need analysis untuk setiap jabatan, Perusahaan telah melakukan monitoring realisasi training plan secara rutin namun evaluasi efektivitasnya belum dilakukan",
+      "Perusahaan telah menyusun training plan yang berisi aspek HSE berdasarkan training need analysis untuk setiap jabatan, Evaluasi terhadap efektivitas pelaksanaan program training sudah dilakukan. Tindaklanjut perbaikan dari hasil evaluasi tersebut telah dilaksanakan seluruhnya."
+    ],
+    "rubric_en": [
+      "The company does not have an HSE training program",
+      "The company has prepared a training plan containing HSE aspects, but the training titles are not based on a training need analysis for each position",
+      "The company has prepared a training plan containing HSE aspects based on a training need analysis for each position, but there is no monitoring of the realization of that training plan.",
+      "The company has prepared a training plan containing HSE aspects based on a training need analysis for each position and regularly monitors the realization of the training plan, but its effectiveness has not been evaluated",
+      "The company has prepared a training plan containing HSE aspects based on a training need analysis for each position. The effectiveness of the training program implementation has been evaluated. Corrective follow-up actions from the evaluation results have all been carried out."
+    ]
   },
   {
     "id": "4.c",
@@ -141,7 +379,21 @@
     "group_en": "Process 4. Support",
     "text": "Apakah perusahaan mempunyai program pelatihan HSE bagi pekerja baru?",
     "text_en": "Does the company have an HSE training program for new workers?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak melakukan induksi bagi pekerja barunya",
+      "Induksi umum HSE bagi pekerja baru (permanen maupun kontrak) baru dilaksanakan setelah pekerja baru tersebut bekerja di lokasi kerjanya (>1 minggu setelah penerimaan)",
+      "Perusahaan melakukan induksi umum tehadap pekerja baru pada hari pertama pekerja tersebut mulai masuk kerja (dituangkan dalam prosedur) namun materi HSE yang disampaikan hanya mencakup sebagian diantara materi berikut : Kebijakan HSE Perusahaan, Peraturan HSE yang Berlaku Emergency Preparedness APD Potensi bahaya dan risiko pekerjaan",
+      "Perusahaan melakukan induksi umum tehadap pekerja baru pada hari pertama pekerja tersebut mulai masuk kerja (dituangkan dalam prosedur) dengan materi HSE yang disampaikan mencakup seluruh materi berikut : Kebijakan HSE Perusahaan Peraturan HSE yang Berlaku Emergency Preparedness APD Potensi bahaya dan risiko pekerjaan Namun induksi khusus (job induction)/ spesifik terkait dengan aktivitas kerjanya belum dilakukan",
+      "Induksi khusus (job induction)/ spesifik terkait dengan aktivitas kerjanya sudah dilakukan setelah pekerja baru tersebut mendapatkan induksi umum yang diberikan pada hari pertama masuk kerja."
+    ],
+    "rubric_en": [
+      "The company does not conduct induction for its new workers",
+      "General HSE induction for new workers (permanent and contract) is only conducted after the new worker has already been working at the work location (>1 week after hiring)",
+      "The company conducts general induction for new workers on their first day of work (stated in a procedure), but the HSE material delivered covers only some of the following: Company HSE Policy, Applicable HSE Regulations, Emergency Preparedness, PPE, Potential hazards and risks of the work",
+      "The company conducts general induction for new workers on their first day of work (stated in a procedure), with the HSE material delivered covering all of the following: Company HSE Policy, Applicable HSE Regulations, Emergency Preparedness, PPE, Potential hazards and risks of the work. However, specific induction (job induction) related to their work activities has not been conducted",
+      "Specific induction (job induction) related to their work activities has been conducted after the new worker received the general induction given on the first day of work."
+    ]
   },
   {
     "id": "4.d",
@@ -149,7 +401,21 @@
     "group_en": "Process 4. Support",
     "text": "Apakah perusahaan memiliki program rapat aspek HSE dari tingkat manajemen hingga pekerja/fungsi?",
     "text_en": "Does the company have an HSE meeting program from management level down to workers/functions?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Tidak ada Program Rapat yang membahas HSE",
+      "Rapat HSE sudah dilaksanakan namun hanya melibatkan fungsi HSE saja",
+      "Rapat HSE sudah melibatkan fungsi non HSE namun tidak terprogram pelaksanaannya (tidak ada prosedur rapat dan tidak ada jadual pelaksanaan Rapat HSE).",
+      "Prosedur dan rencana rapat HSE sudah disusun dan sebagian sudah dilaksanakan untuk tingkatan manajemen/ pekerja saja.",
+      "Prosedur dan rencana rapat HSE sudah disusun dan telah dilaksanakan secara rutin (sesuai prosedur) untuk seluruh tingkatan rapat manajemen dan pekerja."
+    ],
+    "rubric_en": [
+      "There is no meeting program that discusses HSE",
+      "HSE meetings are held but involve only the HSE function",
+      "HSE meetings involve non-HSE functions but are not programmed (there is no meeting procedure and no HSE meeting schedule).",
+      "An HSE meeting procedure and plan have been prepared and some have been held, for management or worker levels only.",
+      "An HSE meeting procedure and plan have been prepared and have been held routinely (according to the procedure) for all levels of management and worker meetings."
+    ]
   },
   {
     "id": "4.e",
@@ -157,7 +423,21 @@
     "group_en": "Process 4. Support",
     "text": "Apakah perusahaan memiliki dan melaksanakan program asuransi ketenagakerjaan?",
     "text_en": "Does the company have and implement an employment insurance program?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Tidak ada program asuransi ketenagakerjaan bagi pekerja",
+      "Perusahaan telah memiliki program asuransi ketenagakerjaan (non BPJS ketenagakerjaan) namun pendaftaran asuransi tersebut belum direalisasikan atau sebaliknya.",
+      "Perusahaan telah memiliki program asuransi ketenagakerjaan (BPJS Ketenagakerjaan) untuk pekerja yang berstatus permanen saja namun pendaftaran asuransi tersebut belum direalisasikan atau sebaliknya atau sudah mengikutsertakan asuransi non BPJS ketenagakerjaan",
+      "Perusahaan telah memiliki program asuransi ketenagakerjaan (BPJS Ketenagakerjaan/ asuransi lainnya) untuk pekerja yang berstatus permanen saja dan pendaftaran asuransi tersebut telah direalisasikan sedangkan untuk pekerja kontrak belum dilakukan.",
+      "Perusahaan telah memiliki program asuransi ketenagakerjaan (BPJS Ketenagakerjaan) untuk pekerja permanen & kontrak dan pendaftaran asuransi tersebut telah direalisasikan sesuai UU Nomor 24 Tahun 2011 beserta peraturan turunannya."
+    ],
+    "rubric_en": [
+      "There is no employment insurance program for workers",
+      "The company has an employment insurance program (non-BPJS Ketenagakerjaan), but enrollment in that insurance has not been realized, or vice versa.",
+      "The company has an employment insurance program (BPJS Ketenagakerjaan) for permanent workers only, but enrollment in that insurance has not been realized, or vice versa, or it has enrolled in non-BPJS Ketenagakerjaan insurance",
+      "The company has an employment insurance program (BPJS Ketenagakerjaan / other insurance) for permanent workers only and enrollment in that insurance has been realized, while contract workers have not yet been enrolled.",
+      "The company has an employment insurance program (BPJS Ketenagakerjaan) for permanent and contract workers and enrollment in that insurance has been realized in accordance with Law Number 24 of 2011 and its implementing regulations."
+    ]
   },
   {
     "id": "4.f",
@@ -165,7 +445,21 @@
     "group_en": "Process 4. Support",
     "text": "Apakah perusahaan memiliki dan melaksanakan sistem Fit To Work, terutama untuk pekerjaan berisiko tinggi?",
     "text_en": "Does the company have and implement a Fit To Work system, especially for high-risk work?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Perusahaan tidak memiliki prosedur tentang pelaksanaan MCU (Medical Check dan tidak melaksanakan program MCU (Medical Check Up) untuk pekerjanya",
+      "Perusahaan memiliki prosedur yang mengatur MCU terhadap pekerja permanen, pekerja baru dan pekerja Kontrak. Realisasi MCU terhadap pekerja tersebut masih dibawah 50% (< 50%)",
+      "Perusahaan telah menyusun Prosedur MCU terhadap pekerja permanen, pekerja kontrak serta pekerja baru. Realisasi MCU terhadap pekerja tersebut sudah diatas 50% namun masih dibawah 80% (50% < Pelaksanaan MCU <80%)",
+      "MCU telah dilaksanakan terhadap lebih dari 80% (≥ 80%) pekerja tersebut dan hasil MCU telah dievaluasi sehingga diperoleh resume pekerja tersebut yang berada dalam kondisi fit/ unfit untuk melakukan pekerjaan.",
+      "MCU telah dilaksanakan terhadap lebih dari 80% (≥ 80%) pekerja tersebut dan berdasarkan hasil MCU yang dievaluasi telah dilaksanakan upaya-upaya penanganan kesehatan pekerja yang dinyatakan unfit sesuai prosedur yang ditetapkan."
+    ],
+    "rubric_en": [
+      "The company does not have a procedure for conducting MCU (Medical Check Up) and does not carry out an MCU (Medical Check Up) program for its workers",
+      "The company has a procedure governing MCU for permanent workers, new workers, and contract workers. The realization of MCU for those workers is still below 50% (< 50%)",
+      "The company has prepared an MCU procedure for permanent workers, contract workers, and new workers. The realization of MCU for those workers is above 50% but still below 80% (50% < MCU implementation < 80%)",
+      "MCU has been conducted for more than 80% (≥ 80%) of those workers and the MCU results have been evaluated, yielding a summary of each worker's status as fit/unfit to perform work.",
+      "MCU has been conducted for more than 80% (≥ 80%) of those workers and, based on the evaluated MCU results, efforts have been made to manage the health of workers declared unfit in accordance with the established procedure."
+    ]
   },
   {
     "id": "4.g",
@@ -173,7 +467,21 @@
     "group_en": "Process 4. Support",
     "text": "Apakah perusahaan memiliki personel terlatih untuk Pertolongan Pertama Pada Kecelakaan (P3K)?",
     "text_en": "Does the company have personnel trained in First Aid (P3K)?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Perusahaan tidak memiliki program terkait P3K",
+      "Perusahaan belum menunjuk pekerjanya sebagai petugas P3K, namun bila terjadi kondisi yang membutuhkan P3K maka pertolongan dilakukan oleh pekerja dengan caranya masing-masing (tidak standard)",
+      "Perusahaan telah menunjuk pekerjanya untuk menjadi petugas P3K namun petugas yang ditunjuk tidak memiliki kualifikasi sebagai sebagai petugas P3K (belum bersertifikat P3K)",
+      "Perusahaan telah memberikan training P3K singkat bagi pekerjanya yang ditunjuk sebagai Petugas P3K namun training tersebut tidak disertai dengan sertifikat kompetensi",
+      "Perusahaan telah memberikan training P3K yang disertai dengan sertifikasi kompetensi petugas P3K terhadap pekerja yang ditunjuk oleh perusahaan sebagai Petugas P3K."
+    ],
+    "rubric_en": [
+      "The company does not have a first aid (P3K) program",
+      "The company has not appointed any of its workers as first aid (P3K) officers, and when a condition requiring first aid occurs, assistance is given by workers in their own way (not standardized)",
+      "The company has appointed workers to serve as first aid (P3K) officers, but the appointed officers do not have the qualifications of a first aid officer (not yet P3K certified)",
+      "The company has provided brief first aid (P3K) training to its workers appointed as First Aid Officers, but the training is not accompanied by a competency certificate",
+      "The company has provided first aid (P3K) training accompanied by a first aid officer competency certification for the workers appointed by the company as First Aid Officers."
+    ]
   },
   {
     "id": "4.h",
@@ -181,7 +489,21 @@
     "group_en": "Process 4. Support",
     "text": "Apakah perusahaan memiliki sistem untuk mengkomunikasikan aspek HSE?",
     "text_en": "Does the company have a system to communicate HSE aspects?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak memiliki prosedur komunikasi HSE dan belum pernah mengkomunikasikan aspek HSE kepada pekerjanya",
+      "Perusahaan telah memiliki prosedur yang mengatur mengenai komunikasi aspek HSE (media komunikasi, target pekerja yang akan dikomunikasikan, konten komunikasi, dll) namun belum memiliki rencana/ program komunikasi HSE dan atau sebaliknya",
+      "Perusahaan telah memiliki program / rencana komunikasi aspek HSE berdasarkan prosedur komunikasi yang berlaku namun komunikasi aspek HSE tersebut belum dilaksanakan",
+      "Perusahaan telah melaksanakan program/ rencana komunikasi aspek HSE kepada sebagian (< 70%) dari total pekerja",
+      "Perusahaan telah melaksanakan program/ rencana komunikasi aspek HSE sesuai prosedur yang telah ditetapkan kepada sebagian besar (> 70%) dari total pekerja"
+    ],
+    "rubric_en": [
+      "The company does not have an HSE communication procedure and has never communicated HSE aspects to its workers",
+      "The company has a procedure governing communication of HSE aspects (communication media, target workers to be communicated with, communication content, etc.), but does not yet have an HSE communication plan/program, and/or vice versa",
+      "The company has an HSE communication program/plan based on the applicable communication procedure, but that HSE communication has not been carried out",
+      "The company has carried out the HSE communication program/plan for part (< 70%) of the total workers",
+      "The company has carried out the HSE communication program/plan in accordance with the established procedure for most (> 70%) of the total workers"
+    ]
   },
   {
     "id": "4.i",
@@ -189,7 +511,21 @@
     "group_en": "Process 4. Support",
     "text": "Apakah perusahaan mengkomunikasikan standar industri dan peraturan HSE terbaru yang berlaku?",
     "text_en": "Does the company communicate the latest applicable industry standards and HSE regulations?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak pernah mengkomunikasikan standard-standard industri dan peraturan baru HSE yang berlaku di perusahaan.",
+      "Perusahaan hanya mengkomunikasikan peraturan baru HSE yang berlaku di perusahaan kepada pekerja tertentu saja (level manajemen), sedangkan level pekerja belum dilakukan.",
+      "Perusahaan telah mengkomunikasikan peraturan baru HSE yang berlaku di perusahaan kepada sebagian besar pekerja (60% - 80%) untuk level manajemen dan pekerja.",
+      "Perusahaan telah mengkomunikasikan peraturan baru HSE yang berlaku di perusahaan kepada seluruh pekerja (100%) untuk level manajemen dan pekerja namun komunikasi standar-standar industry dan aturan regulasi dari pemerintah belum dikomunikasikan kepada seluruh pekerja dan manajemen.",
+      "Perusahaan telah mengkomunikasikan peraturan baru HSE yang berlaku di perusahaan dan standar-standar industri serta aturan regulasi dari pemerintah kepada seluruh pekerja (100%) untuk level manajemen dan pekerja."
+    ],
+    "rubric_en": [
+      "The company has never communicated industry standards and new HSE regulations that apply in the company.",
+      "The company only communicates new HSE regulations that apply in the company to certain workers (management level), while the worker level has not yet been reached.",
+      "The company has communicated new HSE regulations that apply in the company to most workers (60% - 80%) at the management and worker levels.",
+      "The company has communicated new HSE regulations that apply in the company to all workers (100%) at the management and worker levels, but industry standards and government regulations have not been communicated to all workers and management.",
+      "The company has communicated new HSE regulations that apply in the company, as well as industry standards and government regulations, to all workers (100%) at the management and worker levels."
+    ]
   },
   {
     "id": "4.j",
@@ -197,7 +533,21 @@
     "group_en": "Process 4. Support",
     "text": "Apakah perusahaan memiliki sistem pengendalian dokumen dan rekaman HSE?",
     "text_en": "Does the company have an HSE document and records control system?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak pernah melakukan pengendalian terhadap dokumen",
+      "Perusahaan memiliki prosedur pengendalian dokumen dengan pengaturan yang tidak lengkap dan belum dilaksanakan dan atau sebaliknya.",
+      "Perusahaan memiliki prosedur pengendalian dokumen yang lengkap namun prosedur tersebut belum dilaksanakan secara menyeluruh sehingga masih ditemukan dokumen yang tidak up to date",
+      "Perusahaan memiliki prosedur pengendalian dokumen yang lengkap dan prosedur tersebut telah dilaksanakan secara konsisten dan menyeluruh namun evaluasi terhadap efektivitas sistem dokumentasi belum dilakukan",
+      "Perusahaan memiliki prosedur pengendalian dokumen yang lengkap dan prosedur tersebut telah dilaksanakan secara konsisten dan menyeluruh. Evaluasi efektivitas pelaksanaan pengendalian dokumen sudah dilakukan berdasarkan prosedur yang berlaku."
+    ],
+    "rubric_en": [
+      "The company has never exercised document control",
+      "The company has a document control procedure with incomplete provisions that has not been implemented, and/or vice versa.",
+      "The company has a complete document control procedure, but the procedure has not been implemented thoroughly, so documents that are not up to date are still found",
+      "The company has a complete document control procedure and the procedure has been implemented consistently and thoroughly, but the effectiveness of the documentation system has not been evaluated",
+      "The company has a complete document control procedure and the procedure has been implemented consistently and thoroughly. The effectiveness of document control implementation has been evaluated based on the applicable procedure."
+    ]
   },
   {
     "id": "5.a",
@@ -205,7 +555,21 @@
     "group_en": "Process 5. Operational Control",
     "text": "Apakah perusahaan memiliki prosedur kerja aspek HSE berdasarkan standar, peraturan dan praktik terbaik?",
     "text_en": "Does the company have HSE work procedures based on standards, regulations, and best practices?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak memiliki prosedur HSE",
+      "Perusahaan telah menyusun prosedur kerja namun aspek HSE tidak menjadi bagian dalam prosedur tersebut.",
+      "Perusahaan telah menyusun prosedur kerja dengan mengakomodir praktik lokal yang berlangsung selama ini di Perusahaan (Praktik yang sub Standard masih ditoleransi dalam prosedur tersebut)",
+      "Perusahaan telah menyusun prosedur kerja dengan mengakomodir praktik HSE berdasarkan standard/ peraturan/ best practice yang berlaku namun belum diimplementasikan",
+      "Perusahaan telah menyusun prosedur kerja dengan mengakomodir praktik HSE berdasarkan standard/ peraturan/ best practice yang berlaku dan sudah melaksanakannya sesuai prosedur tersebut"
+    ],
+    "rubric_en": [
+      "The company does not have HSE procedures",
+      "The company has prepared work procedures, but HSE aspects are not part of those procedures.",
+      "The company has prepared work procedures that accommodate the local practices that have prevailed in the company to date (substandard practices are still tolerated in those procedures)",
+      "The company has prepared work procedures that accommodate HSE practices based on applicable standards/regulations/best practices, but they have not been implemented",
+      "The company has prepared work procedures that accommodate HSE practices based on applicable standards/regulations/best practices and has implemented them in accordance with those procedures"
+    ]
   },
   {
     "id": "5.b",
@@ -213,7 +577,21 @@
     "group_en": "Process 5. Operational Control",
     "text": "Apakah perusahaan menyediakan APD yang layak dan memastikan penggunaannya sesuai fungsi?",
     "text_en": "Does the company provide suitable PPE and ensure it is used for its intended function?",
-    "max": 5
+    "max": 5,
+    "rubric": [
+      "Perusahaan tidak menyediaan APD untuk pekerjanya.",
+      "Perusahaan telah menyediakan APD dasar (Safety Shoes, Coverall, Safety Helmet) untuk sebagian pekerjanya, dan tidak ada identifikasi daftar kebutuhan APD pekerjanya (jenis-jenia APD yang dibutuhkan untuk melaksanakan pekerjaan)",
+      "Perusahaan telah menyediakan APD dasar (Safety Shoes, Coverall, Safety Helmet) untuk seluruh pekerjanya berdasarkan identifikasi jenis APD yang dibutuhkan dan telah dilakukan pemeriksaan kelayakan fisik dan kelayakan fungsinya",
+      "Perusahaan telah menyediakan APD dasar (Safety Shoes, Coverall, Safety Helmet) untuk seluruh pekerjanya berdasarkan identifikasi jenis APD yang dibutuhkan namun Tidak ada pemeriksaan yang dilakukan untuk memastikan APD telah digunakan secara benar dan layak",
+      "Perusahaan telah melakukan tindakan perbaikan terhadap hasil pemeriksaan kelayakan fisik dan kelayakan fungsi APD yang telah disediakan serta telah menyediakan APD khusus untuk pekerjanya (bila dalam pelaksanaan pekerjaan dibutuhkan APD khusus tersebut)"
+    ],
+    "rubric_en": [
+      "The company does not provide PPE for its workers.",
+      "The company has provided basic personal protective equipment (PPE) (Safety Shoes, Coverall, Safety Helmet) for some of its workers, and there is no identification of the list of PPE needs of its workers (the types of PPE required to perform the work)",
+      "The company has provided basic PPE (Safety Shoes, Coverall, Safety Helmet) for all of its workers based on an identification of the types of PPE required, and has checked their physical condition and functional fitness",
+      "The company has provided basic PPE (Safety Shoes, Coverall, Safety Helmet) for all of its workers based on an identification of the types of PPE required, but no checks are conducted to ensure the PPE is used correctly and properly",
+      "The company has taken corrective action on the results of checks on the physical condition and functional fitness of the PPE provided, and has provided specialized PPE for its workers (if such specialized PPE is required in carrying out the work)"
+    ]
   },
   {
     "id": "5.c",
@@ -221,7 +599,21 @@
     "group_en": "Process 5. Operational Control",
     "text": "Apakah perusahaan mengelola limbah rumah tangga, limbah B3 dan air limbah sesuai ketentuan?",
     "text_en": "Does the company manage household waste, hazardous (B3) waste, and wastewater in accordance with regulations?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan belum memiliki prosedur pengelolaan limbah dan belum ada bukti pengelolaan limbah sesuai ketentuan peraturan",
+      "Perusahaan baru mengelola limbah domestik atau sampah rumah tangga saja",
+      "Perusahaan sudah mengelola sampah rumah tangga dan air limbah sesuai ketentuan peraturan dimana terdapat fasilitas IPAL namun untuk limbah B3 belum terkelola",
+      "Perusahaan sudah mengelola sampah rumah tangga, air limbah sesuai ketentuan peraturan dimana terdapat fasilitas IPAL, limbah B3 sesuai ketentuan peraturan, namun belum melakporkan pengelolaannya kepada instansi yang terkait.",
+      "Perusahaan memiliki prosedur dan fasilitas pengelolaan limbah, sudah semua limbah dikelola sesuai ketentuan peraturan perundangan dan dilaporkan ke instansi terkait secara berkala"
+    ],
+    "rubric_en": [
+      "The company does not yet have a waste management procedure and there is no evidence of waste management in accordance with regulatory requirements",
+      "The company only manages domestic waste or household waste",
+      "The company manages household waste and wastewater in accordance with regulatory requirements, with an IPAL (wastewater treatment plant) facility in place, but hazardous and toxic waste (B3) is not yet managed",
+      "The company manages household waste and wastewater in accordance with regulatory requirements, with an IPAL (wastewater treatment plant) facility in place, and manages hazardous and toxic waste (B3) in accordance with regulatory requirements, but has not yet reported its management to the relevant agencies.",
+      "The company has waste management procedures and facilities, all waste is managed in accordance with statutory regulatory requirements, and it is reported to the relevant agencies periodically"
+    ]
   },
   {
     "id": "5.d",
@@ -229,7 +621,21 @@
     "group_en": "Process 5. Operational Control",
     "text": "Apakah perusahaan memiliki sistem Management of Change untuk perubahan personel, peralatan, proses dan dokumentasi?",
     "text_en": "Does the company have a Management of Change system for changes in personnel, equipment, processes, and documentation?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak memiliki prosedur yang mengatur MOC (Management Of Change/ Pengelolaan perubahan) terkait perubahan personil, peralatan, proses, dokumentasi",
+      "Perusahaan sudah memiliki prosedur MOC namun belum dilaksanakan terhadap perubahan personil, peralatan, proses, dokumentasi",
+      "Perusahaan sudah melakukan MOC namun hanya dilakukan apabila diminta oleh Klien/ Perusahaan pemberi kerja",
+      "Perusahaan telah melakukan MOC sesuai dengan prosedur yang berlaku terhadap perubahan personil, peralatan, proses, dokumentasi namun MOC tersebut belum direview efektivitasnya",
+      "Perusahaan telah melakukan MOC sesuai dengan prosedur yang berlaku terhadap perubahan personil, peralatan, proses, dokumentasi dan MOC terebut telah direview efektivitasnya"
+    ],
+    "rubric_en": [
+      "The company does not have a procedure governing MOC (Management Of Change) related to changes in personnel, equipment, processes, and documentation",
+      "The company has an MOC procedure but has not applied it to changes in personnel, equipment, processes, and documentation",
+      "The company has carried out MOC but only when requested by the Client / employer company",
+      "The company has carried out MOC in accordance with the applicable procedure for changes in personnel, equipment, processes, and documentation, but the effectiveness of that MOC has not been reviewed",
+      "The company has carried out MOC in accordance with the applicable procedure for changes in personnel, equipment, processes, and documentation, and the effectiveness of that MOC has been reviewed"
+    ]
   },
   {
     "id": "5.e",
@@ -237,7 +643,21 @@
     "group_en": "Process 5. Operational Control",
     "text": "Apakah perusahaan memiliki sistem pengelolaan subkontraktor yang mensyaratkan pemenuhan HSE selama kontrak?",
     "text_en": "Does the company have a subcontractor management system that requires HSE compliance throughout the contract?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak memiliki prosedur yang menyaratkan pemenuhan aspek HSE terhadap Sub Kontraktor yang digunakan",
+      "Perusahaan telah memiliki prosedur yang mengatur terkait persyaratan aspek HSE untuk penggunaan Sub kontraktor namun cakupannya hanya fase administrasi saja (Risk Assessment, Qualification Assessment For CSMS dan Vendor Selection)",
+      "Perusahaan telah memiliki prosedur yang mengatur terkait persyaratan aspek HSE untuk penggunaan Sub Kontraktor (Contractor safety Management System/ CSMS) dengan cakupannya fase administrasi dan fase implementasi pekerjaan kontrak namun prosedur tersebut belum diterapkan dalam selama menggunakan kontraktor",
+      "Perusahaan telah menerapkan prosedur CSMS namun implementasinya hanya pada fase administrasi saja (Risk Assessment, Qualification Assessment For CSMS dan Vendor Selection)/ Fase sebelum kontrak ditandatangani",
+      "Perusahaan telah menerapkan prosedur CSMS secara menyeluruh yang mencakup fase administrasi dan fase implementasi pekerjaan kontrak"
+    ],
+    "rubric_en": [
+      "The company does not have a procedure requiring fulfillment of HSE aspects by the Subcontractors it uses",
+      "The company has a procedure governing HSE aspect requirements for the use of Subcontractors, but its scope covers only the administrative phase (Risk Assessment, Qualification Assessment for CSMS, and Vendor Selection)",
+      "The company has a procedure governing HSE aspect requirements for the use of Subcontractors (Contractor Safety Management System / CSMS) covering the administrative phase and the contract work implementation phase, but the procedure has not been applied while using contractors",
+      "The company has applied the CSMS procedure, but its implementation is only in the administrative phase (Risk Assessment, Qualification Assessment for CSMS, and Vendor Selection) / the phase before the contract is signed",
+      "The company has applied the CSMS procedure comprehensively, covering the administrative phase and the contract work implementation phase"
+    ]
   },
   {
     "id": "5.f",
@@ -245,7 +665,21 @@
     "group_en": "Process 5. Operational Control",
     "text": "Apakah perusahaan memiliki sistem pemeliharaan peralatan untuk memastikan kesiapan dan kelayakan fungsi?",
     "text_en": "Does the company have an equipment maintenance system to ensure readiness and fitness for use?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Perusahaan tidak memiliki prosedur terkait dengan pemeliharaan peralatan.",
+      "Perusahaan telah memiliki prosedur pemeliharaan peralatan namun tidak ada program pemeliharaan yang dibuat terhadap peralatan yang digunakan",
+      "Perusahaan telah memiliki program pemeliharaan yang disusun berdasarkan prosedur pemeliharaan yang berlaku namun program pemeliharaan tersebut belum di laksanakan",
+      "Perusahaan telah melaksanakan sebagian (<80%) kegiatan pemeliharaan berdasarkan program pemeliharaan yang telah disusun",
+      "Perusahaan telah melaksanakan seluruh program pemeliharaan yang telah disusun"
+    ],
+    "rubric_en": [
+      "The company does not have a procedure related to equipment maintenance.",
+      "The company has an equipment maintenance procedure, but no maintenance program has been created for the equipment used",
+      "The company has a maintenance program prepared based on the applicable maintenance procedure, but the maintenance program has not been carried out",
+      "The company has carried out part (<80%) of the maintenance activities according to the maintenance program that has been prepared",
+      "The company has carried out the entire maintenance program that has been prepared"
+    ]
   },
   {
     "id": "5.g",
@@ -253,7 +687,21 @@
     "group_en": "Process 5. Operational Control",
     "text": "Apakah perusahaan memiliki dan menerapkan sistem izin kerja untuk mengendalikan bahaya?",
     "text_en": "Does the company have and implement a work permit system to control hazards?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak memiliki Prosedur terkait penerapan Sistem Ijin Kerja Aman (Permit To Work)",
+      "Perusahaan telah memiliki Prosedur terkait penerapan Sistem Ijin Kerja Aman (Permit To Work) namun belum mengatur terkait jenis pekerjaan yang harus memiliki Surat ijin Kerja Aman dan tidak ada pengaturan personil yang berwenang untuk mengusulkan, memeriksa dan menyetujui Ijin kerja aman.",
+      "Perusahaan telah memiliki Prosedur terkait penerapan Sistem Ijin Kerja Aman (Permit To Work) yang telah mengakomodir jenis pekerjaan yang harus memiliki Sistem ijin Kerja Aman dan terdapat pengaturan personil yang berwenang untuk mengusulkan, memeriksa dan menyetujui Ijin kerja aman namun Sistem Ijin Kerja aman tersebut belum dilaksanakan.",
+      "Perusahaan telah melaksanakan sistem ijin kerja aman terhadap sebagian pekerjaan yang disyaratkan dalam prosedur Sistem Ijin Kerja Aman yang berlaku",
+      "Perusahaan telah melaksanakan sistem ijin kerja aman terhadap seluruh pekerjaan yang disyaratkan dalam prosedur Sistem Ijin Kerja Aman yang berlaku"
+    ],
+    "rubric_en": [
+      "The company does not have a procedure related to implementing a Safe Work Permit System (Permit To Work)",
+      "The company has a procedure related to implementing a Safe Work Permit System (Permit To Work), but it does not yet specify the types of work that must have a Safe Work Permit and there is no designation of personnel authorized to propose, check, and approve safe work permits.",
+      "The company has a procedure related to implementing a Safe Work Permit System (Permit To Work) that accommodates the types of work that must have a Safe Work Permit System and designates personnel authorized to propose, check, and approve safe work permits, but the Safe Work Permit System has not been implemented.",
+      "The company has implemented the safe work permit system for some of the work required by the applicable Safe Work Permit System procedure",
+      "The company has implemented the safe work permit system for all of the work required by the applicable Safe Work Permit System procedure"
+    ]
   },
   {
     "id": "5.h",
@@ -261,7 +709,21 @@
     "group_en": "Process 5. Operational Control",
     "text": "Apakah perusahaan menggunakan peralatan hemat energi?",
     "text_en": "Does the company use energy-efficient equipment?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Tidak ada bukti menggunakan peralatan hemat energi atau mempersyaratkan dalam pengadaan untuk alat yang hemat energi",
+      "Terdapat penggunaan beberapa alat yang hemat energi namun hanya sebagian kecil",
+      "Sebagian peralatan sudah menggunakan peralatan hemat energi namun belum di integrasikan dalam proses pengadaan barang dan jasa.",
+      "Sudah ada pertimbangan dalam pengadaan memilih peralatan yang hemat energi namun belum semua peralatan menggunakan yang hemat energi",
+      "Semua peralatan yang digunakan merupakan hemat energi dibuktikan dengan penggunaannya dan adanya persyaratan dalam pengadaan untuk memilih peralatan hemat energi"
+    ],
+    "rubric_en": [
+      "There is no evidence of using energy-efficient equipment or of requiring energy-efficient equipment in procurement",
+      "Some energy-efficient equipment is used, but only a small portion",
+      "Some of the equipment already uses energy-efficient equipment, but it has not yet been integrated into the procurement process for goods and services.",
+      "Procurement already takes into consideration choosing energy-efficient equipment, but not all equipment is yet energy-efficient",
+      "All equipment used is energy-efficient, as evidenced by its use and by procurement requirements to choose energy-efficient equipment"
+    ]
   },
   {
     "id": "5.i",
@@ -269,7 +731,21 @@
     "group_en": "Process 5. Operational Control",
     "text": "Apakah peralatan pencegahan/penanggulangan kebakaran, ledakan dan pencemaran terpelihara serta berfungsi?",
     "text_en": "Is fire, explosion, and pollution prevention/response equipment maintained and functional?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Perusahaan tidak memiliki peralatan pencegahan dan penanggulangan kebakaran, ledakan, pencemaran",
+      "Perusahaan telah mengidentifikasi sebagian peralatan pencegahan & penanggulangan kebakaran, ledakan, pencemaran yang semestinya harus dimiliki oleh perusahaan namun peralatan tersebut belum tersedia di lokasi Perusahaan",
+      "Perusahaan hanya menyediakan sebagian peralatan pencegahan dan penanggulangan yang telah diidentifikasi oleh Perusahaan",
+      "Perusahaan telah menyediakan seluruh peralatan pencegahan dan penanggulangan yang telah diidentifikasi oleh perusahaan namun belum dilakukan pemeriksaan kelayakan fungsinya secara rutin",
+      "Perusahaan telah menyediakan sebagian peralatan pencegahan dan penanggulangan yang telah diidentifikasi oleh perusahaan"
+    ],
+    "rubric_en": [
+      "The company does not have equipment for preventing and responding to fire, explosion, and pollution",
+      "The company has identified some of the fire, explosion, and pollution prevention and response equipment that the company should have, but that equipment is not yet available at the company's location",
+      "The company only provides some of the prevention and response equipment that the company has identified",
+      "The company has provided all of the prevention and response equipment that the company has identified, but routine checks of its functional fitness have not been carried out",
+      "The company has provided some of the prevention and response equipment that the company has identified"
+    ]
   },
   {
     "id": "5.j",
@@ -277,7 +753,21 @@
     "group_en": "Process 5. Operational Control",
     "text": "Apakah perusahaan memiliki sistem pengelolaan keadaan darurat dan rencana darurat sesuai kegiatan operasional?",
     "text_en": "Does the company have an emergency management system and emergency plan appropriate to its operations?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Perusahaan tidak memiliki prosedur keadaan darurat yang berlaku.",
+      "Perusahaan telah memiliki prosedur keadaan darurat namun isinya belum mengatur secara lengkap (Apa, bagaimana, mengapa, kapan, siapa, dimana terkait dengan pengeloaan keadaan darurat belum terjawab dalam prosedur tersebut) serta belum memiliki rencana penanggulangan keadaan darurat.",
+      "Perusahaan telah memiliki prosedur keadaan darurat dengan cakupan yang lengkap (Apa, bagaimana, mengapa, kapan, siapa, dimana terkait dengan pengeloaan keadaan darurat sudah terjawab dalam prosedur tersebut) dan sudah memiliki rencana penanggulangan keadaan darurat yang terkait dengan aktivitas perusahaan berdasarkan Top Risk perusahaan.",
+      "Perusahaan telah memiliki rencana keadaan darurat yang berlaku di perusahaan yang mengacu pada prosedur keadaan darurat yang berlaku dan Top Risk perusahaan namun simulasi keadaan darurat belum pernah dilakukan.",
+      "Perusahaan sudah melakukan simulasi keadaan darurat secara periodik (minimal 1 kali/ tahun) berdasarkan rencana keadaan darurat dan prosedur keadaan darurat yang berlaku."
+    ],
+    "rubric_en": [
+      "The company does not have an applicable emergency procedure.",
+      "The company has an emergency procedure, but its content is not yet fully specified (what, how, why, when, who, and where regarding emergency management are not yet answered in the procedure) and it does not yet have an emergency response plan.",
+      "The company has an emergency procedure with complete coverage (what, how, why, when, who, and where regarding emergency management are answered in the procedure) and already has an emergency response plan related to the company's activities based on the company's Top Risks.",
+      "The company has an emergency plan that applies in the company, referring to the applicable emergency procedure and the company's Top Risks, but an emergency simulation has never been conducted.",
+      "The company has conducted emergency simulations periodically (at least once a year) based on the applicable emergency plan and emergency procedure."
+    ]
   },
   {
     "id": "6.a",
@@ -285,7 +775,21 @@
     "group_en": "Process 6. Performance Evaluation",
     "text": "Apakah perusahaan melakukan pengukuran dan pemantauan lingkungan kerja?",
     "text_en": "Does the company measure and monitor the work environment?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Perusahaan tidak memiliki program Lingkungan Kejra",
+      "Perusahaan telah menyusun Program Lingkungan Kerja namun belum diimplementasikan. Program Hygiene Industry yang disusun dapat mencakup pengukuran bahaya kesehatan di tempat kerja/ paparan bahaya kesehatan terhadap pekerja/ pemeriksaan kesehatan.",
+      "Program Lingkungan Kerja yang disusun telah dilengkapi dengan Prosedur Pengukuran dan Pemantauan bahaya kesehataan di tempat kerja namun belum diimplemantasikan.",
+      "Program Lingkungan Kerja telah disusun berdasarkan Prosedur yang ditetapkan namun pelaksanaannya belum konsisten.",
+      "Program Lingkungan Kerja telah disusun berdasarkan Prosedur yang ditetapkan dan telah dilaksanakan secara konsisten."
+    ],
+    "rubric_en": [
+      "The company does not have a Work Environment program",
+      "The company has prepared a Work Environment Program but has not implemented it. The Industrial Hygiene program prepared may cover measurement of workplace health hazards / exposure of workers to health hazards / health examinations.",
+      "The Work Environment Program prepared has been supplemented with a Procedure for Measuring and Monitoring workplace health hazards, but has not been implemented.",
+      "The Work Environment Program has been prepared based on the established Procedure, but its implementation is not yet consistent.",
+      "The Work Environment Program has been prepared based on the established Procedure and has been implemented consistently."
+    ]
   },
   {
     "id": "6.b",
@@ -293,7 +797,21 @@
     "group_en": "Process 6. Performance Evaluation",
     "text": "Apakah perusahaan melakukan pengelolaan dan pemantauan sesuai dokumen lingkungan?",
     "text_en": "Does the company carry out management and monitoring in line with its environmental documents?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Perusahaan tidak melakukan pengelolaan dan pemantauan sesuai ketentuan dokumen lingkungan",
+      "Perusahaan telah melakukan pengelolaan lingkungan sesuai ketentuan dokumen lingkungan, namun belum melakukan pemantauan lingkungan",
+      "Pengelolaan dan pemantauan lingkungan sudah dilaksanakan namun belum semua parameter lingkungan dilakukan pemantauan.",
+      "Pengelolaan dan pemantauan lingkungan sudah dilaksanakan secara berkala namun belum dilakukan oleh pihak laboratorium yang terdaftar",
+      "Pengelolaan dan pemantauan lingkungan sudah dilaksanakan secara berkala oleh pihak laboratorium lingkungan yang terdaftar sesuai dengan ketentuan dan dilaporkan rutin"
+    ],
+    "rubric_en": [
+      "The company does not carry out management and monitoring in accordance with the provisions of the environmental document",
+      "The company has carried out environmental management in accordance with the provisions of the environmental document, but has not carried out environmental monitoring",
+      "Environmental management and monitoring have been carried out, but not all environmental parameters are monitored.",
+      "Environmental management and monitoring have been carried out periodically, but not by a registered laboratory",
+      "Environmental management and monitoring have been carried out periodically by a registered environmental laboratory in accordance with requirements and are reported routinely"
+    ]
   },
   {
     "id": "6.c",
@@ -301,7 +819,21 @@
     "group_en": "Process 6. Performance Evaluation",
     "text": "Apakah perusahaan memiliki sistem audit HSE yang dilaksanakan personel kompeten?",
     "text_en": "Does the company have an HSE audit system carried out by competent personnel?",
-    "max": 20
+    "max": 20,
+    "rubric": [
+      "Perusahaan tidak memiliki prosedur yang terkait dengan audit HSE",
+      "Perusahaan telah memiliki prosedur terkait dengan audit namun cakupan isinya masih belum lengkap (What, When, Where, Why, Who dan Hownya belum tercantum dalam prosdeur tersebut)",
+      "Perusahaan telah memiliki prosedur audit HSE yang lengkap namun perusahaan belum menyusun program audit HSE. (terdapat jadual, auditor, pengkomunikasian pelaksanaan audit)",
+      "Perusahaan telah menyusun program audit HSE sesuai prosedur yang telah ditetapkan namun program tersebut belum dilaksanakan/ dilaksanakan tidak memenuhi program yang ditetapkan",
+      "Perusahaan telah melaksanakan seluruh audit HSE berdasarkan prosedur dan program audit yang ditetapkan."
+    ],
+    "rubric_en": [
+      "The company does not have a procedure related to HSE audits",
+      "The company has an audit-related procedure, but its content coverage is still incomplete (What, When, Where, Why, Who, and How are not yet stated in the procedure)",
+      "The company has a complete HSE audit procedure, but has not yet prepared an HSE audit program (including schedule, auditors, and communication of audit implementation).",
+      "The company has prepared an HSE audit program in accordance with the established procedure, but the program has not been carried out / has been carried out without meeting the established program",
+      "The company has carried out all HSE audits based on the established audit procedure and program."
+    ]
   },
   {
     "id": "6.d",
@@ -309,7 +841,21 @@
     "group_en": "Process 6. Performance Evaluation",
     "text": "Apakah perusahaan melakukan inspeksi terhadap peralatan yang digunakan?",
     "text_en": "Does the company inspect the equipment it uses?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Perusahaan tidak melakukan inspeksi kelayakan peralatan yang digunakan",
+      "Perusahaan hanya melakukan inspeksi/ pemeriksaan fisik secara internal terhadap sebagian peralatan dan instalasi yang digunakan. Perusahaan telah melakukan inspeksi/ pemeriksaan fisik secara internal terhadap peralatan dan instalasi yang digunakan namun belum memiliki Program Inspeksi yang ditetapkan atau sebaliknya.",
+      "Perusahaan telah melakukan pemeriksaan/ inspeksi secara internal terhadap seluruh peralatan dan instalasi yang digunakannya sesuai dengan program yang telah ditetapkan namun sertifikasi yang disyaratkan secara regulasi belum di penuhi",
+      "Perusahaan telah melakukan pemeriksaan/ inspeksi secara internal dan eksternal (Sertifikasi) terhadap seluruh peralatan dan instalasi yang digunakannya sesuai program yang telah ditetapkan namun sertifikasi personil/ operator yang terkait dengan pengoperasian peralatan tersebut belum tersedia.",
+      "Perusahaan telah melakukan pemeriksaan/ inspeksi secara internal dan eksternal (Sertifikasi) terhadap seluruh peralatan dan instalasi yang digunakannya sesuai dengan program yang telah ditetapkan dan sertifikasi personil/ operator yang mengoperasikan peralatan tersebut telah dipenuhi."
+    ],
+    "rubric_en": [
+      "The company does not carry out fitness inspections of the equipment used",
+      "The company only carries out internal inspections/physical examinations of some of the equipment and installations used. The company has carried out internal inspections/physical examinations of the equipment and installations used, but does not yet have an established Inspection Program, or vice versa.",
+      "The company has carried out internal examinations/inspections of all the equipment and installations it uses in accordance with the established program, but the certifications required by regulation have not been fulfilled",
+      "The company has carried out internal and external (Certification) examinations/inspections of all the equipment and installations it uses in accordance with the established program, but certification of the personnel/operators related to operating that equipment is not yet available.",
+      "The company has carried out internal and external (Certification) examinations/inspections of all the equipment and installations it uses in accordance with the established program, and certification of the personnel/operators who operate that equipment has been fulfilled."
+    ]
   },
   {
     "id": "6.e",
@@ -317,7 +863,21 @@
     "group_en": "Process 6. Performance Evaluation",
     "text": "Apakah perusahaan memiliki program observasi dan intervensi aspek HSE (pengamatan keselamatan kerja)?",
     "text_en": "Does the company have an HSE observation and intervention program (workplace safety observation)?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak memiliki prosedur terkait observasi dan intervensi aspek HSE (Pengamatan keselamatan kerja)",
+      "Perusahaan sudah memiliki prosedur observasi dan intervensi aspek HSE namun program observasi dan intervensi aspek HSE belum disusun",
+      "Perusahaan sudah menyusun program observasi dan intervensi aspek HSE namun belum dilaksanakan",
+      "Perusahaan sudah melaksanakan program observasi dan intervensi aspek HSE namun hasilnya tidak ditindaklanjuti untuk perbaikan",
+      "Perusahaan sudah melaksanakan program observasi dan intervensi aspek HSE sesuai prosedur yang berlaku dan telah menindaklanjuti hasilnya untuk perbaikan"
+    ],
+    "rubric_en": [
+      "The company does not have a procedure related to HSE observation and intervention (occupational safety observation)",
+      "The company has an HSE observation and intervention procedure, but the HSE observation and intervention program has not yet been prepared",
+      "The company has prepared an HSE observation and intervention program, but it has not been carried out",
+      "The company has carried out the HSE observation and intervention program, but the results are not followed up for improvement",
+      "The company has carried out the HSE observation and intervention program in accordance with the applicable procedure and has followed up the results for improvement"
+    ]
   },
   {
     "id": "6.f",
@@ -325,7 +885,21 @@
     "group_en": "Process 6. Performance Evaluation",
     "text": "Apakah perusahaan memiliki sistem pemantauan kinerja HSE secara periodik?",
     "text_en": "Does the company have a system for periodic HSE performance monitoring?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Perusahaan tidak mencatat setiap insiden yang terjadi di Perusahaan",
+      "Perusahaan telah mencatat seluruh kategori insiden (termasuk Near Miss yang terjadi) namun terkait pencapaian program HSE belum dicatat",
+      "Perusahaan telah mencatat seluruh kategori insiden (termasuk Near Miss yang terjadi) dan pencapaian program HSE sebagai kinerja HSE perusahaan namun kinerja HSE tersebut tidak dievaluasi pencapaiannya",
+      "Kinerja HSE perusahaan telah dicatat, dimonitor dan dievaluasi pencapaiannya selama kurang dari 3 tahun (< 3 tahun) terakhir namun tidak periodik",
+      "Kinerja HSE perusahaan telah dicatat, dimonitor dan dievaluasi pencapaiannya secara periodik selama lebih dari 3 (tiga) tahun terakhir."
+    ],
+    "rubric_en": [
+      "The company does not record every incident that occurs in the company",
+      "The company has recorded all categories of incidents (including Near Misses that occur), but the achievement of HSE programs has not been recorded",
+      "The company has recorded all categories of incidents (including Near Misses that occur) and the achievement of HSE programs as the company's HSE performance, but the achievement of that HSE performance is not evaluated",
+      "The company's HSE performance has been recorded, monitored, and evaluated for less than the last 3 years (< 3 years), but not periodically",
+      "The company's HSE performance has been recorded, monitored, and had its achievement evaluated periodically for more than the last 3 (three) years."
+    ]
   },
   {
     "id": "6.g",
@@ -333,7 +907,21 @@
     "group_en": "Process 6. Performance Evaluation",
     "text": "Apakah perusahaan memiliki sistem tinjauan manajemen?",
     "text_en": "Does the company have a management review system?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Perusahaan tidak memiliki Prosedur tinjauan manajemen aspek HSE",
+      "Perusahaan sudah memiliki prosedur tinjauan manajemen namun prosedur tersebut belum mengatur salah satu hal berikut : Bagaimana, kapan, siapa, dimana, apa dan kenapa manajemen review tersebut harus dilakukan.",
+      "Perusahaan sudah memiliki prosedur tinjauan manajemen dengan cakupan telah mengatur sebagian item berikut : Bagaimana, kapan, siapa, dimana, apa dan kenapa manajemen review tersebut harus dilakukan",
+      "Perusahaan sudah memiliki prosedur tinjauan manajemen dengan cakupan telah mengatur seluruh item berikut : Bagaimana, kapan, siapa, dimana, apa dan kenapa manajemen review tersebut harus dilakukan",
+      "Perusahaan telah mengkomunikasikan Prosedur Tinjauan Manajemen kepada Tim Manajemen."
+    ],
+    "rubric_en": [
+      "The company does not have a management review procedure for HSE aspects",
+      "The company has a management review procedure, but the procedure does not yet govern one of the following: how, when, who, where, what, and why the management review must be conducted.",
+      "The company has a management review procedure whose coverage governs some of the following items: how, when, who, where, what, and why the management review must be conducted",
+      "The company has a management review procedure whose coverage governs all of the following items: how, when, who, where, what, and why the management review must be conducted",
+      "The company has communicated the Management Review Procedure to the Management Team."
+    ]
   },
   {
     "id": "6.h",
@@ -341,7 +929,21 @@
     "group_en": "Process 6. Performance Evaluation",
     "text": "Apakah tinjauan manajemen dilaksanakan periodik dan hasilnya ditindaklanjuti?",
     "text_en": "Is management review carried out periodically and its results followed up?",
-    "max": 5
+    "max": 5,
+    "rubric": [
+      "Perusahaan tidak pernah melakukan tinjauan manajemen",
+      "Perusahaan pernah melakukan tinjauan manajemen namun tidak konsisten pelaksanaannya",
+      "Perusahaan telah melakukan tinjauan manajemen secara konsisten namun hasilnya tidak ditindaklanjuti oleh manajemen",
+      "Perusahaan telah melakukan tinjauan manajemen secara konsisten namun hanya sebagian hasilnya yang ditindaklanjuti oleh manajemen",
+      "Perusahaan telah melakukan tinjauan manajemen secara konsisten dan hasilnya telah ditindaklanjuti seluruhnya oleh manajemen"
+    ],
+    "rubric_en": [
+      "The company has never conducted a management review",
+      "The company has conducted a management review, but its implementation is not consistent",
+      "The company has conducted management reviews consistently, but the results are not followed up by management",
+      "The company has conducted management reviews consistently, but only some of the results are followed up by management",
+      "The company has conducted management reviews consistently and the results have been fully followed up by management"
+    ]
   },
   {
     "id": "7.a",
@@ -349,7 +951,21 @@
     "group_en": "Process 7. Improvement",
     "text": "Apakah perusahaan memiliki sistem pelaporan dan investigasi kecelakaan termasuk insiden berpotensi Major Accident?",
     "text_en": "Does the company have an accident reporting and investigation system, including incidents with Major Accident potential?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak memiliki sistem pelaporan terhadap insiden yang terjadi.",
+      "Perusahaan memiliki hanya memiliki prosedur pelaporan yang terjadi namun prosedur investigasi kecelakaan belum tersedia.",
+      "Perusahaan telah memiliki prosedur pelaporan dan investigasi kecelakaan namun hanya sebagian insiden yang dilaporkan",
+      "Perusahaan telah memiliki prosedur pelaporan dan investigasi kecelakaan dan seluruh insiden telah dilaporkan namun insiden tersebut tidak diinvestigasi",
+      "Perusahaan telah melaporkan dan menginvestigasi seluruh insiden sesuai dengan prosedur yang berlaku."
+    ],
+    "rubric_en": [
+      "The company does not have a system for reporting incidents that occur.",
+      "The company only has an incident reporting procedure, but an accident investigation procedure is not yet available.",
+      "The company has reporting and accident investigation procedures, but only some incidents are reported",
+      "The company has reporting and accident investigation procedures and all incidents have been reported, but those incidents are not investigated",
+      "The company has reported and investigated all incidents in accordance with the applicable procedure."
+    ]
   },
   {
     "id": "7.b",
@@ -357,7 +973,21 @@
     "group_en": "Process 7. Improvement",
     "text": "Apakah temuan audit, inspeksi dan rekomendasi investigasi kecelakaan telah ditindaklanjuti?",
     "text_en": "Have audit findings, inspections, and accident investigation recommendations been followed up?",
-    "max": 20
+    "max": 20,
+    "rubric": [
+      "Perusahaan tidak menindaklanjuti seluruh rekomendasi temuan HSE yang ditujukan kepada perusahaan",
+      "Perusahaan hanya menindaklanjuti sebagian kecil rekomendasi HSE (audit, inspeksi dan rekomendasi investigasi kecelakaan) yang ditujukan untuk perusahaan (< 40% rekomendasi)",
+      "Perusahaan telah menindaklanjuti sebagian rekomendasi HSE (audit, inspeksi dan rekomendasi investigasi kecelakaan) yang ditujukan untuk perusahaan (40% - 60% dari rekomendasi)",
+      "Perusahaan telah menindaklanjuti sebagian besar rekomendasi HSE (audit, inspeksi dan rekomendasi investigasi kecelakaan) yang ditujukan untuk perusahaan (60% - 90% dari rekomendasi)",
+      "Perusahaan telah menindaklanjuti seluruh rekomendasi HSE (audit, inspeksi dan rekomendasi investigasi kecelakaan) yang ditujukan untuk perusahaan (90% - 100% dari rekomendasi)"
+    ],
+    "rubric_en": [
+      "The company does not follow up on any of the HSE finding recommendations addressed to the company",
+      "The company only follows up on a small portion of the HSE recommendations (audit, inspection, and accident investigation recommendations) addressed to the company (< 40% of recommendations)",
+      "The company has followed up on some of the HSE recommendations (audit, inspection, and accident investigation recommendations) addressed to the company (40% - 60% of recommendations)",
+      "The company has followed up on most of the HSE recommendations (audit, inspection, and accident investigation recommendations) addressed to the company (60% - 90% of recommendations)",
+      "The company has followed up on all HSE recommendations (audit, inspection, and accident investigation recommendations) addressed to the company (90% - 100% of recommendations)"
+    ]
   },
   {
     "id": "7.c",
@@ -365,7 +995,21 @@
     "group_en": "Process 7. Improvement",
     "text": "Apakah kasus insiden dikomunikasikan sebagai pembelajaran agar tidak terulang?",
     "text_en": "Are incident cases communicated as lessons learned to prevent recurrence?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak pernah mengkomunikasikan kasus insiden yang terjadi kepada pekerjanya",
+      "Perusahaan hanya mengkomunikasikan kasus insiden yang terjadi di perusahaan kepada sebagian pekerja perusahaan",
+      "Perusahaan telah mengkomunikasikan kasus insiden yang terjadi di perusahaan kepada seluruh pekerja perusahaan",
+      "Perusahaan telah mengkomunikasikan kasus insiden yang terjadi di perusahaan dan di luar perusahaan kepada pekerjanya namun tidak dilakukan pengukuran efektivitas pengkomunikasian yang sudah dilakukannya",
+      "Perusahaan telah mengkomunikasikan kasus insiden yang terjadi di perusahaan kepada seluruh pekerja perusahaan dan telah dilakukan pengukuran efektivitas pengkomunikasian yang sudah dilakukannya"
+    ],
+    "rubric_en": [
+      "The company has never communicated incident cases that occurred to its workers",
+      "The company only communicates incident cases that occurred in the company to some of the company's workers",
+      "The company has communicated incident cases that occurred in the company to all of the company's workers",
+      "The company has communicated incident cases that occurred inside and outside the company to its workers, but has not measured the effectiveness of the communication it has carried out",
+      "The company has communicated incident cases that occurred in the company to all of the company's workers and has measured the effectiveness of the communication it has carried out"
+    ]
   },
   {
     "id": "8.a",
@@ -373,7 +1017,21 @@
     "group_en": "Process 8. ESG, Awards and Sanctions",
     "text": "Apakah perusahaan menerima penghargaan HSE dari badan/instansi terkait implementasi HSE?",
     "text_en": "Has the company received HSE awards from agencies/institutions for its HSE implementation?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak pernah menerima penghargaan/ apresiasi HSE",
+      "Perusahaan pernah menerima penghargaan aspek HSE dari Holding Companynya",
+      "Perusahaan pernah menerima penghargaan aspek HSE dari client/ badan/ instansi terkait implementasi HSE (1 kali menerima penghargaan)",
+      "Perusahaan pernah menerima penghargaan aspek HSE dari client/ badan/ instansi terkait implementasi HSE (2 kali menerima penghargaan)",
+      "Perusahaan pernah menerima penghargaan aspek HSE dari client/ badan/ instansi terkait implementasi HSE (lebih dari 2 kali menerima penghargaan)"
+    ],
+    "rubric_en": [
+      "The company has never received an HSE award/appreciation",
+      "The company has received an HSE award from its Holding Company",
+      "The company has received an HSE award from a client/body/relevant agency for HSE implementation (received an award once)",
+      "The company has received an HSE award from a client/body/relevant agency for HSE implementation (received an award twice)",
+      "The company has received an HSE award from a client/body/relevant agency for HSE implementation (received an award more than twice)"
+    ]
   },
   {
     "id": "8.b",
@@ -381,7 +1039,21 @@
     "group_en": "Process 8. ESG, Awards and Sanctions",
     "text": "Apakah perusahaan menerima sanksi/teguran/kewajiban perbaikan dari Pemerintah akibat pelanggaran HSE dalam tiga tahun terakhir?",
     "text_en": "Has the company received sanctions, warnings, or corrective obligations from the Government due to HSE violations in the last three years?",
-    "max": 10
+    "max": 10,
+    "rubric": [
+      "Perusahaan tidak pernah menerima penghargaan/ apresiasi HSE",
+      "Perusahaan sering menerima sanksi dari Client atau pemerintah akibat kinerja HSE yang buruk",
+      "Perusahaan pernah menerima sanksi dari Client atau pemerintah terkait kinerja HSE perusahaannya sejumlah antara 1 s/d 4 kali selama periode 3 tahun",
+      "Perusahaan pernah menerima sanksi dari Client atau pemerintah terkait kinerja HSE perusahaannya sejumlah 1 kali selama periode 3 tahun",
+      "Perusahaan tidak pernah menerima sanksi dari Client atau pemerintah terkait kinerja HSE perusahaannya selama periode 3 tahun terhitung dari tanggal pengajuan dokumen Penilaian kualifikasi CSMS"
+    ],
+    "rubric_en": [
+      "The company has never received an HSE award/appreciation",
+      "The company often receives sanctions from the Client or the government due to poor HSE performance",
+      "The company has received sanctions from the Client or the government related to its HSE performance between 1 and 4 times during a 3-year period",
+      "The company has received sanctions from the Client or the government related to its HSE performance 1 time during a 3-year period",
+      "The company has never received sanctions from the Client or the government related to its HSE performance during the 3-year period counted from the date the CSMS qualification assessment documents were submitted"
+    ]
   },
   {
     "id": "8.c",
@@ -389,6 +1061,20 @@
     "group_en": "Process 8. ESG, Awards and Sanctions",
     "text": "Apakah perusahaan menerapkan ESG dalam praktik bisnisnya?",
     "text_en": "Does the company apply ESG in its business practices?",
-    "max": 15
+    "max": 15,
+    "rubric": [
+      "Tidak menerapkan ESG",
+      "Menerapkan praktik ESG / Sustainability namun hanya sekedar kebijakan atau komitmen dalam perusahaan",
+      "Sudah memiliki komitmen terkait sustainability / ESG dan topik material beserta inisiatif program yang mendukung",
+      "Memiliki sustainability report, namun tidak melakukan rating terkait ESG",
+      "Menerapkan ESG dengan dibuktikan memiliki sustainability report dan terdapat ESG Rating beserta roadmap pemenuhan atau peningkatannya"
+    ],
+    "rubric_en": [
+      "Does not implement ESG",
+      "Implements ESG / Sustainability practices, but only as a policy or commitment within the company",
+      "Already has a commitment related to sustainability / ESG, along with material topics and supporting program initiatives",
+      "Has a sustainability report, but does not obtain an ESG rating",
+      "Implements ESG, as evidenced by having a sustainability report and an ESG Rating along with a roadmap for fulfilling or improving it"
+    ]
   }
 ]

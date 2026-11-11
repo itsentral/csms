@@ -351,4 +351,25 @@ class WorkflowTest extends TestCase
         $this->assertNotEmpty($state->json('questions.0.text_en'));
         $this->assertNotEmpty($state->json('questions.48.group_en'));
     }
+
+    public function test_every_question_has_a_five_level_scoring_rubric(): void
+    {
+        $questions = $this->actingAs($this->user('vendor'))->getJson('/api/state')->assertOk()->json('questions');
+        foreach ($questions as $q) {
+            foreach (['rubric', 'rubric_en'] as $key) {
+                $this->assertCount(5, $q[$key], "{$q['id']} {$key}");
+                $this->assertSame(5, count(array_filter($q[$key], fn ($t) => is_string($t) && trim($t) !== '')), "{$q['id']} {$key} has an empty level");
+            }
+        }
+        $this->assertStringStartsWith('Tidak melakukan identifikasi', $questions[0]['rubric'][0]);
+    }
+
+    public function test_seeder_fills_a_missing_rubric_without_touching_weights(): void
+    {
+        DB::table('questions')->where('id', '1.a')->update(['rubric' => null, 'max' => 12]);
+        $this->seed(QuestionSeeder::class);
+        $q = DB::table('questions')->where('id', '1.a')->first();
+        $this->assertCount(5, json_decode($q->rubric, true));
+        $this->assertSame(12, (int) $q->max);
+    }
 }

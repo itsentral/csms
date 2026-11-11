@@ -42,10 +42,6 @@ A single-page application (SPA) in plain JavaScript (no framework). `/` serves t
 
 Asset URLs carry `?v=<file modification time>` (in `portal.blade.php`), so browsers fetch the new version automatically after a deploy.
 
-### Leftover code from the first implementation
-
-The `app/Http/Controllers` and `app/Models` folders still contain the first implementation, which is **not connected to any route** (`ApplicationController`, `ReviewController`, `CertificateController`, `DashboardController`, `AdminUserController`, the models `RchsemsApplication`, `Criterion`, `Review`, and related ones), together with the views in `resources/views/{applications,reviews,admin,certificates,auth}` and the migrations of its old tables (`rchsems_applications`, `criteria`, `reviews`, and so on). This code calls `hasAnyRole()`, which no longer exists, so it would not work if connected. It is safe to ignore and should be removed in the next cleanup.
-
 ## Database
 
 Active tables: `users` (JSON column `roles` and `active`), `questions`, `vendors`, `answers`, `evidence`, `assessments`, `assessment_scores`, `audit_logs`; plus the default Laravel tables (`password_reset_tokens`, `sessions`, `cache`, `jobs`, and similar).
@@ -85,6 +81,10 @@ npm run watch:css    # optional, while developing
 The output (`public/assets/portal.css`, `portal.js`, `i18n.js`, `qr.js`) must be committed because the server does not run Node.js; CI fails if the build output does not match the sources. esbuild does not bundle files and keeps top-level function names intact, because they are called through `data-click`/`data-change` attributes.
 
 **Score format:** `fmtScore()` in `portal.js` shows scores in a uniform format (integers without decimals, otherwise at most two decimals, following the interface language) and truncates instead of rounding, so a score never appears to cross a risk category threshold.
+
+**Scoring rubric:** `questions.json` carries `rubric` and `rubric_en` (five criteria each, from LAMPIRAN 3-A) per question; they are stored as JSON columns on `questions` (migration `2026_11_11_000002`), filled in on existing databases by `QuestionSeeder` without touching weights, and sent by `/api/state`. In `portal.js`, `matrixPicker()` renders a hidden score input (still read by `assessmentPayload()`) plus a toggle, `rubricRow()` the criteria row, and `pickRubric()`/`toggleRubric()` handle choosing and moving to the next question; an empty input means "not rated" and `allRated()` blocks saving. When the stage is closed the picker and notes (`commentCell()`) render as static text.
+
+**Personal sheet vs team average:** the Verifikasi and Validasi tables share helpers in `portal.js` (`SCORE_STAGE`, `matrixSelect`, `ownScoreCell`, `teamScoreCell`, `scoreSummary`, `refreshScores`, `bindScoreInputs`). The cells are filled from the dropdowns by `refreshScores()` after rendering and on every change, so "Nilai Anda" always equals the dropdown × weight. Until the signed-in account has saved an assessment for that stage, the team average, the combined total, and other assessors' totals in `reviewerSummary(..., hideOthers)` are not rendered, so they cannot anchor its scores; the validation dropdowns default to 0 instead of the other validators' average for the same reason. After saving, the team average uses the other assessors' saved scores plus the account's current dropdown value. This is a display rule only: `/api/state` still sends every assessor's scores to internal accounts. The server-side total (`Portal::total`) is unchanged.
 
 **Deployed version:** the short commit hash is shown on the login page, at the bottom of the desktop sidebar, and in the account menu ("Versi 1d2ea1d"), so reports can name the exact release. `AppVersion::commit()` resolves it in this order: `APP_COMMIT` (config `rchsems.commit`), `bootstrap/cache/revision.txt` (written by `deploy/update.sh`), then the repository's own `.git` data, which it reads from files without running git. The value is rendered by `portal.blade.php` (the `app-version` meta tag feeds the account menu) and is hidden when it cannot be determined.
 

@@ -4,7 +4,13 @@ let groups = [], // [[group name, [[text, weight], ...]], ...]
   STATUS = {}; // { awaitingFill, needsRevision, awaitingVerification, awaitingValidation, validated } => status text
 
 function setQuestions(list) {
-  questions = list.map(q => ({ id: q.id, group: q.group, text: q.text, max: Number(q.max) }));
+  questions = list.map(q => ({
+    id: q.id,
+    group: q.group,
+    text: q.text,
+    max: Number(q.max),
+    rubric: Array.isArray(q.rubric) && q.rubric.length === 5 ? q.rubric : null,
+  }));
   groups = [];
   for (const q of questions) {
     let g = groups.find(x => x[0] === q.group);
@@ -16,6 +22,10 @@ function setQuestions(list) {
   const en = {};
   for (const q of list) {
     if (q.text_en) en[q.text] = q.text_en;
+    if (Array.isArray(q.rubric) && Array.isArray(q.rubric_en))
+      q.rubric.forEach((t, i) => {
+        if (q.rubric_en[i]) en[t] = q.rubric_en[i];
+      });
     if (q.group_en) {
       en[q.group] = q.group_en;
       en[shortName(q.group)] = shortName(q.group_en);
@@ -359,13 +369,258 @@ function averageMatrix(v, stage, qid) {
   const n = Number(raw && typeof raw === 'object' ? raw.score : raw);
   return Number.isFinite(n) ? n : 0;
 }
+/* --- Individual sheet vs team average (verification and validation pages) ---------------------------------------
+   Each assessor fills in a personal sheet: "Nilai Anda" is always their own matrix × weight. The team average (the
+   value the system uses) is shown next to it, previewing the signed-in account's unsaved choices. */
+const SCORE_STAGE = {
+  review: { attr: 'review', key: 'reviewByUser', team: 'verifikator' },
+  validation: { attr: 'fieldscore', key: 'validationByUser', team: 'validator' },
+};
+function ownSavedScore(v, stage, qid) {
+  const s = v?.[SCORE_STAGE[stage].key]?.[session?.username]?.scores?.[qid];
+  return s && Number.isFinite(Number(s.score)) ? Number(s.score) : null;
+}
+function otherScores(v, stage, qid) {
+  return Object.entries(v?.[SCORE_STAGE[stage].key] || {})
+    .filter(([username]) => username !== session?.username)
+    .map(([username, r]) => ({
+      name: r?.name || username,
+      score: Number(r?.scores?.[qid]?.score),
+      comment: r?.scores?.[qid]?.comment || '',
+    }))
+    .filter(x => Number.isFinite(x.score));
+}
+// Live state of one question row, read from its (hidden) score input; an empty value means "not rated yet".
+function scoreRow(v, stage, input) {
+  const qid = input.dataset[SCORE_STAGE[stage].attr];
+  const q = questions.find(x => x.id === qid);
+  const own = input.value === '' ? null : Number(input.value);
+  const saved = ownSavedScore(v, stage, qid);
+  // The team average is only shown after the account has saved, so its own (possibly changed) value always joins it.
+  const counted = saved !== null && own !== null;
+  const others = otherScores(v, stage, qid);
+  const values = others.map(x => x.score).concat(counted ? [own] : []);
+  const team = values.length ? values.reduce((a, n) => a + n, 0) / values.length : null;
+  const othersAvg = others.length ? others.reduce((a, x) => a + x.score, 0) / others.length : null;
+  return {
+    q,
+    own,
+    counted,
+    others,
+    team,
+    count: values.length,
+    dirty: saved !== null && own !== saved,
+    diverges: counted && othersAvg !== null && Math.abs(own - othersAvg) >= 0.25,
+  };
+}
+
+/* --- Scoring rubric (LAMPIRAN 3-A): the five criteria are the choices, so the assessor never leaves the page ---- */
+const MATRIX = [0, 0.25, 0.5, 0.75, 1];
+// Score cell: the value lives in a hidden input (read by assessmentPayload); the button opens the rubric row below.
+// locked: the stage is closed (e.g. already sent to field validation), so the chosen criterion is shown as full text.
+function matrixPicker(stage, q, value, locked = false) {
+  const v = value === null || value === undefined || value === '' ? '' : String(Number(value));
+  const input = `<input type="hidden" data-${SCORE_STAGE[stage].attr}="${q.id}" value="${v}">`;
+  return locked
+    ? `${input}<div class="rubric-static" data-rubric-toggle="${q.id}"></div>`
+    : `${input}<button type="button" class="rubric-toggle" data-click="toggleRubric" data-args='["${q.id}"]' data-rubric-toggle="${q.id}" aria-expanded="false" aria-controls="rubric_${q.id}"></button>`;
+}
+// Notes are often long: an auto-growing textarea while editing, plain readable text once the stage is closed.
+function commentCell(stage, q, value, locked) {
+  const attr = stage === 'review' ? 'data-comment' : 'data-fieldcomment';
+  const label = stage === 'review' ? 'Keterangan verifikasi' : 'Catatan lapangan';
+  if (locked) return value ? `<div class="note-text">${esc(value)}</div>` : '<span class="muted">–</span>';
+  return `<textarea ${attr}="${q.id}" rows="2" data-autogrow aria-label="${label} ${esc(q.id)}" placeholder="${stage === 'review' ? 'Catatan pemeriksa' : 'Catatan validasi'}">${esc(value)}</textarea>`;
+}
+function autogrow(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 2 + 'px';
+}
+document.addEventListener('input', e => {
+  if (e.target.matches && e.target.matches('textarea[data-autogrow]')) autogrow(e.target);
+});
+function rubricRow(q, columns) {
+  const levels = q.rubric || MATRIX.map(() => '');
+  return `<tr class="rubric-row" id="rubric_${q.id}" data-rubric-row="${q.id}" hidden><td colspan="${columns}"><div class="rubric-panel"><div class="small muted">Pilih kriteria yang paling sesuai dengan bukti</div><div class="rubric-options" role="radiogroup" aria-label="Kriteria ${esc(q.id)}">${levels.map((t, k) => `<button type="button" class="rubric-option" role="radio" aria-checked="false" tabindex="-1" data-rubric-option="${q.id}" data-click="pickRubric" data-args='["${q.id}",${k}]'><span class="rubric-level">${MATRIX[k].toLocaleString('id-ID')}</span><span class="rubric-text">${esc(t)}</span></button>`).join('')}</div><div class="small muted">Tekan 1–5 untuk memilih; pertanyaan berikutnya terbuka otomatis. Esc menutup.</div></div></td></tr>`;
+}
+function scoreInput(qid) {
+  return document.querySelector(`[data-review="${qid}"], [data-fieldscore="${qid}"]`);
+}
+function closeRubrics() {
+  document.querySelectorAll('.rubric-row:not([hidden])').forEach(row => {
+    row.hidden = true;
+    document.querySelector(`[data-rubric-toggle="${row.dataset.rubricRow}"]`)?.setAttribute('aria-expanded', 'false');
+  });
+}
+function toggleRubric(qid) {
+  const row = document.querySelector(`[data-rubric-row="${qid}"]`);
+  if (!row) return;
+  const open = row.hidden;
+  closeRubrics();
+  if (!open) return;
+  row.hidden = false;
+  const toggle = document.querySelector(`[data-rubric-toggle="${qid}"]`);
+  toggle?.setAttribute('aria-expanded', 'true');
+  toggle?.closest('tr')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  row.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  (row.querySelector('[aria-checked="true"]') || row.querySelector('.rubric-option'))?.focus({ preventScroll: true });
+}
+// Choosing a criterion sets the matrix, then opens the next question so the sheet can be scored in one pass.
+function pickRubric(qid, level) {
+  const input = scoreInput(qid);
+  if (!input) return;
+  input.value = String(MATRIX[level]);
+  input.dispatchEvent(new Event('change'));
+  const all = [
+    ...document.querySelectorAll(`[${input.hasAttribute('data-review') ? 'data-review' : 'data-fieldscore'}]`),
+  ];
+  const next = all[all.indexOf(input) + 1];
+  if (next) toggleRubric(next.dataset.review || next.dataset.fieldscore);
+  else {
+    closeRubrics();
+    document.querySelector(`[data-rubric-toggle="${qid}"]`)?.focus();
+  }
+}
+// Every question needs a criterion before saving (the server also requires all of them).
+function allRated(stage) {
+  const missing = [...document.querySelectorAll(`[data-${SCORE_STAGE[stage].attr}]`)].filter(x => x.value === '');
+  if (!missing.length) return true;
+  m3Snackbar(`${missing.length} pertanyaan belum dinilai.`);
+  const qid = missing[0].dataset.review || missing[0].dataset.fieldscore;
+  if (document.querySelector(`[data-rubric-row="${qid}"]`)?.hidden) toggleRubric(qid);
+  return false;
+}
+document.addEventListener('keydown', e => {
+  const row = document.querySelector('.rubric-row:not([hidden])');
+  if (!row || document.querySelector('.dialog-backdrop') || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.target.closest && e.target.closest('input, textarea, select')) return;
+  const qid = row.dataset.rubricRow;
+  const options = [...row.querySelectorAll('.rubric-option')];
+  if (/^[1-5]$/.test(e.key)) {
+    e.preventDefault();
+    pickRubric(qid, Number(e.key) - 1);
+  } else if (e.key === 'Escape') {
+    closeRubrics();
+    document.querySelector(`[data-rubric-toggle="${qid}"]`)?.focus();
+  } else if (['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft'].includes(e.key) && options.includes(e.target)) {
+    e.preventDefault();
+    const step = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : -1;
+    options[(options.indexOf(e.target) + step + options.length) % options.length].focus();
+  }
+});
+function ownScoreCell(q) {
+  return `<div class="score-own"><b data-own="${q.id}"></b><span data-own-chip="${q.id}"></span><span data-team-chip="${q.id}"></span><div class="score-team-inline small muted" data-team-inline="${q.id}"></div></div>`;
+}
+function teamScoreCell(q) {
+  return `<span class="muted small score-hold" data-team-hold="${q.id}">Tampil setelah Anda menyimpan</span><details class="score-team" data-team-box="${q.id}" hidden><summary><b data-team="${q.id}"></b> <span class="muted small" data-team-n="${q.id}"></span></summary><div class="small muted score-team-detail" data-team-detail="${q.id}"></div></details>`;
+}
+function scoreSummary(stage, actions) {
+  const use =
+    stage === 'review'
+      ? 'Rata-rata semua verifikator, dipakai sebagai nilai dokumen.'
+      : 'Rata-rata semua validator, dipakai sebagai nilai akhir dan kategori risiko.';
+  return `<div class="panel" style="margin-top:18px"><div class="score-summary"><div class="score-card score-card-mine"><div class="muted small">Nilai Anda</div><div class="risk"><span id="scoreOwn"></span> / ${maxTotal()}</div><div class="small muted"><span id="scoreOwnPct"></span> · <span id="scoreOwnState"></span></div></div><div class="score-card"><div class="muted small"><span>Nilai gabungan</span><span id="scoreTeamNWrap"> · <span id="scoreTeamN"></span></span></div><div id="scoreTeamBox" hidden><div class="risk"><span id="scoreTeam"></span> / ${maxTotal()}</div><div class="small muted">${use}</div><div id="scoreTeamRisk" style="margin-top:8px"></div></div><div id="scoreTeamHold" class="small muted score-hold-card">Rata-rata tim tampil setelah Anda menyimpan penilaian, agar penilaian Anda tidak terpengaruh penilai lain.</div></div></div><div class="row" style="margin-top:16px">${actions}</div></div>`;
+}
+function setScoreHtml(selector, html) {
+  const el = document.querySelector(selector);
+  if (el) el.innerHTML = html;
+}
+function setScoreHidden(selector, hidden) {
+  const el = document.querySelector(selector);
+  if (el) el.hidden = hidden;
+}
+// Recomputes every row and the two totals from the dropdowns on the page. Other assessors' scores stay hidden until
+// the signed-in account has saved its own assessment, so they cannot anchor it.
+function refreshScores(v, stage) {
+  const cfg = SCORE_STAGE[stage];
+  const rows = [...document.querySelectorAll(`[data-${cfg.attr}]`)].map(s => scoreRow(v, stage, s));
+  const revealed = Boolean(v?.[cfg.key]?.[session?.username]);
+  let own = 0;
+  let team = 0;
+  for (const r of rows) {
+    const id = r.q.id;
+    own += (r.own ?? 0) * r.q.max;
+    team += (r.team ?? 0) * r.q.max;
+    const level = r.own === null ? -1 : MATRIX.indexOf(r.own);
+    const locked = document.querySelector(`[data-rubric-toggle="${id}"]`)?.classList.contains('rubric-static');
+    setScoreHtml(
+      `[data-rubric-toggle="${id}"]`,
+      level < 0
+        ? `<span class="rubric-level rubric-level-empty">–</span><span class="rubric-text">${locked ? 'Belum dinilai' : 'Pilih kriteria'}</span>`
+        : `<span class="rubric-level">${MATRIX[level].toLocaleString('id-ID')}</span><span class="rubric-text">${esc(r.q.rubric?.[level] || '')}</span>`
+    );
+    document.querySelectorAll(`[data-rubric-option="${id}"]`).forEach((b, k) => {
+      b.setAttribute('aria-checked', String(k === level));
+      b.tabIndex = k === Math.max(level, 0) ? 0 : -1;
+    });
+    setScoreHtml(`[data-own="${id}"]`, r.own === null ? '–' : fmtScore(r.own * r.q.max));
+    setScoreHtml(`[data-own-chip="${id}"]`, r.dirty ? '<span class="tag tag-warning">Belum disimpan</span>' : '');
+    setScoreHidden(`[data-team-hold="${id}"]`, revealed);
+    setScoreHidden(`[data-team-box="${id}"]`, !revealed);
+    if (!revealed) {
+      setScoreHtml(`[data-team-inline="${id}"]`, '');
+      setScoreHtml(`[data-team-chip="${id}"]`, '');
+      continue;
+    }
+    const teamText = r.team === null ? '–' : fmtScore(r.team * r.q.max);
+    setScoreHtml(`[data-team="${id}"]`, teamText);
+    setScoreHtml(`[data-team-inline="${id}"]`, `<span>Rata-rata tim</span> <b>${teamText}</b>`);
+    setScoreHtml(
+      `[data-team-n="${id}"]`,
+      r.count === 0 ? 'Belum ada penilai' : r.count === 1 && r.counted ? 'Baru Anda' : `${r.count} penilai`
+    );
+    setScoreHtml(
+      `[data-team-detail="${id}"]`,
+      (r.counted ? `<div><b>Anda</b>: ${fmtScore(r.own)}</div>` : '') +
+        r.others
+          .map(x => `<div>${esc(x.name)}: ${fmtScore(x.score)}${x.comment ? ` — ${esc(x.comment)}` : ''}</div>`)
+          .join('') || '<div>Belum dinilai</div>'
+    );
+    setScoreHtml(
+      `[data-team-chip="${id}"]`,
+      !r.others.length || !r.counted
+        ? ''
+        : r.diverges
+          ? '<span class="tag tag-warning">Beda dari tim</span>'
+          : '<span class="tag tag-success">Sejalan</span>'
+    );
+  }
+  setScoreHtml('#scoreOwn', fmtScore(own));
+  setScoreHtml('#scoreOwnPct', fmtScore((own / maxTotal()) * 100) + '%');
+  const unrated = rows.filter(r => r.own === null).length;
+  setScoreHtml(
+    '#scoreOwnState',
+    unrated
+      ? `${unrated} pertanyaan belum dinilai`
+      : !revealed
+        ? 'Belum disimpan'
+        : rows.some(r => r.dirty)
+          ? 'Ada perubahan yang belum disimpan'
+          : 'Tersimpan'
+  );
+  setScoreHidden('#scoreTeamBox', !revealed);
+  setScoreHidden('#scoreTeamHold', revealed);
+  setScoreHidden('#scoreTeamNWrap', !revealed);
+  if (!revealed) return;
+  setScoreHtml('#scoreTeam', fmtScore(team));
+  setScoreHtml('#scoreTeamN', `${Object.keys(v?.[cfg.key] || {}).length} ${cfg.team}`);
+  setScoreHtml('#scoreTeamRisk', badgeRisk((team / maxTotal()) * 100));
+}
+function bindScoreInputs(v, stage) {
+  document.querySelectorAll(`[data-${SCORE_STAGE[stage].attr}]`).forEach(s => {
+    s.onchange = () => refreshScores(v, stage);
+  });
+  refreshScores(v, stage);
+  document.querySelectorAll('#view textarea[data-autogrow]').forEach(autogrow);
+}
 function maxTotal() {
   return questions.reduce((s, q) => s + Number(q.max), 0);
 }
 function score(v, stage) {
   return questions.reduce((sum, q) => sum + averageMatrix(v, stage, q.id) * q.max, 0);
 }
-function reviewerSummary(v, key) {
+// hideOthers: the viewer is still filling in this stage, so other assessors' totals are not shown yet.
+function reviewerSummary(v, key, hideOthers = false) {
   const records = Object.entries(v?.[key] || {});
   if (!records.length) return '<div class="empty small">Belum ada penilaian yang disimpan.</div>';
   const stageName = key === 'reviewByUser' ? 'Verifikator' : 'Validator';
@@ -373,7 +628,7 @@ function reviewerSummary(v, key) {
     .map(([username, r]) => {
       const vals = Object.values(r.scores || {}).filter(x => x && Number.isFinite(Number(x.score)));
       const total = questions.reduce((a, q) => a + Number(r.scores?.[q.id]?.score || 0) * q.max, 0);
-      return `<tr><td><b>${esc(r.name || username)}</b><br><small>${esc(username)}</small></td><td>${r.date ? new Date(r.date).toLocaleString('id-ID') : '-'}</td><td>${vals.length} / ${questions.length}</td><td>${fmtScore(total)} / ${maxTotal()} (${fmtScore((total / maxTotal()) * 100)}%)</td></tr>`;
+      return `<tr><td><b>${esc(r.name || username)}</b>${username === session?.username ? ' <span class="tag tag-primary">Anda</span>' : ''}<br><small>${esc(username)}</small></td><td>${r.date ? new Date(r.date).toLocaleString('id-ID') : '-'}</td><td>${vals.length} / ${questions.length}</td><td>${hideOthers && username !== session?.username ? '<span class="muted">Tampil setelah Anda menyimpan</span>' : `${fmtScore(total)} / ${maxTotal()} (${fmtScore((total / maxTotal()) * 100)}%)`}</td></tr>`;
     })
     .join('')}</tbody></table></div>`;
 }
@@ -1072,75 +1327,49 @@ function picker(status) {
 }
 function verificationPage(el) {
   let v = autoPick(STATUS.awaitingVerification);
+  const locked = Boolean(v) && v.status !== STATUS.awaitingVerification;
   el.innerHTML = `<div class="heading"><div><div class="eyebrow">Langkah 3 dari 5</div><h1>Verifikasi Dokumen</h1><p>Unit Keselamatan menilai dokumen dan memberi catatan per pertanyaan.</p></div></div>${picker(STATUS.awaitingVerification)}${
     !v
       ? '<div class="panel empty">Pilih vendor untuk mulai verifikasi.</div>'
-      : `<div class="panel"><div class="row between"><div><h2>${esc(v.name)}</h2><p class="muted small">${esc(v.id)} · ${esc(v.scope)}</p></div>${statusTag(v.status)}</div><div class="formgrid">${field('Tanggal verifikasi dokumen', 'docDate', v.docDate, false, 'date')}${field('Nama evaluator', 'evaluator', v.evaluator || '')}</div><div class="role-note">Setiap akun verifikator menyimpan rekam penilaiannya sendiri. Lebih dari satu verifikator dapat menilai pengajuan yang sama.</div><div class="panel" style="margin-top:14px"><h2>Rekap penilaian seluruh verifikator</h2><p class="muted small">Data dapat dilihat bersama. Nilai per kriteria dan total dihitung dari rata-rata skor verifikator yang telah menyimpan penilaian.</p>${reviewerSummary(v, 'reviewByUser')}</div><div class="note small">Skala matriks sesuai formulir: 0; 0,25; 0,5; 0,75; 1. Nilai dicapai = matriks × nilai maksimum. Nilai total dokumen bersifat sementara; nilai akhir mengikuti hasil validasi lapangan.</div>${groups
+      : `<div class="panel"><div class="row between"><div><h2>${esc(v.name)}</h2><p class="muted small">${esc(v.id)} · ${esc(v.scope)}</p></div>${statusTag(v.status)}</div><div class="formgrid">${field('Tanggal verifikasi dokumen', 'docDate', v.docDate, false, 'date')}${field('Nama evaluator', 'evaluator', v.evaluator || '')}</div><div class="role-note">Setiap akun verifikator menyimpan rekam penilaiannya sendiri. Lebih dari satu verifikator dapat menilai pengajuan yang sama.</div><div class="panel" style="margin-top:14px"><h2>Rekap penilaian seluruh verifikator</h2><p class="muted small">Data dapat dilihat bersama. Nilai per kriteria dan total dihitung dari rata-rata skor verifikator yang telah menyimpan penilaian.</p>${reviewerSummary(v, 'reviewByUser', !v.reviewByUser?.[session?.username])}</div><div class="note small">Skala matriks sesuai formulir: 0; 0,25; 0,5; 0,75; 1. Nilai Anda = matriks Anda × bobot. Rata-rata tim menggabungkan semua verifikator dan menjadi nilai dokumen sementara; nilai akhir mengikuti hasil validasi lapangan.</div>${groups
           .map(
             g =>
-              `<div style="margin-top:20px"><h2>${esc(g[0])}</h2><div class="tablewrap"><table><thead><tr><th>Pertanyaan</th><th>Bobot</th><th>Jawaban vendor</th><th>Matriks dokumen</th><th>Nilai</th><th>Keterangan verifikasi</th></tr></thead><tbody>${questions
+              `<div style="margin-top:20px"><h2>${esc(g[0])}</h2><div class="tablewrap"><table class="score-table"><thead><tr><th>Pertanyaan</th><th>Bobot</th><th>Jawaban vendor</th><th class="score-mine">Matriks Anda</th><th class="score-mine">Nilai Anda</th><th class="col-team">Rata-rata tim</th><th>Keterangan verifikasi</th></tr></thead><tbody>${questions
                 .filter(q => q.group === g[0])
                 .map(
                   q =>
-                    `<tr><td>${esc(q.id)}. ${esc(q.text)}</td><td>${q.max}</td><td>${statusTag(v.answers[q.id]?.answer || 'Belum diisi')}<br><small>${v.answers[q.id]?.files?.length || v.answers[q.id]?.fileId ? (v.answers[q.id]?.files?.length ? v.answers[q.id].files.map((f, i) => `<a href="#" data-click="openEvidence" data-args='["${v.id}","${q.id}","${f.id}"]'>Buka ${i + 1}: ${esc(f.name)}</a>`).join('<br>') : `<a href="#" data-click="openEvidence" data-args='["${v.id}","${q.id}"]'>Buka: ${esc(v.answers[q.id].fileName || 'File bukti')}</a>`) : 'Tanpa bukti'}</small></td><td><select data-review="${q.id}">${[0, 0.25, 0.5, 0.75, 1].map(n => `<option value="${n}" ${Number(v.reviewByUser?.[session?.username]?.scores?.[q.id]?.score ?? v.review[q.id]?.score ?? 0) === n ? 'selected' : ''}>${n.toLocaleString('id-ID')}</option>`).join('')}</select></td><td><b id="val_${q.id}">${fmtScore(averageMatrix(v, 'review', q.id) * q.max)}</b></td><td><input data-comment="${q.id}" value="${esc(v.reviewByUser?.[session?.username]?.scores?.[q.id]?.comment ?? v.review[q.id]?.comment ?? '')}" placeholder="Catatan pemeriksa"></td></tr>`
+                    `<tr><td>${esc(q.id)}. ${esc(q.text)}</td><td>${q.max}</td><td>${statusTag(v.answers[q.id]?.answer || 'Belum diisi')}<br><small>${v.answers[q.id]?.files?.length || v.answers[q.id]?.fileId ? (v.answers[q.id]?.files?.length ? v.answers[q.id].files.map((f, i) => `<a href="#" data-click="openEvidence" data-args='["${v.id}","${q.id}","${f.id}"]'>Buka ${i + 1}: ${esc(f.name)}</a>`).join('<br>') : `<a href="#" data-click="openEvidence" data-args='["${v.id}","${q.id}"]'>Buka: ${esc(v.answers[q.id].fileName || 'File bukti')}</a>`) : 'Tanpa bukti'}</small></td><td class="score-mine">${matrixPicker('review', q, v.reviewByUser?.[session?.username]?.scores?.[q.id]?.score ?? v.review[q.id]?.score, locked)}</td><td class="score-mine">${ownScoreCell(q)}</td><td class="col-team">${teamScoreCell(q)}</td><td class="note-cell">${commentCell('review', q, v.reviewByUser?.[session?.username]?.scores?.[q.id]?.comment ?? v.review[q.id]?.comment ?? '', locked)}</td></tr>${locked ? '' : rubricRow(q, 7)}`
                 )
                 .join('')}</tbody></table></div></div>`
           )
           .join(
             ''
-          )}<div class="panel" style="margin-top:18px"><div class="row between"><div><div class="muted">Nilai dokumen sementara</div><div class="risk" id="docTotal">${fmtScore(score(v, 'review'))} / ${maxTotal()}</div></div><div id="docRisk">${badgeRisk((score(v, 'review') / maxTotal()) * 100)}</div></div><div class="row" style="margin-top:16px"><button class="btn btn-filled"  data-click="saveReview">Simpan Verifikasi</button><button class="btn btn-accent" data-click="submitReview">Kirim ke Validasi Lapangan →</button><button class="btn btn-tonal" data-click="returnCorrection">Minta Perbaikan</button></div></div>`
+          )}${scoreSummary('review', '<button class="btn btn-filled"  data-click="saveReview">Simpan Verifikasi</button><button class="btn btn-accent" data-click="submitReview">Kirim ke Validasi Lapangan →</button><button class="btn btn-tonal" data-click="returnCorrection">Minta Perbaikan</button>')}`
   }`;
-  if (v) {
-    document.querySelectorAll('[data-review]').forEach(
-      s =>
-        (s.onchange = () => {
-          let q = questions.find(q => q.id === s.dataset.review);
-          document.getElementById('val_' + q.id).textContent = fmtScore(Number(s.value) * q.max);
-          let total = [...document.querySelectorAll('[data-review]')].reduce(
-            (a, x) => a + Number(x.value) * questions.find(q => q.id === x.dataset.review).max,
-            0
-          );
-          document.getElementById('docTotal').textContent = fmtScore(total) + ' / ' + maxTotal();
-          document.getElementById('docRisk').innerHTML = badgeRisk((total / maxTotal()) * 100);
-        })
-    );
-  }
+  if (v) bindScoreInputs(v, 'review');
 }
 function validationPage(el) {
   let v = autoPick(STATUS.awaitingValidation);
+  const locked = Boolean(v) && v.status !== STATUS.awaitingValidation;
   el.innerHTML = `<div class="heading"><div><div class="eyebrow">Langkah 4 dari 5</div><h1>Validasi Dokumen & Lapangan</h1><p>Validasi dilakukan Unit Keselamatan atau Ahli Keselamatan Daerah sesuai penetapan Unit Keselamatan.</p></div></div>${picker(STATUS.awaitingValidation)}${
     !v
       ? '<div class="panel empty">Pilih vendor untuk validasi.</div>'
-      : `<div class="panel"><div class="row between"><div><h2>${esc(v.name)}</h2><p class="muted small">${esc(v.scope)}</p></div>${statusTag(v.status)}</div><div class="formgrid">${field('Tanggal validasi lapangan', 'fieldDate', v.fieldDate, false, 'date')}${field('Validator / Ahli Keselamatan Daerah', 'validator', v.validator || '')}${field('Lokasi validasi', 'fieldLocation', v.fieldLocation || '')}${field('Hasil tinjauan', 'fieldResult', v.fieldResult || 'Belum dilakukan', false, 'select', ['Belum dilakukan', 'Sesuai', 'Sesuai dengan catatan', 'Tidak sesuai'])}</div><div class="role-note">Setiap akun validator dapat menyimpan rekam validasinya sendiri. Lebih dari satu validator dapat memvalidasi pengajuan yang sama.</div><div class="panel" style="margin-top:14px"><h2>Hasil verifikasi dokumen</h2><p class="muted small">Ringkasan seluruh verifikator. Nilai dokumen per kriteria adalah rata-rata skor yang sudah disimpan; catatan tiap verifikator ditampilkan agar dapat ditinjau validator.</p>${reviewerSummary(v, 'reviewByUser')}</div><div class="panel" style="margin-top:14px"><h2>Rekap penilaian seluruh validator</h2><p class="muted small">Nilai akhir per kriteria dihitung dari rata-rata skor semua validator yang sudah menyimpan penilaian.</p>${reviewerSummary(v, 'validationByUser')}</div><div class="note small">Masukkan nilai matriks berdasarkan bukti yang telah dikonfirmasi saat validasi lapangan. Nilai lapangan adalah nilai akhir penetapan kategori RCHSEMS.</div>${groups
+      : `<div class="panel"><div class="row between"><div><h2>${esc(v.name)}</h2><p class="muted small">${esc(v.scope)}</p></div>${statusTag(v.status)}</div><div class="formgrid">${field('Tanggal validasi lapangan', 'fieldDate', v.fieldDate, false, 'date')}${field('Validator / Ahli Keselamatan Daerah', 'validator', v.validator || '')}${field('Lokasi validasi', 'fieldLocation', v.fieldLocation || '')}${field('Hasil tinjauan', 'fieldResult', v.fieldResult || 'Belum dilakukan', false, 'select', ['Belum dilakukan', 'Sesuai', 'Sesuai dengan catatan', 'Tidak sesuai'])}</div><div class="role-note">Setiap akun validator dapat menyimpan rekam validasinya sendiri. Lebih dari satu validator dapat memvalidasi pengajuan yang sama.</div><div class="panel" style="margin-top:14px"><h2>Hasil verifikasi dokumen</h2><p class="muted small">Ringkasan seluruh verifikator. Nilai dokumen per kriteria adalah rata-rata skor yang sudah disimpan; catatan tiap verifikator ditampilkan agar dapat ditinjau validator.</p>${reviewerSummary(v, 'reviewByUser')}</div><div class="panel" style="margin-top:14px"><h2>Rekap penilaian seluruh validator</h2><p class="muted small">Nilai akhir per kriteria dihitung dari rata-rata skor semua validator yang sudah menyimpan penilaian.</p>${reviewerSummary(v, 'validationByUser', !v.validationByUser?.[session?.username])}</div><div class="note small">Masukkan nilai matriks berdasarkan bukti yang telah dikonfirmasi saat validasi lapangan. Nilai Anda = matriks Anda × bobot. Rata-rata tim menggabungkan semua validator dan menjadi nilai akhir penetapan kategori RCHSEMS.</div>${groups
           .map(
             g =>
-              `<div style="margin-top:20px"><h2>${esc(g[0])}</h2><div class="tablewrap"><table><thead><tr><th>Pertanyaan</th><th>Bobot</th><th>Rata-rata verifikasi dokumen</th><th>Detail skor verifikator</th><th>Matriks lapangan</th><th>Nilai lapangan</th><th>Catatan lapangan</th></tr></thead><tbody>${questions
+              `<div style="margin-top:20px"><h2>${esc(g[0])}</h2><div class="tablewrap"><table class="score-table"><thead><tr><th>Pertanyaan</th><th>Bobot</th><th>Rata-rata verifikasi dokumen</th><th class="score-mine">Matriks Anda</th><th class="score-mine">Nilai Anda</th><th class="col-team">Rata-rata tim</th><th>Catatan lapangan</th></tr></thead><tbody>${questions
                 .filter(q => q.group === g[0])
                 .map(
                   q =>
-                    `<tr><td>${esc(q.id)}. ${esc(q.text)}</td><td>${q.max}</td><td><b>${fmtScore(averageMatrix(v, 'review', q.id) * q.max)}</b><br><small>${fmtScore(averageMatrix(v, 'review', q.id))} / 1</small></td><td><small>${reviewerCriterionDetails(v, q.id, 'reviewByUser')}</small></td><td><select data-fieldscore="${q.id}">${[0, 0.25, 0.5, 0.75, 1].map(n => `<option value="${n}" ${Number(v.validationByUser?.[session?.username]?.scores?.[q.id]?.score ?? averageMatrix(v, 'validation', q.id) ?? averageMatrix(v, 'review', q.id)) === n ? 'selected' : ''}>${n.toLocaleString('id-ID')}</option>`).join('')}</select></td><td><b id="fv_${q.id}">${fmtScore(Number(v.validationByUser?.[session?.username]?.scores?.[q.id]?.score ?? v.validation[q.id]?.score ?? v.review[q.id]?.score ?? 0) * q.max)}</b></td><td><input data-fieldcomment="${q.id}" value="${esc(v.validationByUser?.[session?.username]?.scores?.[q.id]?.comment ?? v.validation[q.id]?.comment ?? '')}" placeholder="Catatan validasi"></td></tr>`
+                    `<tr><td>${esc(q.id)}. ${esc(q.text)}</td><td>${q.max}</td><td><details class="score-team"><summary><b>${fmtScore(averageMatrix(v, 'review', q.id) * q.max)}</b> <span class="muted small">${fmtScore(averageMatrix(v, 'review', q.id))} / 1</span></summary><div class="small muted score-team-detail">${reviewerCriterionDetails(v, q.id, 'reviewByUser')}</div></details></td><td class="score-mine">${matrixPicker('validation', q, v.validationByUser?.[session?.username]?.scores?.[q.id]?.score, locked)}</td><td class="score-mine">${ownScoreCell(q)}</td><td class="col-team">${teamScoreCell(q)}</td><td class="note-cell">${commentCell('validation', q, v.validationByUser?.[session?.username]?.scores?.[q.id]?.comment ?? v.validation[q.id]?.comment ?? '', locked)}</td></tr>${locked ? '' : rubricRow(q, 7)}`
                 )
                 .join('')}</tbody></table></div></div>`
           )
           .join(
             ''
-          )}<div class="panel" style="margin-top:18px"><div class="row between"><div><div class="muted">Rata-rata nilai lapangan</div><div class="risk" id="fieldTotal">${fmtScore(score(v, 'validation'))} / ${maxTotal()}</div></div><div id="fieldRisk">${badgeRisk((score(v, 'validation') / maxTotal()) * 100)}</div></div><div class="row" style="margin-top:16px"><button class="btn btn-filled"  data-click="saveValidation">Simpan Validasi</button><button class="btn btn-accent" data-click="finalizeValidation">Tetapkan Hasil →</button></div></div>`
+          )}${scoreSummary('validation', '<button class="btn btn-filled"  data-click="saveValidation">Simpan Validasi</button><button class="btn btn-accent" data-click="finalizeValidation">Tetapkan Hasil →</button>')}`
   }`;
-  if (v) {
-    document.querySelectorAll('[data-fieldscore]').forEach(
-      s =>
-        (s.onchange = () => {
-          let q = questions.find(q => q.id === s.dataset.fieldscore);
-          document.getElementById('fv_' + q.id).textContent = fmtScore(Number(s.value) * q.max);
-          let total = [...document.querySelectorAll('[data-fieldscore]')].reduce(
-            (a, x) => a + Number(x.value) * questions.find(q => q.id === x.dataset.fieldscore).max,
-            0
-          );
-          document.getElementById('fieldTotal').textContent = fmtScore(total) + ' / ' + maxTotal();
-          document.getElementById('fieldRisk').innerHTML = badgeRisk((total / maxTotal()) * 100);
-        })
-    );
-  }
+  if (v) bindScoreInputs(v, 'validation');
 }
 
 function accountsPage(el) {
@@ -1707,6 +1936,7 @@ async function saveAssessment(stage, act) {
   });
 }
 async function saveReview() {
+  if (!allRated('review')) return;
   if (
     !(await m3Confirm(
       'Simpan penilaian verifikasi?',
@@ -1718,6 +1948,7 @@ async function saveReview() {
   return saveAssessment('review', 'save');
 }
 async function submitReview() {
+  if (!allRated('review')) return;
   if (
     !(await m3Confirm(
       'Teruskan ke validasi lapangan?',
@@ -1729,6 +1960,7 @@ async function submitReview() {
   return saveAssessment('review', 'advance');
 }
 async function returnCorrection() {
+  if (!allRated('review')) return;
   if (
     !(await m3Confirm(
       'Kembalikan ke vendor?',
@@ -1741,6 +1973,7 @@ async function returnCorrection() {
   return saveAssessment('review', 'return');
 }
 async function saveValidation() {
+  if (!allRated('validation')) return;
   if (
     !(await m3Confirm(
       'Simpan penilaian validasi?',
@@ -1752,6 +1985,7 @@ async function saveValidation() {
   return saveAssessment('validation', 'save');
 }
 function finalizeValidation() {
+  if (!allRated('validation')) return;
   m3Confirm(
     'Tetapkan hasil akhir?',
     'Penilaian lapangan akan dikunci dan tidak dapat diubah. Pastikan seluruh validator telah menyimpan nilainya.',

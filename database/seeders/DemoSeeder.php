@@ -17,6 +17,8 @@ class DemoSeeder extends Seeder
         foreach (['admin', 'vendor', 'verifikator', 'validator', 'pengadaan'] as $role) {
             User::firstOrCreate(['email' => $role.'@example.test'], ['name' => ucfirst($role).' Demo', 'password' => 'LocalDemo2026!', 'roles' => [$role]]);
         }
+        // A second verifier, to demo (and test) an assessment shared by several verifiers.
+        User::firstOrCreate(['email' => 'verifikator2@example.test'], ['name' => 'Verifikator Dua Demo', 'password' => 'LocalDemo2026!', 'roles' => ['verifikator']]);
         $u = User::where('email', 'vendor@example.test')->first();
         Vendor::firstOrCreate(['id' => 'RCH-DEMO-001'], ['owner_id' => $u->id, 'name' => 'PT Vendor Contoh (Demo)', 'nib' => '1234567890123', 'email' => $u->email, 'pic' => 'PIC Demo', 'business' => 'Pemeliharaan', 'scope' => 'Pemeliharaan fasilitas', 'address' => 'Jakarta', 'status' => 'Menunggu Pengisian']);
     }
