@@ -38,7 +38,7 @@ The following rules must be agreed and tested by the PT KAI process owner; do no
 ## UAT: vendor process
 
 - [ ] Vendor registration and required-field validation work.
-- [ ] The questionnaire shows the 49 questions as in the mockup with the correct weights.
+- [ ] The questionnaire shows the 49 questions with the correct weights, and each question's five scoring criteria match LAMPIRAN 3-A.
 - [ ] Uploading many documents works, extensions and size are validated (including a file of about 15 MB), progress is visible during the upload, and downloads are only possible for authorized parties.
 - [ ] Draft saving: fill in part of the form, close the browser, continue from another device; the process checkpoints show what is filled in; the **Lanjutkan pengisian** ("Continue filling in") button opens the first unanswered question; attachments upload by themselves as soon as they are picked (progress is visible and a failed upload can be retried).
 - [ ] A draft that has not been submitted is not visible to the Verifier, Validator, and Procurement (including its attachments).

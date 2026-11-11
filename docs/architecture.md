@@ -38,7 +38,6 @@ A single-page application (SPA) in plain JavaScript (no framework). `/` serves t
 | `database/migrations`, `database/seeders`, `database/data` | Schema, seeders, and the question master |
 | `deploy/` | Nginx and PHP configuration, plus `update.sh` |
 | `tests/Feature` | Workflow and security tests |
-| `RCHSEMS_CSMS_PT_KAI_MVP_v11.html` | The original mockup, kept for reference |
 
 Asset URLs carry `?v=<file modification time>` (in `portal.blade.php`), so browsers fetch the new version automatically after a deploy.
 

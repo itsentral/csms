@@ -6,7 +6,7 @@ Laravel 13 · PHP 8.3+ · MySQL 8 · Material 3 interface (Google Sans, KAI colo
 
 Main features: the pre-qualification → verification → validation → result workflow, a pre-qualification form that is split into processes with progress checkpoints and can be resumed with one click, Excel export, two languages (ID/EN), two-factor authentication (TOTP) for internal accounts, forgot password by email, and email notifications for status changes.
 
-The application was built from the mockup `RCHSEMS_CSMS_PT_KAI_MVP_v11.html` (kept in the root as a reference): 49 questions in 8 groups, a total weight of 565, the assessor summary, risk categories, and the certificate print design. Data and authority are processed on the Laravel/MySQL server. Node.js, Vite, and a CDN are not needed at runtime.
+The application was first built from an HTML mockup (`RCHSEMS_CSMS_PT_KAI_MVP_v11.html`, removed from the repository in commit 81a0d1b and still available in its history): 49 questions in 8 groups, a total weight of 565, the assessor summary, risk categories, and the certificate print design. The scoring criteria per question come from the pre-qualification form LAMPIRAN 3-A and are stored in `database/data/questions.json`. Data and authority are processed on the Laravel/MySQL server. Node.js, Vite, and a CDN are not needed at runtime.
 
 ## Quick start
 

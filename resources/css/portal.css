@@ -490,16 +490,16 @@
 
   /* Scoring rubric: the five criteria are the choices (LAMPIRAN 3-A) */
   .rubric-toggle {
-    @apply flex w-56 items-start gap-2 rounded-md border border-outline-variant bg-surface-container-lowest p-2 text-left
+    @apply flex w-52 items-start gap-2 rounded-md border border-outline-variant bg-surface-container-lowest p-2 text-left
       text-body-small text-on-surface transition-colors duration-150 hover:border-outline focus-visible:outline-2
       focus-visible:outline-offset-2 focus-visible:outline-primary;
   }
   .rubric-toggle[aria-expanded="true"] { @apply border-primary bg-primary-container/40; }
-  .rubric-static { @apply flex w-64 items-start gap-2 whitespace-normal text-body-small text-on-surface; }
+  .rubric-static { @apply flex w-52 items-start gap-2 whitespace-normal text-body-small text-on-surface; }
 
   /* Assessor notes: long text, so a growing textarea while editing and plain text once closed */
-  .score-table td.note-cell { @apply min-w-64 whitespace-normal align-top; }
-  .score-table tr:not(.rubric-row) > td:first-child { @apply min-w-60; }
+  .score-table td.note-cell { @apply min-w-56 whitespace-normal align-top; }
+  .score-table tr:not(.rubric-row) > td:first-child { @apply min-w-48; }
   .score-table textarea[data-autogrow] {
     @apply block max-h-80 min-h-16 w-full resize-y rounded-md border border-outline-variant bg-surface-container-lowest px-2.5 py-2
       text-body-medium leading-snug text-on-surface transition-colors duration-200 hover:border-outline focus:border-primary

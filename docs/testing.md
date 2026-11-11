@@ -26,7 +26,7 @@ The shell environment overrides the PHPUnit defaults. `RefreshDatabase` creates 
 | Access | The shell is available to guests; the API rejects guests and inactive accounts; API errors are JSON |
 | Accounts | Registration cannot escalate roles; internal accounts with multiple roles; safe deactivation (your own account and admins are protected); changing a password ends other sessions |
 | Isolation | A vendor cannot see or change another vendor's data; permissions per role |
-| Master data | 49 questions and a total weight of 565 as in the mockup; risk category thresholds; `/api/state` provides the question master and status constants |
+| Master data | 49 questions and a total weight of 565; a five-level scoring rubric (ID and EN) per question; risk category thresholds; `/api/state` provides the question master and status constants |
 | Assessment flow | Two verifiers and two validators with averages; status transitions and the final lock; invalid scores or stages are rejected; saving verifier scores after forwarding; return for correction and round archiving |
 | Draft and attachments | Partial save and resume; the draft is locked after submission; submission names the unanswered questions; the draft is visible to admins only (including attachment download); private evidence and authorized downloads; the owner deletes draft attachments but not after submission |
 | Deletion | An admin deletes a vendor together with its files; the owner's account remains |
