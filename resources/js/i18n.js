@@ -376,6 +376,16 @@
     Kirim: 'Submit',
     'Setelah dikirim, jawaban dan lampiran dikunci dan diproses oleh verifikator. Pastikan semuanya sudah benar.':
       'Once submitted, answers and attachments are locked and processed by the verifier. Make sure everything is correct.',
+    'Vendor sudah berada di tahap validasi lapangan. Nilai verifikasi masih dapat diperbaiki; setiap perubahan dicatat di log audit.':
+      'The vendor is already in field validation. Verification scores can still be corrected; every change is recorded in the audit log.',
+    'Pengajuan sedang diproses. Jawaban terkunci, tetapi Anda masih dapat menambah lampiran untuk dokumen yang baru ditemukan. Lampiran yang sudah diunggah tidak dapat dihapus atau diganti.':
+      'The submission is being processed. Answers are locked, but you can still add attachments for documents found later. Files already uploaded cannot be deleted or replaced.',
+    'Buang draft?': 'Discard draft?',
+    'Buang draft': 'Discard draft',
+    'Isian yang belum disimpan dihapus dan formulir kembali ke data yang tersimpan.':
+      'Unsaved input will be deleted and the form returns to the saved data.',
+    'Draft belum tersimpan di server. Periksa koneksi; isian Anda masih ada di halaman ini.':
+      'The draft has not been saved to the server. Check your connection; your input is still on this page.',
     'Simpan penilaian verifikasi?': 'Save verification assessment?',
     'Nilai dan catatan Anda disimpan ke server. Anda masih dapat memperbaruinya nanti.':
       'Your scores and notes will be saved to the server. You can still update them later.',
@@ -571,6 +581,18 @@
       /^(.+): maksimal 15 MB\.$/,
       function (m) {
         return m[1] + ': maximum 15 MB.';
+      },
+    ],
+    [
+      /^Draft yang belum disimpan dipulihkan \(tersimpan (.+)\)\. Isian ini belum menjadi data tersimpan\.$/,
+      function (m) {
+        return 'Unsaved draft restored (saved ' + m[1] + '). This input is not saved data yet.';
+      },
+    ],
+    [
+      /^Draft tersimpan otomatis ke server pukul (.+)\. Belum disimpan sebagai data\.$/,
+      function (m) {
+        return 'Draft saved automatically to the server at ' + m[1] + '. Not saved as data yet.';
       },
     ],
     [

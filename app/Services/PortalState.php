@@ -44,6 +44,7 @@ class PortalState
                     return $q;
                 }),
             'vendors' => $vendors,
+            'drafts' => Drafts::forUser($viewer),
             'accounts' => $isAdmin ? User::where('active', true)->get()->map(fn (User $u) => $u->publicData()) : [],
         ];
     }

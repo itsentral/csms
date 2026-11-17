@@ -32,13 +32,15 @@ class AssessmentService
             }
 
             $metadata = array_intersect_key($d, array_flip($stage === 'review' ? ['docDate', 'evaluator'] : ['fieldDate', 'validator', 'fieldLocation', 'fieldResult']));
+            $changes = $this->scoreChanges($user, $v, $stage, $d['scores']);
             $assessmentId = $this->storeScores($user, $v, $stage, $metadata, $d['scores']);
             foreach ($metadata as $key => $value) {
                 $v->$key = $value ?? (in_array($key, ['docDate', 'fieldDate']) ? null : '');
             }
             $this->transition($v, $d['action']);
             $v->save();
-            Portal::audit($stage.'_'.$d['action'], $v->id, ['assessment_id' => $assessmentId, 'scores' => $d['scores'], 'metadata' => $metadata]);
+            Drafts::forget($user, $stage.':'.$v->id);
+            Portal::audit($stage.'_'.$d['action'], $v->id, ['assessment_id' => $assessmentId, 'scores' => $d['scores'], 'metadata' => $metadata, 'status' => $v->status, 'changes' => $changes]);
 
             return [$v, Portal::serialize($v)];
         });
@@ -48,6 +50,31 @@ class AssessmentService
         }
 
         return $out[1];
+    }
+
+    /**
+     * Before/after of every criterion this user is changing, so corrections made after the first save (including after the
+     * vendor was forwarded to field validation) can be traced. Empty on the first save.
+     *
+     * @return array<int|string, array{from: array{score: mixed, comment: string}, to: array{score: mixed, comment: string}}>
+     */
+    private function scoreChanges(User $user, Vendor $v, string $stage, array $scores): array
+    {
+        $old = DB::table('assessment_scores')
+            ->join('assessments', 'assessments.id', '=', 'assessment_scores.assessment_id')
+            ->where(['assessments.vendor_id' => $v->id, 'assessments.user_id' => $user->id, 'assessments.stage' => $stage])
+            ->get(['assessment_scores.question_id', 'assessment_scores.score', 'assessment_scores.comment'])
+            ->keyBy('question_id');
+        $changes = [];
+        foreach ($scores as $s) {
+            $prev = $old->get($s['question_id']);
+            $to = ['score' => $s['score'], 'comment' => $s['comment'] ?? ''];
+            if ($prev && ((float) $prev->score !== (float) $s['score'] || (string) $prev->comment !== $to['comment'])) {
+                $changes[$s['question_id']] = ['from' => ['score' => $prev->score, 'comment' => (string) $prev->comment], 'to' => $to];
+            }
+        }
+
+        return $changes;
     }
 
     private function storeScores(User $user, Vendor $v, string $stage, array $metadata, array $scores): int

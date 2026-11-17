@@ -33,7 +33,7 @@ function setQuestions(list) {
   }
   if (window.I18N) I18N.extend(en);
 }
-let db = { vendors: [] },
+let db = { vendors: [], drafts: {} },
   accounts = [],
   session = null,
   authMode = 'login',
@@ -56,8 +56,6 @@ function setAuthSubmitting(isSubmitting) {
   button.disabled = isSubmitting;
   const [idle, busy] = AUTH_BUTTON[authMode] || AUTH_BUTTON.login;
   text.textContent = isSubmitting ? busy : idle;
-  button.querySelector('.button-spinner')?.remove();
-  if (isSubmitting) text.insertAdjacentHTML('beforebegin', '<span class="button-spinner" aria-hidden="true"></span>');
 }
 function toggleAuthPassword() {
   const input = document.getElementById('authPass'),
@@ -1204,9 +1202,15 @@ function pqFlushOnExit() {
   } catch (e) {}
 }
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'hidden') pqFlushOnExit();
+  if (document.visibilityState === 'hidden') {
+    pqFlushOnExit();
+    draftFlushOnExit();
+  }
 });
-window.addEventListener('pagehide', () => pqFlushOnExit());
+window.addEventListener('pagehide', () => {
+  pqFlushOnExit();
+  draftFlushOnExit();
+});
 window.addEventListener('beforeunload', e => {
   if (hasActiveUploads()) {
     e.preventDefault();
@@ -1221,6 +1225,14 @@ function pqSetSaveState(state, msg) {
   else if (state === 'error') el.textContent = 'Gagal menyimpan: ' + (msg || 'periksa koneksi');
   else el.textContent = pqSavedAt ? 'Tersimpan ' + pqFormatTime(pqSavedAt) : 'Belum ada perubahan';
   el.className = 'pq-save-state' + (state === 'error' ? ' error' : state === 'saving' ? ' saving' : '');
+}
+// The owner may add (not delete) attachments while the submission is with the verifier or the validator.
+function canAddEvidence(v) {
+  return (
+    Boolean(v) &&
+    rolesOf(session?.role).includes('vendor') &&
+    [STATUS.awaitingVerification, STATUS.awaitingValidation].includes(v.status)
+  );
 }
 function canRemoveEvidence(v) {
   if (!v) return false;
@@ -1299,6 +1311,8 @@ async function saveDraft() {
   }
 }
 
+// STATUS is filled in after login, so this must be evaluated lazily.
+const verificationEditable = status => [STATUS.awaitingVerification, STATUS.awaitingValidation].includes(status);
 function autoPick(status) {
   let v = vendor();
   if (!v) {
@@ -1327,11 +1341,14 @@ function picker(status) {
 }
 function verificationPage(el) {
   let v = autoPick(STATUS.awaitingVerification);
-  const locked = Boolean(v) && v.status !== STATUS.awaitingVerification;
+  // Scores stay editable until the vendor is validated, so documents found late can still be reflected in the assessment.
+  const locked = Boolean(v) && !verificationEditable(v.status);
+  // Once forwarded to field validation the vendor cannot be advanced or returned again; only the scores can be corrected.
+  const forwarded = Boolean(v) && v.status === STATUS.awaitingValidation;
   el.innerHTML = `<div class="heading"><div><div class="eyebrow">Langkah 3 dari 5</div><h1>Verifikasi Dokumen</h1><p>Unit Keselamatan menilai dokumen dan memberi catatan per pertanyaan.</p></div></div>${picker(STATUS.awaitingVerification)}${
     !v
       ? '<div class="panel empty">Pilih vendor untuk mulai verifikasi.</div>'
-      : `<div class="panel"><div class="row between"><div><h2>${esc(v.name)}</h2><p class="muted small">${esc(v.id)} · ${esc(v.scope)}</p></div>${statusTag(v.status)}</div><div class="formgrid">${field('Tanggal verifikasi dokumen', 'docDate', v.docDate, false, 'date')}${field('Nama evaluator', 'evaluator', v.evaluator || '')}</div><div class="role-note">Setiap akun verifikator menyimpan rekam penilaiannya sendiri. Lebih dari satu verifikator dapat menilai pengajuan yang sama.</div><div class="panel" style="margin-top:14px"><h2>Rekap penilaian seluruh verifikator</h2><p class="muted small">Data dapat dilihat bersama. Nilai per kriteria dan total dihitung dari rata-rata skor verifikator yang telah menyimpan penilaian.</p>${reviewerSummary(v, 'reviewByUser', !v.reviewByUser?.[session?.username])}</div><div class="note small">Skala matriks sesuai formulir: 0; 0,25; 0,5; 0,75; 1. Nilai Anda = matriks Anda × bobot. Rata-rata tim menggabungkan semua verifikator dan menjadi nilai dokumen sementara; nilai akhir mengikuti hasil validasi lapangan.</div>${groups
+      : `<div class="panel"><div class="row between"><div><h2>${esc(v.name)}</h2><p class="muted small">${esc(v.id)} · ${esc(v.scope)}</p></div>${statusTag(v.status)}</div><div class="formgrid">${field('Tanggal verifikasi dokumen', 'docDate', v.docDate, false, 'date')}${field('Nama evaluator', 'evaluator', v.evaluator || '')}</div><div class="role-note">Setiap akun verifikator menyimpan rekam penilaiannya sendiri. Lebih dari satu verifikator dapat menilai pengajuan yang sama.</div>${forwarded ? '<p class="note note-info">Vendor sudah berada di tahap validasi lapangan. Nilai verifikasi masih dapat diperbaiki; setiap perubahan dicatat di log audit.</p>' : ''}<div class="panel" style="margin-top:14px"><h2>Rekap penilaian seluruh verifikator</h2><p class="muted small">Data dapat dilihat bersama. Nilai per kriteria dan total dihitung dari rata-rata skor verifikator yang telah menyimpan penilaian.</p>${reviewerSummary(v, 'reviewByUser', !v.reviewByUser?.[session?.username])}</div><div class="note small">Skala matriks sesuai formulir: 0; 0,25; 0,5; 0,75; 1. Nilai Anda = matriks Anda × bobot. Rata-rata tim menggabungkan semua verifikator dan menjadi nilai dokumen sementara; nilai akhir mengikuti hasil validasi lapangan.</div>${groups
           .map(
             g =>
               `<div style="margin-top:20px"><h2>${esc(g[0])}</h2><div class="tablewrap"><table class="score-table"><thead><tr><th>Pertanyaan</th><th>Bobot</th><th>Jawaban vendor</th><th class="score-mine">Matriks Anda</th><th class="score-mine">Nilai Anda</th><th class="col-team">Rata-rata tim</th><th>Keterangan verifikasi</th></tr></thead><tbody>${questions
@@ -1344,7 +1361,7 @@ function verificationPage(el) {
           )
           .join(
             ''
-          )}${scoreSummary('review', '<button class="btn btn-filled"  data-click="saveReview">Simpan Verifikasi</button><button class="btn btn-accent" data-click="submitReview">Kirim ke Validasi Lapangan →</button><button class="btn btn-tonal" data-click="returnCorrection">Minta Perbaikan</button>')}`
+          )}${scoreSummary('review', '<button class="btn btn-filled"  data-click="saveReview">Simpan Verifikasi</button>' + (forwarded ? '' : '<button class="btn btn-accent" data-click="submitReview">Kirim ke Validasi Lapangan →</button><button class="btn btn-tonal" data-click="returnCorrection">Minta Perbaikan</button>'))}`
   }`;
   if (v) bindScoreInputs(v, 'review');
 }
@@ -1568,7 +1585,7 @@ async function refresh() {
   STATUS = state.statuses;
   setQuestions(state.questions);
   session = state.session;
-  db = { vendors: state.vendors };
+  db = { vendors: state.vendors, drafts: state.drafts || {} };
   accounts = state.accounts;
 }
 function replaceVendor(v) {
@@ -1590,6 +1607,7 @@ async function confirmLogout() {
 }
 async function logout() {
   await pqFlush();
+  await draftFlush();
   await action(async () => {
     await api('/logout', 'POST');
     location.reload();
@@ -1699,8 +1717,11 @@ async function saveProfile(e) {
   )
     return;
   const data = Object.fromEntries(new FormData(e.target));
+  const draftScope = 'profile:' + (currentId || 'new');
   await action(async () => {
+    await draftSettle(draftScope);
     const v = await api(currentId ? '/vendors/' + currentId : '/vendors', currentId ? 'PUT' : 'POST', data);
+    draftDrop(draftScope);
     replaceVendor(v);
     go('questionnaire');
   });
@@ -1926,8 +1947,11 @@ function assessmentPayload(stage, act) {
   return data;
 }
 async function saveAssessment(stage, act) {
+  const draftScope = (stage === 'review' ? 'review:' : 'validation:') + currentId;
   await action(async () => {
+    await draftSettle(draftScope);
     const v = await api('/vendors/' + currentId + '/assessments/' + stage, 'POST', assessmentPayload(stage, act));
+    draftDrop(draftScope);
     replaceVendor(v);
     if (act === 'advance') go(canAccess('validation') ? 'validation' : 'vendors');
     else if (act === 'finalize') go('risk');
@@ -2096,16 +2120,208 @@ function go(p) {
     goNow(p);
   });
 }
+
+/* --- Form drafts ---------------------------------------------------------------------------------------------------
+   The vendor profile and the verification and validation forms cannot be saved half-filled as real data (scores need
+   every criterion), so what is typed is kept as a draft on the server, per user and form. It is sent a moment after
+   typing stops and when the page is hidden or closed, and comes back the next time the form opens, even on another
+   device. A real save deletes the draft (on the server, in the same transaction). The questionnaire has its own autosave. */
+const DRAFT_FIELDS =
+  'input[name]:not([type=password]):not([type=file]):not([type=radio]):not([type=checkbox]),select[name],textarea[name],[data-review],[data-comment],[data-fieldscore],[data-fieldcomment]';
+const DRAFT_DATA_ATTRS = ['review', 'comment', 'fieldscore', 'fieldcomment'];
+const DRAFT_DELAY_MS = 1500;
+let draftActive = null; // { scope, root, baseline, dirty, timer, inflight, onApply }
+function draftKey(el) {
+  if (el.name) return el.name;
+  const attr = DRAFT_DATA_ATTRS.find(a => el.hasAttribute('data-' + a));
+  return attr ? attr + ':' + el.getAttribute('data-' + attr) : '';
+}
+function draftCollect(root) {
+  const data = {};
+  root.querySelectorAll(DRAFT_FIELDS).forEach(el => {
+    const key = draftKey(el);
+    if (key) data[key] = el.value;
+  });
+  return data;
+}
+function draftApply(root, data) {
+  root.querySelectorAll(DRAFT_FIELDS).forEach(el => {
+    const key = draftKey(el);
+    if (key && typeof data[key] === 'string' && el.value !== data[key]) el.value = data[key];
+  });
+}
+function draftNote(html, state) {
+  const d = draftActive;
+  if (!d) return;
+  let el = document.getElementById('draftNote');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'draftNote';
+    el.setAttribute('role', 'status');
+    const head = d.root.querySelector('.heading');
+    if (head) head.after(el);
+    else d.root.prepend(el);
+  }
+  el.className = 'note ' + (state === 'error' ? 'note-error' : 'note-info');
+  el.innerHTML = html;
+}
+function draftTime(iso) {
+  return new Date(iso).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+}
+// Starts watching a form. Call once the page (and its locks) are rendered; `onApply` refreshes anything computed from the fields.
+function draftStart(scope, root, onApply) {
+  draftActive = null;
+  if (!root || !session) return;
+  const d = {
+    scope,
+    root,
+    baseline: JSON.stringify(draftCollect(root)),
+    dirty: false,
+    timer: 0,
+    inflight: null,
+    onApply,
+  };
+  draftActive = d;
+  const saved = db.drafts?.[scope];
+  if (saved?.data) {
+    draftApply(root, saved.data);
+    if (JSON.stringify(draftCollect(root)) !== d.baseline) {
+      onApply?.();
+      draftNote(
+        `<span>Draft yang belum disimpan dipulihkan (tersimpan ${draftTime(saved.updated_at)}). Isian ini belum menjadi data tersimpan.</span><button type="button" class="btn btn-text" data-click="draftDiscard">Buang draft</button>`
+      );
+    } else delete db.drafts[scope];
+  }
+  // Capture phase: the score pickers dispatch a plain `change` event that does not bubble.
+  const onEdit = () => {
+    d.dirty = true;
+    clearTimeout(d.timer);
+    d.timer = setTimeout(() => draftPush(d), DRAFT_DELAY_MS);
+  };
+  root.addEventListener('input', onEdit, true);
+  root.addEventListener('change', onEdit, true);
+}
+// Sends the draft now; when the fields match the saved data again, the draft is removed instead.
+function draftPush(d, keepalive = false) {
+  clearTimeout(d.timer);
+  if (!d.dirty) return d.inflight;
+  d.dirty = false;
+  const data = draftCollect(d.root); // read now: the page may be replaced right after
+  const same = JSON.stringify(data) === d.baseline;
+  const path = '/drafts/' + encodeURIComponent(d.scope);
+  const send = async () => {
+    try {
+      if (same) {
+        if (db.drafts?.[d.scope]) await draftRequest('DELETE', path, null, keepalive);
+        delete db.drafts[d.scope];
+        if (draftActive === d) document.getElementById('draftNote')?.remove();
+        return;
+      }
+      await draftRequest('PUT', path, { data }, keepalive);
+      const at = new Date().toISOString();
+      db.drafts[d.scope] = { data, updated_at: at };
+      if (draftActive === d)
+        draftNote(
+          `<span>Draft tersimpan otomatis ke server pukul ${draftTime(at)}. Belum disimpan sebagai data.</span>`
+        );
+    } catch (e) {
+      d.dirty = true; // try again with the next edit
+      if (draftActive === d)
+        draftNote(
+          '<span>Draft belum tersimpan di server. Periksa koneksi; isian Anda masih ada di halaman ini.</span>',
+          'error'
+        );
+    }
+  };
+  d.inflight = send();
+  return d.inflight;
+}
+async function draftRequest(method, path, body, keepalive) {
+  const res = await fetch('/api' + path, {
+    method,
+    keepalive,
+    signal: AbortSignal.timeout(15000),
+    credentials: 'same-origin',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'X-Lang': window.I18N ? I18N.lang : 'id',
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) throw new Error('draft ' + res.status);
+}
+// Before the page is replaced (navigation, logout): send anything not yet sent.
+function draftFlush() {
+  return draftActive ? draftPush(draftActive) : undefined;
+}
+// Before a real save: stop the timer and wait for a request in flight, so a late draft cannot outlive the save that clears it.
+async function draftSettle(scope) {
+  const d = draftActive;
+  if (!d || d.scope !== scope) return;
+  clearTimeout(d.timer);
+  d.dirty = false;
+  await d.inflight;
+}
+function draftDrop(scope) {
+  if (draftActive?.scope === scope) {
+    clearTimeout(draftActive.timer);
+    draftActive.dirty = false;
+  }
+  delete db.drafts?.[scope];
+}
+async function draftDiscard() {
+  const d = draftActive;
+  if (!d) return;
+  if (
+    !(await m3Confirm(
+      'Buang draft?',
+      'Isian yang belum disimpan dihapus dan formulir kembali ke data yang tersimpan.',
+      'Buang draft',
+      true
+    ))
+  )
+    return;
+  await action(async () => {
+    clearTimeout(d.timer);
+    d.dirty = false;
+    await draftRequest('DELETE', '/drafts/' + encodeURIComponent(d.scope), null, false);
+    delete db.drafts[d.scope];
+    render();
+  });
+}
+function draftFlushOnExit() {
+  if (draftActive?.dirty) draftPush(draftActive, true);
+}
+function draftScopeFor(v) {
+  const has = r => rolesOf(session?.role).includes(r);
+  if (page === 'register' && has('vendor') && (!v || [STATUS.awaitingFill, STATUS.needsRevision].includes(v.status)))
+    return ['profile:' + (v ? v.id : 'new'), '#regForm'];
+  if (v && page === 'verification' && has('verifikator') && verificationEditable(v.status))
+    return ['review:' + v.id, '#view'];
+  if (v && page === 'validation' && has('validator') && v.status === STATUS.awaitingValidation)
+    return ['validation:' + v.id, '#view'];
+  return null;
+}
 // After the page is rendered: lock forms that can no longer be changed and show the correction notes.
 function render() {
+  draftFlush();
   renderPage();
   const v = vendor();
   if (v && page === 'questionnaire' && ![STATUS.awaitingFill, STATUS.needsRevision].includes(v.status)) {
-    document.querySelectorAll('#qForm input,#qForm button').forEach(el => (el.disabled = true));
+    // The vendor can still add attachments while the submission is being reviewed; answers and notes stay locked.
+    const addOnly = canAddEvidence(v);
+    const keep = '.pq-fileinput,.pq-filebtn,.pq-group-head';
+    document
+      .querySelectorAll('#qForm input,#qForm button')
+      .forEach(el => (el.disabled = !(addOnly && el.matches(keep))));
+    if (addOnly) document.querySelector('#qForm .pq-actions-btns')?.setAttribute('hidden', '');
     const note = document.createElement('div');
     note.className = 'note';
-    note.textContent =
-      'Pengajuan sedang diproses atau telah final. Formulir terkunci sampai dikembalikan untuk perbaikan.';
+    note.textContent = addOnly
+      ? 'Pengajuan sedang diproses. Jawaban terkunci, tetapi Anda masih dapat menambah lampiran untuk dokumen yang baru ditemukan. Lampiran yang sudah diunggah tidak dapat dihapus atau diganti.'
+      : 'Pengajuan sedang diproses atau telah final. Formulir terkunci sampai dikembalikan untuk perbaikan.';
     document.getElementById('qForm').prepend(note);
   }
   if (v && page === 'questionnaire' && v.status === STATUS.needsRevision) {
@@ -2118,7 +2334,7 @@ function render() {
   }
   if (
     v &&
-    ((page === 'verification' && v.status !== STATUS.awaitingVerification) ||
+    ((page === 'verification' && !verificationEditable(v.status)) ||
       (page === 'validation' && v.status !== STATUS.awaitingValidation))
   ) {
     document
@@ -2127,6 +2343,15 @@ function render() {
       )
       .forEach(el => (el.disabled = true));
   }
+  const draft = draftScopeFor(v);
+  if (draft) {
+    const stage = page === 'verification' ? 'review' : 'validation';
+    draftStart(
+      draft[0],
+      document.querySelector(draft[1]),
+      page === 'register' ? undefined : () => bindScoreInputs(v, stage)
+    );
+  } else draftActive = null;
 }
 (async () => {
   renderSkeleton();

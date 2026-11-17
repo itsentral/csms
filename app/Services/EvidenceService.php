@@ -19,7 +19,8 @@ class EvidenceService
     {
         return DB::transaction(function () use ($user, $vendor, $questionId, $file) {
             $v = $this->vendors->lock($vendor);
-            abort_unless(in_array($v->status, VendorStatus::editable()), 409, __('portal.attachments_locked'));
+            abort_unless(in_array($v->status, VendorStatus::attachable()), 409, __('portal.attachments_locked'));
+            $late = ! in_array($v->status, VendorStatus::editable());
             $id = (string) Str::uuid();
             $path = $file->store('evidence/'.$vendor->id, 'local');
             try {
@@ -28,8 +29,13 @@ class EvidenceService
                     'name' => mb_substr(basename($file->getClientOriginalName()), 0, 240), 'path' => $path,
                     'mime' => $file->getMimeType(), 'size' => $file->getSize(), 'created_at' => now(), 'updated_at' => now(),
                 ]);
-                $v->update(['draft_saved_at' => now()]);
-                Portal::audit('evidence_uploaded', $v->id, ['id' => $id]);
+                if (! $late) {
+                    $v->update(['draft_saved_at' => now()]);
+                }
+                // A file added after the submission was sent is recorded separately, with the stage it reached the reviewers in.
+                Portal::audit($late ? 'evidence_added_after_submit' : 'evidence_uploaded', $v->id, $late
+                    ? ['id' => $id, 'question_id' => $questionId, 'name' => mb_substr(basename($file->getClientOriginalName()), 0, 240), 'status' => $v->status]
+                    : ['id' => $id]);
             } catch (\Throwable $e) {
                 Storage::disk('local')->delete($path);
                 throw $e;

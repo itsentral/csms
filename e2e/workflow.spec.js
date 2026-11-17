@@ -103,15 +103,19 @@ test('verifier assesses and forwards to field validation', async ({ page }) => {
   await confirmDialog(page);
   await expect(page.locator('.snackbar')).toContainText('berhasil disimpan');
 
-  // Once forwarded, the sheet is read-only: the note and the chosen criterion are shown as full text.
+  // Once forwarded the scores can still be corrected (until the vendor is validated), but the vendor cannot be
+  // forwarded or returned again.
   await page.evaluate(() => go('verification'));
   await expect(page.locator('#view h1')).toHaveText('Verifikasi Dokumen');
-  await expect(page.locator('textarea[data-comment]')).toHaveCount(0);
-  await expect(page.locator('.note-text').first()).toContainText('Perlu dicek saat lapangan.');
-  await expect(page.locator('.rubric-static[data-rubric-toggle="1.a"]')).toContainText(
-    'rencana tindakan untuk mitigasi'
-  );
-  await expect(page.locator('[data-rubric-row]')).toHaveCount(0);
+  await expect(page.locator('textarea[data-comment="1.a"]')).toHaveValue(/Perlu dicek saat lapangan\./);
+  await expect(page.locator('[data-click="submitReview"]')).toHaveCount(0);
+  await expect(page.locator('[data-click="returnCorrection"]')).toHaveCount(0);
+  await expect(page.locator('[data-rubric-toggle="1.a"]')).toBeEnabled();
+  await page.fill('textarea[data-comment="1.a"]', 'Bukti tambahan diterima.');
+  await page.click('[data-click="saveReview"]');
+  await confirmDialog(page);
+  await expect(page.locator('textarea[data-comment="1.a"]')).toHaveValue('Bukti tambahan diterima.');
+  await expect(page.locator('#draftNote')).toHaveCount(0); // the real save removed the draft
 });
 
 test('validator sets the final result', async ({ page }) => {

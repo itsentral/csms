@@ -3,9 +3,11 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DraftController;
 use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\MfaController;
 use App\Http\Controllers\VendorController;
+use App\Http\Requests\SaveDraftRequest;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'portal')->name('login');
@@ -29,6 +31,9 @@ Route::middleware(['auth', 'active', 'mfa.setup'])->prefix('api')->group(functio
     Route::post('/vendors/{vendor}/answers', [VendorController::class, 'answers']);
     Route::post('/vendors/{vendor}/submit', [VendorController::class, 'submit']);
     Route::post('/vendors/{vendor}/assessments/{stage}', [AssessmentController::class, 'store']);
+
+    Route::put('/drafts/{scope}', [DraftController::class, 'put'])->where('scope', SaveDraftRequest::SCOPE)->middleware('throttle:120,1');
+    Route::delete('/drafts/{scope}', [DraftController::class, 'destroy'])->where('scope', SaveDraftRequest::SCOPE);
 
     Route::post('/vendors/{vendor}/evidence', [EvidenceController::class, 'upload'])->middleware('throttle:120,1');
     Route::get('/evidence/{id}', [EvidenceController::class, 'download']);

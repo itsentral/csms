@@ -83,6 +83,52 @@ class WorkflowTest extends TestCase
         $this->assertDatabaseHas('audit_logs', ['action' => 'validation_finalize', 'vendor_id' => $v->id]);
     }
 
+    public function test_verification_scores_can_be_corrected_after_forwarding_and_the_change_is_audited(): void
+    {
+        $v = $this->vendor($this->user('vendor'), 'Menunggu Verifikasi Dokumen');
+        $r = $this->user('verifikator');
+        $url = '/api/vendors/'.$v->id.'/assessments/review';
+        $this->actingAs($r)->postJson($url, ['action' => 'advance', 'scores' => $this->scores(.5)])->assertOk()->assertJsonPath('status', 'Menunggu Validasi Lapangan');
+
+        $this->actingAs($r)->postJson($url, ['action' => 'save', 'scores' => $this->scores(1)])->assertOk()->assertJsonPath('status', 'Menunggu Validasi Lapangan');
+
+        $log = DB::table('audit_logs')->where(['vendor_id' => $v->id, 'action' => 'review_save'])->latest('id')->first();
+        $details = json_decode($log->details, true);
+        $this->assertSame('Menunggu Validasi Lapangan', $details['status']);
+        $this->assertCount(DB::table('questions')->count(), $details['changes']);
+        $this->assertEquals(.5, collect($details['changes'])->first()['from']['score']);
+        $this->assertEquals(1, collect($details['changes'])->first()['to']['score']);
+
+        // Still no way back: advancing or returning after the forward is refused, and validation completes the lock.
+        $this->actingAs($r)->postJson($url, ['action' => 'return', 'scores' => $this->scores(1)])->assertConflict();
+        $v->update(['status' => 'Tervalidasi']);
+        $this->actingAs($r)->postJson($url, ['action' => 'save', 'scores' => $this->scores(0)])->assertConflict();
+    }
+
+    public function test_owner_can_add_but_not_delete_attachments_while_submission_is_under_review(): void
+    {
+        Storage::fake('local');
+        $owner = $this->user('vendor');
+        $v = $this->vendor($owner, 'Menunggu Verifikasi Dokumen');
+        $png = fn (string $name) => UploadedFile::fake()->createWithContent($name, base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl6NvEAAAAASUVORK5CYII='));
+        $post = fn ($user, string $name) => $this->actingAs($user)->post('/api/vendors/'.$v->id.'/evidence', ['question_id' => '1.a', 'file' => $png($name)], ['Accept' => 'application/json']);
+
+        $id = $post($owner, 'baru.png')->assertOk()->json('id');
+        $log = json_decode(DB::table('audit_logs')->where(['vendor_id' => $v->id, 'action' => 'evidence_added_after_submit'])->value('details'), true);
+        $this->assertSame(['1.a', 'baru.png', 'Menunggu Verifikasi Dokumen'], [$log['question_id'], $log['name'], $log['status']]);
+        $this->assertNull($v->fresh()->draft_saved_at);
+
+        $v->update(['status' => 'Menunggu Validasi Lapangan']);
+        $post($owner, 'baru2.png')->assertOk();
+
+        // Added files cannot be removed by the owner, and other vendors cannot add to this submission.
+        $this->actingAs($owner)->deleteJson('/api/evidence/'.$id)->assertConflict();
+        $post($this->user('vendor'), 'x.png')->assertForbidden();
+
+        $v->update(['status' => 'Tervalidasi']);
+        $post($owner, 'terlambat.png')->assertConflict();
+    }
+
     public function test_invalid_score_and_wrong_stage_rejected(): void
     {
         $v = $this->vendor($this->user('vendor'));

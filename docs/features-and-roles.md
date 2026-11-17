@@ -52,7 +52,7 @@ The form has 49 questions with file attachments; filling it in does not have to 
 | Draft | Stored on the server (`answers`, `vendors.draft_saved_at`); it can be continued from another device with the same login |
 | Submission | Checks that all 49 questions are complete (showing the list of unanswered ones), locks the submission, and moves the status to Menunggu Verifikasi Dokumen |
 
-After submission the inputs are locked; changes are only possible through the **Perlu Perbaikan** flow, and resubmitting opens a new assessment round.
+After submission the answers and notes are locked; changing them is only possible through the **Perlu Perbaikan** flow (available until the vendor is forwarded to field validation), and resubmitting opens a new assessment round. While the submission is with the verifier or the validator (Menunggu Verifikasi Dokumen, Menunggu Validasi Lapangan), the vendor owner can still **add** attachments for documents found late; they cannot delete or replace files. Each one is recorded in `audit_logs` as `evidence_added_after_submit` (question, file name, stage).
 
 **Draft privacy:** an unsubmitted draft is only visible to **admins** and its owner. Verifiers, validators, and procurement still see the vendor data and the number of answered questions, but not the content of the answers, notes, or draft attachments; downloading draft attachments is also refused for them.
 
@@ -63,7 +63,17 @@ After submission the inputs are locked; changes are only possible through the **
 | A file is waiting in the upload queue or has failed | The `×` button removes it from the list; it is not on the server |
 | A file is already saved on the server | The `×` button deletes it permanently from the server (`DELETE /api/evidence/{id}`) |
 
-Only the vendor owner (while the submission can still be filled in) and admins may delete attachments. After submission, attachments are locked for the vendor and only an admin can delete them. Every deletion is recorded in `audit_logs` with the action `evidence_deleted`. Attachment formats: PDF, Word, Excel, JPG, and PNG, at most 15 MB **per file** (not in total). Clicking an attachment opens it in a **new tab**: PDF and image files are shown there by the browser, while Word and Excel files cannot be shown by a browser and are downloaded instead. The Excel export and the 2FA recovery codes file remain downloads.
+Only the vendor owner (while the submission can still be filled in) and admins may delete attachments. After submission, the vendor can no longer delete attachments and only an admin can. Every deletion is recorded in `audit_logs` with the action `evidence_deleted`. Attachment formats: PDF, Word, Excel, JPG, and PNG, at most 15 MB **per file** (not in total). Clicking an attachment opens it in a **new tab**: PDF and image files are shown there by the browser, while Word and Excel files cannot be shown by a browser and are downloaded instead. The Excel export and the 2FA recovery codes file remain downloads.
+
+## Drafts of the other forms
+
+The pre-qualification questionnaire saves itself (above). The other forms where typing can be lost, the **vendor profile** (Pendaftaran Vendor), the **verification** scores and the **validation** scores, keep a **draft** on the server per user:
+
+- It is sent about 1.5 seconds after typing stops, and when the tab is hidden or closed. A note on the form shows the time of the last draft save.
+- The next time the form opens, even from another device with the same login, the draft is filled back in with a note "Draft yang belum disimpan dipulihkan" and a **Buang draft** (Discard draft) button. A draft is not saved data: scores still count only after **Simpan Verifikasi** or **Simpan Validasi**.
+- A successful real save deletes the draft. Drafts are private to their author, are removed when the vendor is deleted, and are dropped after 30 days without changes.
+- Scores can only be saved when all 49 criteria are rated, which is why they need a draft of their own.
+- Login, registration, and password forms are never drafted.
 
 ## Data management
 

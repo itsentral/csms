@@ -23,8 +23,10 @@ class VendorService
             } else {
                 $vendor = new Vendor(['id' => 'RCH-'.date('Y').'-'.Str::upper(Str::random(12)), 'owner_id' => $user->id, 'status' => VendorStatus::AwaitingFill->value]);
             }
+            $draftScope = 'profile:'.($vendor->exists ? $vendor->id : 'new');
             $vendor->fill(array_map(fn ($x) => $x ?? '', $data));
             $vendor->save();
+            Drafts::forget($user, $draftScope);
             Portal::audit('vendor_saved', $vendor->id);
 
             return Portal::serialize($vendor);
@@ -95,6 +97,7 @@ class VendorService
             DB::table('evidence')->where('vendor_id', $v->id)->delete();
             DB::table('answers')->where('vendor_id', $v->id)->delete();
             $v->delete();
+            Drafts::forgetVendor($v->id);
 
             return ['paths' => $paths, 'counts' => $counts];
         });

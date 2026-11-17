@@ -17,6 +17,15 @@ enum VendorStatus: string
         return [self::AwaitingFill->value, self::NeedsRevision->value];
     }
 
+    /**
+     * Statuses in which the vendor may still add (never replace or delete) attachments: the editable ones, plus the review
+     * stages, so a document found late can reach the verifier without sending the whole submission back. @return list<string>
+     */
+    public static function attachable(): array
+    {
+        return [...self::editable(), self::AwaitingVerification->value, self::AwaitingValidation->value];
+    }
+
     /** Map of name (camelCase) => value, used by the client as the `STATUS` constant. @return array<string,string> */
     public static function map(): array
     {
